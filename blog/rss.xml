@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
         <title>Blong Blog</title>
         <link>https://feasibleone.github.io/blong-docs/blog</link>
@@ -9,10 +9,22 @@
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
         <item>
-            <title><![CDATA[Welcome]]></title>
-            <link>https://feasibleone.github.io/blong-docs/blog/welcome</link>
-            <guid>https://feasibleone.github.io/blong-docs/blog/welcome</guid>
+            <title><![CDATA[Blong]]></title>
+            <link>https://feasibleone.github.io/blong-docs/blog/blong-ambrym</link>
+            <guid>https://feasibleone.github.io/blong-docs/blog/blong-ambrym</guid>
             <pubDate>Mon, 08 Jan 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[I am happy to announce the release of Blong 2024, codename Ambrym.]]></description>
+            <content:encoded><![CDATA[<p>I am happy to announce the release of Blong 2024, codename Ambrym.</p>
+<p>This framework is the result of many years of efforts around producing
+reusable software. Its is descendant of the UnderTree frameworks,
+whose roots started as a Delphi application.</p>
+<p>Many of the ideas of the UnderTree framework were pioneered during my numerous
+trips to the amazing country <a href="https://en.wikipedia.org/wiki/Vanuatu" target="_blank" rel="noopener noreferrer">Vanuatu</a>.</p>
+<p>The name of the framework <a href="https://en.wikipedia.org/wiki/Bislama#%22Blong%22" target="_blank" rel="noopener noreferrer">"blong"</a>
+comes from Bislama, the official language of Vanuatu.</p>
+<hr>
+<p><a href="https://en.wikipedia.org/wiki/Ambrym" target="_blank" rel="noopener noreferrer">Ambrym</a> is a volcanic island in the
+archipelago of Vanuatu.</p>]]></content:encoded>
             <category>blong</category>
         </item>
     </channel>
