@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_feasibleone_blong_docs=self.webpackChunk_feasibleone_blong_docs||[]).push([[2535],{5641:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Welcome","permalink":"/blong-docs/blog/welcome","unlisted":false}]}')}}]);
