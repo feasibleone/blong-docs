@@ -10,7 +10,7 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/blong-docs/assets/css/styles.64895a14.css">
-<script src="/blong-docs/assets/js/runtime~main.c7079633.js" defer="defer"></script>
+<script src="/blong-docs/assets/js/runtime~main.c43528e6.js" defer="defer"></script>
 <script src="/blong-docs/assets/js/main.584a1893.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -26,13 +26,16 @@ the configuration to be specified in multiple places, such as:</p>
 <p>The configuration coming from these places is merged to get
 the effective one.</p>
 <h2 class="anchor anchorWithStickyNavbar_PXSQ" id="environments-and-use-cases">Environments and use cases<a href="#environments-and-use-cases" class="hash-link" aria-label="Direct link to Environments and use cases" title="Direct link to Environments and use cases">​</a></h2>
-<p>There are some established names for some environments and use cases:</p>
+<p>The configuration is usually split in several parts, which are activated based
+on the environment and the use case. There are some established names for some
+of the activations:</p>
 <ul>
-<li><code>default</code>: the base configuration valid for all cases</li>
-<li><code>dev</code>: the development environment</li>
-<li><code>prod</code>: the user acceptance test and production environments</li>
+<li><code>default</code>: the base configuration, active for all cases</li>
+<li><code>dev</code>: active in the development environment</li>
+<li><code>prod</code>: active in the user acceptance test and production environments</li>
 <li><code>test</code>: active during automated tests</li>
 <li><code>db</code>: active during database creation</li>
+<li><code>realm</code>: active when focusing the development on a single realm</li>
 </ul>
 <h2 class="anchor anchorWithStickyNavbar_PXSQ" id="source-code-configuration">Source code configuration<a href="#source-code-configuration" class="hash-link" aria-label="Direct link to Source code configuration" title="Direct link to Source code configuration">​</a></h2>
 <p>The configuration coming from the source code has the purpose
