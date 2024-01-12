@@ -16,12 +16,17 @@
             <description><![CDATA[I am happy to announce the release of Blong 2024, codename Ambrym.]]></description>
             <content:encoded><![CDATA[<p>I am happy to announce the release of Blong 2024, codename Ambrym.</p>
 <p>This framework is the result of many years of efforts around producing
-reusable software. Its is descendant of the UnderTree frameworks,
-whose roots started as a Delphi application.</p>
+reusable software. Its is descendant of the UnderTree framework, whose roots
+started as a Delphi application. It aims to follow the RAD spirit of
+Delphi while using TypeScript, which both have
+<a href="https://en.wikipedia.org/wiki/Anders_Hejlsberg" target="_blank" rel="noopener noreferrer">Anders Hejlsberg</a> as
+a lead architect.</p>
 <p>Many of the ideas of the UnderTree framework were pioneered during my numerous
 trips to the amazing country <a href="https://en.wikipedia.org/wiki/Vanuatu" target="_blank" rel="noopener noreferrer">Vanuatu</a>.</p>
 <p>The name of the framework <a href="https://en.wikipedia.org/wiki/Bislama#%22Blong%22" target="_blank" rel="noopener noreferrer">"blong"</a>
-comes from Bislama, the official language of Vanuatu.</p>
+is a word in Bislama, the official language of Vanuatu. It is one of the most
+widely used and versatile words in the language, depicting the versatility
+and the usage of the framework in various scenarios.</p>
 <hr>
 <p><a href="https://en.wikipedia.org/wiki/Ambrym" target="_blank" rel="noopener noreferrer">Ambrym</a> is a volcanic island in the
 archipelago of Vanuatu.</p>]]></content:encoded>
