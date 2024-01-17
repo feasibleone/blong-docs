@@ -4,7 +4,7 @@
         <title>Blong Blog</title>
         <link>https://feasibleone.github.io/blong-docs/blog</link>
         <description>Blong Blog</description>
-        <lastBuildDate>Mon, 08 Jan 2024 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 16 Jan 2024 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
@@ -12,7 +12,7 @@
             <title><![CDATA[Blong]]></title>
             <link>https://feasibleone.github.io/blong-docs/blog/blong-ambrym</link>
             <guid>https://feasibleone.github.io/blong-docs/blog/blong-ambrym</guid>
-            <pubDate>Mon, 08 Jan 2024 00:00:00 GMT</pubDate>
+            <pubDate>Tue, 16 Jan 2024 00:00:00 GMT</pubDate>
             <description><![CDATA[I am happy to announce the release of Blong 2024, codename Ambrym.]]></description>
             <content:encoded><![CDATA[<p>I am happy to announce the release of Blong 2024, codename Ambrym.</p>
 <p>This framework is the result of many years of efforts around producing
