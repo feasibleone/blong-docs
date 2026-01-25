@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://feasibleone.github.io/blong-docs/blog</id>
+    <id>http://blong.feasible.one/blog</id>
     <title>Blong Blog</title>
     <updated>2024-01-16T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://feasibleone.github.io/blong-docs/blog"/>
+    <link rel="alternate" href="http://blong.feasible.one/blog"/>
     <subtitle>Blong Blog</subtitle>
-    <icon>https://feasibleone.github.io/blong-docs/img/favicon.ico</icon>
+    <icon>http://blong.feasible.one/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Blong]]></title>
-        <id>https://feasibleone.github.io/blong-docs/blog/blong-ambrym</id>
-        <link href="https://feasibleone.github.io/blong-docs/blog/blong-ambrym"/>
+        <id>http://blong.feasible.one/blog/blong-ambrym</id>
+        <link href="http://blong.feasible.one/blog/blong-ambrym"/>
         <updated>2024-01-16T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[I am happy to announce the release of Blong 2024, codename Ambrym.]]></summary>
         <content type="html"><![CDATA[<p>I am happy to announce the release of Blong 2024, codename Ambrym.</p>

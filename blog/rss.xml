@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
         <title>Blong Blog</title>
-        <link>https://feasibleone.github.io/blong-docs/blog</link>
+        <link>http://blong.feasible.one/blog</link>
         <description>Blong Blog</description>
         <lastBuildDate>Tue, 16 Jan 2024 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
@@ -10,8 +10,8 @@
         <language>en</language>
         <item>
             <title><![CDATA[Blong]]></title>
-            <link>https://feasibleone.github.io/blong-docs/blog/blong-ambrym</link>
-            <guid>https://feasibleone.github.io/blong-docs/blog/blong-ambrym</guid>
+            <link>http://blong.feasible.one/blog/blong-ambrym</link>
+            <guid>http://blong.feasible.one/blog/blong-ambrym</guid>
             <pubDate>Tue, 16 Jan 2024 00:00:00 GMT</pubDate>
             <description><![CDATA[I am happy to announce the release of Blong 2024, codename Ambrym.]]></description>
             <content:encoded><![CDATA[<p>I am happy to announce the release of Blong 2024, codename Ambrym.</p>

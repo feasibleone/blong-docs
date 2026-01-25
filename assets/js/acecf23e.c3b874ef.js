@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunk_feasibleone_blong_docs=globalThis.webpackChunk_feasibleone_blong_docs||[]).push([[1903],{1912(o){o.exports=JSON.parse('{"blogBasePath":"/blong-docs/blog","blogTitle":"Blog","authorsListPath":"/blong-docs/blog/authors"}')}}]);

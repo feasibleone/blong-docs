@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunk_feasibleone_blong_docs=globalThis.webpackChunk_feasibleone_blong_docs||[]).push([[8947],{6600(e){e.exports=JSON.parse('{"authors":[{"name":"Kalin Krustev","title":"Author of Blong","url":"https://github.com/kalinkrustev","imageURL":"https://github.com/kalinkrustev.png","key":"kalinkrustev","page":null,"count":1}]}')}}]);

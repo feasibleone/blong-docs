@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunk_feasibleone_blong_docs=globalThis.webpackChunk_feasibleone_blong_docs||[]).push([[7472],{5513(e){e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Blong","permalink":"/blong-docs/blog/blong-ambrym","unlisted":false,"date":"2024-01-16T00:00:00.000Z"}]}')}}]);
