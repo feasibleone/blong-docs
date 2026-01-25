@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_feasibleone_blong_docs=self.webpackChunk_feasibleone_blong_docs||[]).push([[128],{2343:e=>{e.exports=JSON.parse('{"permalink":"/blong-docs/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);
