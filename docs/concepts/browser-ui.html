@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-concepts/browser-ui" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.9.2">
+<title data-rh="true">Browser UI | Blong</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="http://blong.feasible.one/img/blong-social-card.jpg"><meta data-rh="true" name="twitter:image" content="http://blong.feasible.one/img/blong-social-card.jpg"><meta data-rh="true" property="og:url" content="http://blong.feasible.one/docs/concepts/browser-ui"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Browser UI | Blong"><meta data-rh="true" name="description" content="The browser platform extends the Blong framework to deliver rich,"><meta data-rh="true" property="og:description" content="The browser platform extends the Blong framework to deliver rich,"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="http://blong.feasible.one/docs/concepts/browser-ui"><link data-rh="true" rel="alternate" href="http://blong.feasible.one/docs/concepts/browser-ui" hreflang="en"><link data-rh="true" rel="alternate" href="http://blong.feasible.one/docs/concepts/browser-ui" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Concepts","item":"http://blong.feasible.one/docs/category/concepts"},{"@type":"ListItem","position":2,"name":"Browser UI","item":"http://blong.feasible.one/docs/concepts/browser-ui"}]}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Blong RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Blong Atom Feed">
+
+
+
+
+<link rel="icon" sizes="32x32" href="img/manta32.png">
+<link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.1dece19a.css">
+<script src="/assets/js/runtime~main.b0032005.js" defer="defer"></script>
+<script src="/assets/js/main.90f59099.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||"light"),document.documentElement.setAttribute("data-theme-choice",t||"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><link rel="preload" as="image" href="/img/manta200.png"><div role="region" aria-label="Skip to main content"><a class="skipToContent_IlsH" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="/img/manta200.png" alt="Blong Logo" class="themedComponent_ZkrZ themedComponent--light_R3K2"><img src="/img/manta200.png" alt="Blong Logo" class="themedComponent_ZkrZ themedComponent--dark_XCbF"></div><b class="navbar__title text--truncate">Blong</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/docs/intro">Docs</a><a class="navbar__item navbar__link" href="/blog">Blog</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a href="https://github.com/feasibleone/blong" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_VfdW"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_de98 colorModeToggle_ZUmf"><button class="clean-btn toggleButton_CmOh toggleButtonDisabled_UxKf" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_C1nR lightToggleIcon_YITt"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_C1nR darkToggleIcon_pPda"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_C1nR systemToggleIcon_r_WW"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_f4h8"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_G10U"><div class="docsWrapper_B3Lf"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_rB2q" type="button"></button><div class="docRoot_Xd1f"><aside class="theme-doc-sidebar-container docSidebarContainer_Kzjj"><div class="sidebarViewport_L2GY"><div class="sidebar_JWvH"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_FcT4"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/intro"><span title="Getting started" class="linkLabel_BlrG">Getting started</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_Tnbm menu__link menu__link--sublist" href="/docs/category/rationale"><span title="Rationale" class="categoryLinkLabel_D884">Rationale</span></a><button aria-label="Expand sidebar category &#x27;Rationale&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_Tnbm menu__link menu__link--sublist menu__link--active" href="/docs/category/concepts"><span title="Concepts" class="categoryLinkLabel_D884">Concepts</span></a><button aria-label="Collapse sidebar category &#x27;Concepts&#x27;" aria-expanded="true" type="button" class="clean-btn menu__caret"></button></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/adapter"><span title="Adapter" class="linkLabel_BlrG">Adapter</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/api"><span title="API" class="linkLabel_BlrG">API</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/architecture"><span title="Architecture" class="linkLabel_BlrG">Architecture</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/docs/concepts/browser-ui"><span title="Browser UI" class="linkLabel_BlrG">Browser UI</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/checkpoint"><span title="Checkpoint" class="linkLabel_BlrG">Checkpoint</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/definitions"><span title="Definitions" class="linkLabel_BlrG">Definitions</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/dependencies"><span title="Dependencies" class="linkLabel_BlrG">Dependencies</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/errors"><span title="Typed Errors" class="linkLabel_BlrG">Typed Errors</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/gateway"><span title="Gateway" class="linkLabel_BlrG">Gateway</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/interactions"><span title="Interactions" class="linkLabel_BlrG">Interactions</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/layer"><span title="Layer" class="linkLabel_BlrG">Layer</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/modules"><span title="Modules" class="linkLabel_BlrG">Modules</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/openapi"><span title="Open API" class="linkLabel_BlrG">Open API</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/orchestrator"><span title="Orchestrator" class="linkLabel_BlrG">Orchestrator</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/realm"><span title="Realm" class="linkLabel_BlrG">Realm</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/suite"><span title="Suite" class="linkLabel_BlrG">Suite</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/concepts/watch"><span title="Watch" class="linkLabel_BlrG">Watch</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_Tnbm menu__link menu__link--sublist" href="/docs/category/patterns"><span title="Patterns" class="categoryLinkLabel_D884">Patterns</span></a><button aria-label="Expand sidebar category &#x27;Patterns&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li></ul></nav></div></div></aside><main class="docMainContainer_mHlX"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_ajdp"><div class="docItemContainer_gz7p"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Bn9s" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_raq9"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/docs/category/concepts"><span>Concepts</span></a></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Browser UI</span></li></ul></nav><div class="tocCollapsible_tTLy theme-doc-toc-mobile tocMobile_qgEr"><button type="button" class="clean-btn tocCollapsibleButton_VNmn">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Browser UI</h1></header>
+<p>The browser platform extends the Blong framework to deliver rich,
+metadata-driven user interfaces that run entirely in the web browser. It
+reuses the same architectural building blocks — suites, realms, layers,
+adapters, orchestrators and handlers — but adapts them to the constraints
+and opportunities of the browser environment.</p>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="core-idea">Core Idea<a href="#core-idea" class="hash-link" aria-label="Direct link to Core Idea" title="Direct link to Core Idea" translate="no">​</a></h2>
+<p>The server already exposes OpenAPI schemas, validation metadata and
+handler definitions. The browser platform consumes this information at
+runtime to <strong>automatically generate</strong> forms, tables, detail views and
+other UI components — without requiring developers to write bespoke JSX
+for every screen. When the server API changes, the UI updates
+accordingly.</p>
+<p>This metadata-driven approach was pioneered in
+<a href="https://github.com/softwaregroup-bg/ut-prime" target="_blank" rel="noopener noreferrer" class="">ut-prime</a> and
+<a href="https://github.com/softwaregroup-bg/ut-model" target="_blank" rel="noopener noreferrer" class="">ut-model</a>. Blong carries
+the concept forward with modern React, a Vite-based toolchain, and
+tighter integration with the framework&#x27;s type system.</p>
+<p>For the design rationale see
+<a class="" href="/docs/rationale/metadata-driven-ui">Metadata-Driven UI</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="layers-in-the-browser">Layers in the Browser<a href="#layers-in-the-browser" class="hash-link" aria-label="Direct link to Layers in the Browser" title="Direct link to Layers in the Browser" translate="no">​</a></h2>
+<p>The following layers have specific meaning in the browser platform:</p>
+<table><thead><tr><th>Layer</th><th>Purpose</th></tr></thead><tbody><tr><td><code>backend</code></td><td>Adapter that communicates with the Blong server gateway over JSON-RPC (or REST). Uses <code>ky</code> / Fetch.</td></tr><tr><td><code>component</code></td><td>React component handlers that define UI pages, cards and widgets. Each handler returns a React component.</td></tr><tr><td><code>orchestrator</code></td><td>Browser-side business logic that coordinates multiple backend calls and manages derived state.</td></tr><tr><td><code>test</code></td><td>Playwright / Storybook interaction tests that run against the rendered UI.</td></tr><tr><td><code>init</code></td><td>Browser-specific initialisation: theme loading, locale detection, service worker registration.</td></tr></tbody></table>
+<p>These names are already recognised by the framework&#x27;s well-known layer
+discovery (see <code>WELL_KNOWN_LAYERS</code> in <code>load.ts</code>).</p>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="metadata-driven-component-generation">Metadata-Driven Component Generation<a href="#metadata-driven-component-generation" class="hash-link" aria-label="Direct link to Metadata-Driven Component Generation" title="Direct link to Metadata-Driven Component Generation" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="schema-discovery">Schema Discovery<a href="#schema-discovery" class="hash-link" aria-label="Direct link to Schema Discovery" title="Direct link to Schema Discovery" translate="no">​</a></h3>
+<p>When the browser platform starts, the <code>backend</code> adapter fetches the
+OpenAPI definition from the server gateway (<code>/documentation/json</code>). This
+definition contains:</p>
+<ul>
+<li class="">Path and method information for every endpoint</li>
+<li class="">Request/response JSON Schema (<code>TypeBox</code> generated)</li>
+<li class="">Descriptions, titles and examples</li>
+<li class="">Extension fields (<code>x-blong-*</code>) for UI hints such as column order,
+default sort, component type overrides and widget configuration</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="component-factory">Component Factory<a href="#component-factory" class="hash-link" aria-label="Direct link to Component Factory" title="Direct link to Component Factory" translate="no">​</a></h3>
+<p>A <strong>component factory</strong> turns a JSON Schema into a React component tree:</p>
+<ol>
+<li class=""><strong>Form generation</strong> — each property in a request schema becomes a form
+field. The factory picks a PrimeReact input component based on the
+property type and <code>x-blong-widget</code> hint. Field labels come from
+<code>title</code> or <code>description</code>. Validation rules come from <code>minimum</code>,
+<code>maxLength</code>, <code>pattern</code>, <code>required</code>, etc.</li>
+<li class=""><strong>Table generation</strong> — each property in a response array item schema
+becomes a column in a PrimeReact DataTable. Column headers use
+<code>title</code>, formatters use the property type.</li>
+<li class=""><strong>Detail view generation</strong> — a single response object schema becomes
+a read-only detail panel.</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="react-hook-form-integration">react-hook-form Integration<a href="#react-hook-form-integration" class="hash-link" aria-label="Direct link to react-hook-form Integration" title="Direct link to react-hook-form Integration" translate="no">​</a></h3>
+<p>All generated forms use <a href="https://react-hook-form.com/" target="_blank" rel="noopener noreferrer" class="">react-hook-form</a>
+for state management. The schema-to-form mapping:</p>
+<ul>
+<li class="">Registers every field via <code>useForm</code> / <code>useFormContext</code></li>
+<li class="">Applies validation rules derived from the JSON Schema</li>
+<li class="">Uses <code>Controller</code> for PrimeReact components that are not natively
+compatible with <code>register</code></li>
+<li class="">Supports nested objects via dot-notation field names</li>
+<li class="">Supports arrays via <code>useFieldArray</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="primereact-component-library">PrimeReact Component Library<a href="#primereact-component-library" class="hash-link" aria-label="Direct link to PrimeReact Component Library" title="Direct link to PrimeReact Component Library" translate="no">​</a></h3>
+<p><a href="https://primereact.org/" target="_blank" rel="noopener noreferrer" class="">PrimeReact</a> provides the component primitives.
+The component factory maps JSON Schema types to PrimeReact components.</p>
+<h4 class="anchor anchorTargetStickyNavbar_HvSE" id="widget-categories">Widget Categories<a href="#widget-categories" class="hash-link" aria-label="Direct link to Widget Categories" title="Direct link to Widget Categories" translate="no">​</a></h4>
+<p>Widgets fall into three categories, matching the ut-prime taxonomy:</p>
+<p><strong>Scalar widgets</strong> — edit or display a single primitive value:</p>
+<table><thead><tr><th>JSON Schema type / format</th><th><code>x-blong-widget</code></th><th>PrimeReact component</th></tr></thead><tbody><tr><td><code>string</code></td><td>(default)</td><td>InputText</td></tr><tr><td><code>string</code></td><td><code>password</code></td><td>Password</td></tr><tr><td><code>string</code></td><td><code>text</code></td><td>InputTextarea</td></tr><tr><td><code>string</code></td><td><code>mask</code></td><td>InputMask</td></tr><tr><td><code>string</code> + <code>date</code></td><td><code>date</code></td><td>Calendar</td></tr><tr><td><code>string</code> + <code>time</code></td><td><code>time</code></td><td>Calendar (timeOnly)</td></tr><tr><td><code>string</code> + <code>date-time</code></td><td><code>date-time</code></td><td>Calendar (showTime)</td></tr><tr><td><code>string</code> + <code>enum</code></td><td><code>dropdown</code></td><td>Dropdown</td></tr><tr><td><code>string</code> + <code>enum</code></td><td><code>dropdownTree</code></td><td>TreeSelect</td></tr><tr><td><code>string</code> + <code>enum</code></td><td><code>select</code></td><td>SelectButton</td></tr><tr><td><code>number</code></td><td><code>number</code></td><td>InputNumber</td></tr><tr><td><code>number</code></td><td><code>currency</code></td><td>InputNumber (currency)</td></tr><tr><td><code>integer</code></td><td><code>integer</code></td><td>InputNumber (integer)</td></tr><tr><td><code>boolean</code></td><td><code>boolean</code></td><td>Checkbox / ToggleButton</td></tr></tbody></table>
+<p><strong>Scalar array widgets</strong> — multi-select from a list, storing arrays of
+scalar values (typically IDs from a relational database):</p>
+<table><thead><tr><th><code>x-blong-widget</code></th><th>PrimeReact component</th></tr></thead><tbody><tr><td><code>multiSelect</code></td><td>MultiSelect</td></tr><tr><td><code>multiSelectTree</code></td><td>TreeSelect (multiple)</td></tr><tr><td><code>selectTable</code></td><td>DataTable (selectionMode: single)</td></tr><tr><td><code>multiSelectPanel</code></td><td>ListBox / PickList</td></tr><tr><td><code>multiSelectTreeTable</code></td><td>TreeTable (multiple)</td></tr></tbody></table>
+<p>All scalar array widgets require a <code>dropdown</code> reference naming the
+options list.</p>
+<p><strong>Vector array widgets</strong> — edit arrays of objects. The primary UI is a
+table with nested column widgets:</p>
+<table><thead><tr><th>JSON Schema pattern</th><th>PrimeReact component</th></tr></thead><tbody><tr><td><code>array</code> of <code>object</code> items</td><td>DataTable (editable)</td></tr><tr><td><code>array</code> + <code>x-blong-widget: table</code></td><td>DataTable with per-column widgets</td></tr></tbody></table>
+<p>Column widgets are specified via nested <code>widgets</code> arrays in the card
+definition. Each column can use any scalar widget type.</p>
+<p>Developers can override any mapping via <code>x-blong-widget</code> in the schema
+or via the interactive design editor.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="custom-widgets">Custom Widgets<a href="#custom-widgets" class="hash-link" aria-label="Direct link to Custom Widgets" title="Direct link to Custom Widgets" translate="no">​</a></h3>
+<p>When built-in widgets are not sufficient, component handlers can provide
+custom widgets via an <code>editors</code> property:</p>
+<div class="language-typescript codeBlockContainer_NJyj theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_LM5I"><pre tabindex="0" class="prism-code language-typescript codeBlock_zBfa thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_o4OG"><span class="token-line" style="color:#000000"><span class="token keyword" style="color:rgb(0, 0, 255)">function</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">Period</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">Input</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> Label</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> ErrorLabel</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">  </span><span class="token keyword" style="color:rgb(0, 0, 255)">return</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token operator" style="color:rgb(0, 0, 0)">&lt;</span><span class="token operator" style="color:rgb(0, 0, 0)">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">      </span><span class="token operator" style="color:rgb(0, 0, 0)">&lt;</span><span class="token plain">ErrorLabel</span><span class="token operator" style="color:rgb(0, 0, 0)">/</span><span class="token operator" style="color:rgb(0, 0, 0)">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">      </span><span class="token operator" style="color:rgb(0, 0, 0)">&lt;</span><span class="token plain">div className</span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token string" style="color:rgb(163, 21, 21)">&quot;field grid w-full mx-0&quot;</span><span class="token operator" style="color:rgb(0, 0, 0)">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">        </span><span class="token operator" style="color:rgb(0, 0, 0)">&lt;</span><span class="token plain">Label name</span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token string" style="color:rgb(163, 21, 21)">&quot;period&quot;</span><span class="token plain"> </span><span class="token operator" style="color:rgb(0, 0, 0)">/</span><span class="token operator" style="color:rgb(0, 0, 0)">&gt;</span><span class="token operator" style="color:rgb(0, 0, 0)">&lt;</span><span class="token plain">Input name</span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token string" style="color:rgb(163, 21, 21)">&quot;period&quot;</span><span class="token plain"> </span><span class="token operator" style="color:rgb(0, 0, 0)">/</span><span class="token operator" style="color:rgb(0, 0, 0)">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">        </span><span class="token operator" style="color:rgb(0, 0, 0)">&lt;</span><span class="token plain">Input name</span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token string" style="color:rgb(163, 21, 21)">&quot;unit&quot;</span><span class="token plain"> </span><span class="token operator" style="color:rgb(0, 0, 0)">/</span><span class="token operator" style="color:rgb(0, 0, 0)">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">      </span><span class="token operator" style="color:rgb(0, 0, 0)">&lt;</span><span class="token operator" style="color:rgb(0, 0, 0)">/</span><span class="token plain">div</span><span class="token operator" style="color:rgb(0, 0, 0)">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token operator" style="color:rgb(0, 0, 0)">&lt;</span><span class="token operator" style="color:rgb(0, 0, 0)">/</span><span class="token operator" style="color:rgb(0, 0, 0)">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">  </span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">Period</span><span class="token punctuation" style="color:rgb(4, 81, 165)">.</span><span class="token plain">properties </span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">[</span><span class="token string" style="color:rgb(163, 21, 21)">&#x27;period&#x27;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">&#x27;unit&#x27;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">]</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><br></span></code></pre></div></div>
+<p>Custom widgets:</p>
+<ul>
+<li class="">Receive <code>Input</code>, <code>Label</code> and <code>ErrorLabel</code> internal components as props,
+allowing reuse of built-in widget rendering</li>
+<li class="">Declare which properties they manage via a static <code>.properties</code> array</li>
+<li class="">Are referenced by name in the card&#x27;s <code>widgets</code> array</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="loading-states">Loading States<a href="#loading-states" class="hash-link" aria-label="Direct link to Loading States" title="Direct link to Loading States" translate="no">​</a></h3>
+<p>During data loading (<code>onGet</code>, <code>onDropdown</code>), the form displays animated
+skeleton placeholders instead of actual widgets, providing visual
+feedback without layout shifts.</p>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="pages-cards-and-layouts">Pages, Cards and Layouts<a href="#pages-cards-and-layouts" class="hash-link" aria-label="Direct link to Pages, Cards and Layouts" title="Direct link to Pages, Cards and Layouts" translate="no">​</a></h2>
+<p>The UI composition model is inspired by ut-prime&#x27;s proven card/layout
+system but driven entirely from schema metadata.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="cards">Cards<a href="#cards" class="hash-link" aria-label="Direct link to Cards" title="Direct link to Cards" translate="no">​</a></h3>
+<p>A <strong>card</strong> is a named group of fields (widgets). Each card defines:</p>
+<ul>
+<li class=""><strong><code>widgets</code></strong> — an ordered array of field names (strings) drawn from
+the schema&#x27;s properties. Nested arrays within <code>widgets</code> describe
+sub-groups for layout purposes (e.g. placing two fields side by side).</li>
+<li class=""><strong><code>label</code></strong> — optional display title for the card header.</li>
+<li class=""><strong><code>className</code></strong> — PrimeFlex CSS class for column sizing
+(e.g. <code>&#x27;lg:col-6 xl:col-4&#x27;</code>). Defaults to <code>&#x27;xl:col-6&#x27;</code> (two columns
+on large screens).</li>
+<li class=""><strong><code>hidden</code></strong> — hides the card from default rendering (useful for
+cards that are only shown in specific modes).</li>
+<li class=""><strong><code>watch</code> / <code>match</code></strong> — conditional visibility: the card is only
+rendered when a watched field value matches the <code>match</code> object.</li>
+<li class=""><strong><code>permission</code></strong> — the permission string required to render this card.</li>
+</ul>
+<p>Cards are the primary composition unit. They are defined either:</p>
+<ul>
+<li class=""><strong>In the schema</strong> via <code>x-blong-cards</code> extension, or</li>
+<li class=""><strong>In the component handler</strong> as a cards configuration object.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="layouts">Layouts<a href="#layouts" class="hash-link" aria-label="Direct link to Layouts" title="Direct link to Layouts" translate="no">​</a></h3>
+<p>A <strong>layout</strong> configures how cards are arranged on a page for a specific
+mode. Layout names follow the convention <code>{mode}{TypeName}</code>:</p>
+<ul>
+<li class=""><code>editDefault</code>, <code>createDefault</code> — standard edit/create layouts</li>
+<li class=""><code>editFoo</code>, <code>createBar</code> — type-dependent layouts (when <code>typeField</code> is
+set, the entity type selects the layout)</li>
+</ul>
+<p>Each layout can be:</p>
+<ul>
+<li class=""><strong>A simple array</strong> of card names (or nested arrays for side-by-side
+cards)</li>
+<li class=""><strong>A tabbed structure</strong> with <code>items</code> (following PrimeReact&#x27;s MenuModel
+API), <code>orientation</code> (<code>&#x27;left&#x27;</code> or <code>&#x27;top&#x27;</code>), and <code>type</code> for the tab
+navigation style</li>
+</ul>
+<p>Layout properties:</p>
+<ul>
+<li class=""><strong><code>orientation</code></strong> — tab index position (<code>&#x27;left&#x27;</code> or <code>&#x27;top&#x27;</code>)</li>
+<li class=""><strong><code>items</code></strong> — array of tab items, each with <code>label</code>, <code>icon</code> and
+<code>widgets</code> (card name array)</li>
+<li class=""><strong><code>disabled</code> / <code>enabled</code></strong> — field-level override arrays</li>
+<li class=""><strong><code>disableBack</code> / <code>hideBack</code></strong> — controls for the tab back button</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="pages">Pages<a href="#pages" class="hash-link" aria-label="Direct link to Pages" title="Direct link to Pages" translate="no">​</a></h3>
+<p>A <strong>page</strong> is a routable top-level view registered via React Router.
+Pages are defined by component handlers using the <code>handler()</code> API.
+A page typically contains one or more cards arranged according to its
+layout configuration.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="runtime-model">Runtime Model<a href="#runtime-model" class="hash-link" aria-label="Direct link to Runtime Model" title="Direct link to Runtime Model" translate="no">​</a></h3>
+<p>At runtime, the framework resolves the active layout by:</p>
+<ol>
+<li class="">Looking up <code>layouts[mode + capitalised(layoutName)]</code></li>
+<li class="">Falling back to <code>layouts[&#x27;edit&#x27; + capitalised(layoutName)]</code> if not
+found</li>
+<li class="">Resolving the card list from the layout and the card definitions</li>
+<li class="">Merging customisation overrides (schema, cards, layouts) on top of
+the defaults</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="dropdown-and-lookup-fields">Dropdown and Lookup Fields<a href="#dropdown-and-lookup-fields" class="hash-link" aria-label="Direct link to Dropdown and Lookup Fields" title="Direct link to Dropdown and Lookup Fields" translate="no">​</a></h2>
+<p>Dropdown fields are resolved through an automatic discovery workflow
+inspired by ut-prime&#x27;s <code>onDropdown</code> pattern:</p>
+<ol>
+<li class="">
+<p><strong>Discovery</strong>: When a form or table is rendered, the framework scans
+the active layout&#x27;s cards to find all fields that require dropdown
+options. This includes fields with <code>enum</code>, <code>x-blong-lookup</code>, or
+schema references to lookup entities.</p>
+</li>
+<li class="">
+<p><strong>Batch fetch</strong>: All discovered dropdown field names are collected
+into a single <code>onDropdown(fieldNames)</code> call. The handler fetches
+options for all fields in one batch and returns a <code>Dropdowns</code> map
+keyed by field name.</p>
+</li>
+<li class="">
+<p><strong>Caching</strong>: TanStack Query caches dropdown results. Subsequent
+renders reuse cached options without re-fetching.</p>
+</li>
+<li class="">
+<p><strong>Lookup fields</strong>: Fields with <code>x-blong-lookup</code> specify an API method
+name (e.g. <code>&quot;currency.currency.find&quot;</code>). The dropdown handler calls
+this method and transforms the result into <code>{label, value}</code> pairs.</p>
+</li>
+</ol>
+<p>This pattern avoids the need to manually wire every select field to its
+data source — the framework discovers and fetches all dropdown data
+automatically.</p>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="form-submission-and-dirty-state">Form Submission and Dirty State<a href="#form-submission-and-dirty-state" class="hash-link" aria-label="Direct link to Form Submission and Dirty State" title="Direct link to Form Submission and Dirty State" translate="no">​</a></h2>
+<p>Blong adopts ut-prime&#x27;s proven form submission patterns, adapted for
+TypeBox validation:</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="trigger-pattern">Trigger Pattern<a href="#trigger-pattern" class="hash-link" aria-label="Direct link to Trigger Pattern" title="Direct link to Trigger Pattern" translate="no">​</a></h3>
+<p>The <code>trigger</code> pattern controls the Save button state:</p>
+<ol>
+<li class="">The form tracks dirty state via react-hook-form&#x27;s <code>formState</code>
+(<code>isDirty</code>, <code>dirtyFields</code>, <code>isSubmitting</code>).</li>
+<li class="">When the form becomes dirty, <code>setTrigger</code> is called with a submit
+function. This enables the Save button in the toolbar.</li>
+<li class="">When the form is clean or submitting, <code>setTrigger</code> is called with
+<code>undefined</code>, disabling the Save button.</li>
+<li class="">The toolbar&#x27;s Save button calls the trigger function, which invokes
+<code>handleSubmit</code>.</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="original-value-tracking">Original Value Tracking<a href="#original-value-tracking" class="hash-link" aria-label="Direct link to Original Value Tracking" title="Direct link to Original Value Tracking" translate="no">​</a></h3>
+<ul>
+<li class="">On load, the form value is stored as <code>$original</code> — a deep clone of
+the loaded data. This allows comparing current values against the
+original for reset operations.</li>
+<li class="">A <code>$modified</code> field is set to <code>true</code> when the form is dirty, <code>false</code>
+otherwise.</li>
+<li class="">Reset restores the form to <code>$original</code> values.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="submit-flow">Submit Flow<a href="#submit-flow" class="hash-link" aria-label="Direct link to Submit Flow" title="Direct link to Submit Flow" translate="no">​</a></h3>
+<ol>
+<li class="">The submit handler receives form data and transforms it via
+<code>prepareSubmit()</code> (strips internal fields like <code>$original</code>,
+<code>$modified</code>).</li>
+<li class="">For new entities (no key value), calls <code>onAdd</code>. For existing entities,
+calls <code>onEdit</code>.</li>
+<li class="">On success, the response is merged with form data to update the form
+(e.g. server-generated IDs).</li>
+<li class="">The mode switches from <code>&#x27;create&#x27;</code> to <code>&#x27;edit&#x27;</code> after a successful add.</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="customisation-persistence">Customisation Persistence<a href="#customisation-persistence" class="hash-link" aria-label="Direct link to Customisation Persistence" title="Direct link to Customisation Persistence" translate="no">​</a></h2>
+<p>Layout customisations are persisted to the server and retrieved at
+startup:</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="api">API<a href="#api" class="hash-link" aria-label="Direct link to API" title="Direct link to API" translate="no">​</a></h3>
+<table><thead><tr><th>Method</th><th>Purpose</th></tr></thead><tbody><tr><td><code>portal.customization.get</code></td><td>Retrieve saved customisation for a component by <code>componentId</code></td></tr><tr><td><code>portal.customization.edit</code></td><td>Save customisation with <code>componentId</code> and <code>componentConfig</code></td></tr></tbody></table>
+<p>In Blong, these map to handler methods:</p>
+<ul>
+<li class=""><code>ui.customization.get({componentId})</code> → returns <code>{component: {componentConfig}}</code></li>
+<li class=""><code>ui.customization.edit({component: {componentId, componentConfig}})</code> → persists the config</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="customisation-structure">Customisation Structure<a href="#customisation-structure" class="hash-link" aria-label="Direct link to Customisation Structure" title="Direct link to Customisation Structure" translate="no">​</a></h3>
+<p>A customisation config has three sections:</p>
+<div class="language-typescript codeBlockContainer_NJyj theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_LM5I"><pre tabindex="0" class="prism-code language-typescript codeBlock_zBfa thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_o4OG"><span class="token-line" style="color:#000000"><span class="token keyword" style="color:rgb(0, 0, 255)">interface</span><span class="token plain"> </span><span class="token class-name" style="color:rgb(38, 127, 153)">Customisation</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">  schema</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> Schema</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">    </span><span class="token comment" style="color:rgb(0, 128, 0)">// Property overrides (labels, widgets, validation)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">  card</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> Cards</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">       </span><span class="token comment" style="color:rgb(0, 128, 0)">// Card overrides (field order, visibility)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">  layout</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> Layouts</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">   </span><span class="token comment" style="color:rgb(0, 128, 0)">// Layout overrides (card arrangement, tabs)</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><br></span></code></pre></div></div>
+<p>These are merged with the defaults at runtime via <code>useCustomization</code>:</p>
+<ul>
+<li class=""><code>mergedSchema = merge({}, schema, customisation.schema)</code></li>
+<li class=""><code>mergedCards = merge({}, cards, customisation.card)</code></li>
+<li class=""><code>mergedLayouts = merge({}, layouts, customisation.layout)</code></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="design-editor-flow">Design Editor Flow<a href="#design-editor-flow" class="hash-link" aria-label="Direct link to Design Editor Flow" title="Direct link to Design Editor Flow" translate="no">​</a></h3>
+<ol>
+<li class="">User activates design mode (toggles the ⚙ button)</li>
+<li class="">Cards and fields become draggable (<code>ConfigCard</code>, <code>ConfigField</code>)</li>
+<li class="">Dropping a field/card updates the local customisation state</li>
+<li class="">An Inspector panel shows properties of the inspected field or card</li>
+<li class="">User clicks Save → <code>ui.customization.edit</code> is called with the
+<code>componentId</code> and the customisation diff</li>
+<li class="">On next load, <code>ui.customization.get</code> retrieves and merges the saved
+customisation</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="internal-form-state--prefix">Internal Form State (<code>$</code> Prefix)<a href="#internal-form-state--prefix" class="hash-link" aria-label="Direct link to internal-form-state--prefix" title="Direct link to internal-form-state--prefix" translate="no">​</a></h2>
+<p>The form maintains transient internal state under a reserved <code>$</code>
+property. This state drives widget relationships without polluting the
+data submitted to the server:</p>
+<table><thead><tr><th>State path</th><th>Purpose</th></tr></thead><tbody><tr><td><code>$.selected.xxx</code></td><td>The currently selected row in table widget <code>xxx</code></td></tr><tr><td><code>$.edit.xxx</code></td><td>The row being edited in table widget <code>xxx</code></td></tr></tbody></table>
+<p>These properties are automatically stripped by <code>prepareSubmit()</code> before
+the form data is sent to the API.</p>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="advanced-ui-patterns">Advanced UI Patterns<a href="#advanced-ui-patterns" class="hash-link" aria-label="Direct link to Advanced UI Patterns" title="Direct link to Advanced UI Patterns" translate="no">​</a></h2>
+<p>Beyond basic forms and tables, the framework supports composable
+patterns for complex data relationships. These patterns are derived from
+ut-prime&#x27;s proven implementations:</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="cascaded-dropdowns">Cascaded Dropdowns<a href="#cascaded-dropdowns" class="hash-link" aria-label="Direct link to Cascaded Dropdowns" title="Direct link to Cascaded Dropdowns" translate="no">​</a></h3>
+<p>Dropdowns can be linked hierarchically so that selecting a value in one
+filters the options in the next. Each child dropdown specifies a
+<code>parent</code> property pointing to the parent field name. The dropdown data
+includes a <code>parent</code> field for each option, used for automatic filtering.</p>
+<p>Example: continent → country → city</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="cascaded-tables">Cascaded Tables<a href="#cascaded-tables" class="hash-link" aria-label="Direct link to Cascaded Tables" title="Direct link to Cascaded Tables" translate="no">​</a></h3>
+<p>Tables can be linked so that selecting a row in a parent table filters
+the rows displayed in a child table. Configuration uses <code>master</code>
+(property mapping between parent and child) and <code>parent</code> (reference to
+<code>$.selected.xxx</code>). Child tables use <code>hidden</code> columns for relational
+fields that drive the cascade.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="master-detail">Master-Detail<a href="#master-detail" class="hash-link" aria-label="Direct link to Master-Detail" title="Direct link to Master-Detail" translate="no">​</a></h3>
+<p>A detail card displays or edits the selected row from a table:</p>
+<ul>
+<li class="">The detail card sets <code>watch: &#x27;$.selected.person&#x27;</code></li>
+<li class="">Edit widgets reference <code>$.edit.person.fullName</code>,
+<code>$.edit.person.birthDate</code>, etc.</li>
+<li class="">Changes to the edit widgets update the row in the parent array</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="static-pivot">Static Pivot<a href="#static-pivot" class="hash-link" aria-label="Direct link to Static Pivot" title="Direct link to Static Pivot" translate="no">​</a></h3>
+<p>Pre-populates a table with static reference data (e.g. weekdays) and
+joins it with the data array. Configured via:</p>
+<ul>
+<li class=""><code>pivot.examples</code> — the static data rows</li>
+<li class=""><code>pivot.join</code> — property mapping between static data and array items</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="dynamic-pivot">Dynamic Pivot<a href="#dynamic-pivot" class="hash-link" aria-label="Direct link to Dynamic Pivot" title="Direct link to Dynamic Pivot" translate="no">​</a></h3>
+<p>Pre-populates a table with data from a dropdown list and joins it with
+the data array. Configured via:</p>
+<ul>
+<li class=""><code>pivot.dropdown</code> — the dropdown list name</li>
+<li class=""><code>pivot.join</code> — maps <code>value</code>/<code>label</code> from the list to array properties</li>
+</ul>
+<p>Example: a permission matrix joining entities (from dropdown) with
+boolean permission flags (from the data array).</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="polymorphic-layout">Polymorphic Layout<a href="#polymorphic-layout" class="hash-link" aria-label="Direct link to Polymorphic Layout" title="Direct link to Polymorphic Layout" translate="no">​</a></h3>
+<p>Different object types can display different widgets. Setting
+<code>typeField</code> on the component causes it to look up a layout named
+<code>edit{TypeValue}</code> or <code>create{TypeValue}</code> based on the data. Falls back
+from <code>createXyz</code> to <code>editXyz</code> to <code>create</code> to <code>edit</code>.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="polymorphic-master-detail">Polymorphic Master-Detail<a href="#polymorphic-master-detail" class="hash-link" aria-label="Direct link to Polymorphic Master-Detail" title="Direct link to Polymorphic Master-Detail" translate="no">​</a></h3>
+<p>Combines master-detail with polymorphic card visibility. Multiple detail
+cards are included in the layout; each has a <code>watch</code> and <code>match</code>
+property. Only the card whose <code>match</code> equals the selected row&#x27;s type
+value is rendered.</p>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="page-naming-conventions">Page Naming Conventions<a href="#page-naming-conventions" class="hash-link" aria-label="Direct link to Page Naming Conventions" title="Direct link to Page Naming Conventions" translate="no">​</a></h2>
+<p>Component handlers follow the <code>subject.object.predicate</code> naming pattern.
+Standard page types:</p>
+<table><thead><tr><th>Pattern</th><th>Purpose</th></tr></thead><tbody><tr><td><code>subject.object.browse</code></td><td>Collection view — table with search, filters, pagination</td></tr><tr><td><code>subject.object.new</code></td><td>Create new entity — form in create mode</td></tr><tr><td><code>subject.object.open</code></td><td>View/edit existing entity — receives <code>{id}</code> prop</td></tr><tr><td><code>subject.object.report</code></td><td>Simple report — filters + read-only table</td></tr><tr><td><code>subject.report.open</code></td><td>Advanced report within a subject module</td></tr></tbody></table>
+<p>These conventions enable automatic menu generation and consistent URL
+routing. When a model is defined, all standard pages are available
+without additional wiring.</p>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="portal-and-menu-configuration">Portal and Menu Configuration<a href="#portal-and-menu-configuration" class="hash-link" aria-label="Direct link to Portal and Menu Configuration" title="Direct link to Portal and Menu Configuration" translate="no">​</a></h2>
+<p>A <strong>portal</strong> is the top-level browser application that combines realms
+into a navigable UI. The portal defines:</p>
+<ul>
+<li class=""><strong>Theme</strong> — PrimeReact design tokens, dark/light mode</li>
+<li class=""><strong>Portal name</strong> — displayed in the header</li>
+<li class=""><strong>Menu structure</strong> — array of <code>{title, items}</code> groups</li>
+</ul>
+<p>Each menu item is created from a component handler reference using
+<code>portalMenuItem(component$subjectObjectBrowse)</code>, which extracts the
+handler&#x27;s <code>title</code> and <code>permission</code> to build the menu entry.</p>
+<p>Component handler definitions return:</p>
+<div class="language-typescript codeBlockContainer_NJyj theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_LM5I"><pre tabindex="0" class="prism-code language-typescript codeBlock_zBfa thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_o4OG"><span class="token-line" style="color:#000000"><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">  title</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">&#x27;Entity list&#x27;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain">           </span><span class="token comment" style="color:rgb(0, 128, 0)">// Default menu/tab title</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">  permission</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">&#x27;subject.object.browse&#x27;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain">  </span><span class="token comment" style="color:rgb(0, 128, 0)">// Required permission</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">  </span><span class="token function-variable function" style="color:rgb(0, 0, 255)">component</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">id</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token plain"> </span><span class="token operator" style="color:rgb(0, 0, 0)">=&gt;</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">function</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">EntityBrowse</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"> </span><span class="token operator" style="color:rgb(0, 0, 0)">...</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><br></span></code></pre></div></div>
+<p>The <code>component</code> function can be async, allowing lazy loading and
+pre-fetching of data before returning the React component.</p>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="file-upload">File Upload<a href="#file-upload" class="hash-link" aria-label="Direct link to File Upload" title="Direct link to File Upload" translate="no">​</a></h2>
+<p>The browser platform supports file upload by switching from
+<code>application/json</code> to <code>multipart/form-data</code>:</p>
+<ul>
+<li class="">Regular form properties are serialized as a single JSON part with
+name <code>$</code></li>
+<li class="">File properties are serialized individually with path-based names
+(e.g. <code>$.document.documentIcon</code>, <code>$.page.0.attachment</code>)</li>
+<li class="">The server handler receives file objects with <code>originalFilename</code>,
+<code>headers</code> and temp file <code>filename</code></li>
+<li class="">File widgets in the schema use <code>x-blong-widget: file</code> and validation
+specifies the file type constraint</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="state-management">State Management<a href="#state-management" class="hash-link" aria-label="Direct link to State Management" title="Direct link to State Management" translate="no">​</a></h2>
+<p>Browser-side state is managed through:</p>
+<ul>
+<li class=""><strong>react-hook-form</strong> for form state (field values, validation, dirty
+tracking)</li>
+<li class=""><strong>React Query / TanStack Query</strong> for server state (caching, refetching,
+optimistic updates, pagination)</li>
+<li class=""><strong>React Context</strong> for cross-cutting concerns (theme, locale,
+authentication tokens, permissions)</li>
+<li class=""><strong>URL state</strong> via React Router for navigation and deep linking</li>
+</ul>
+<p>There is deliberately no global state store (Redux, Zustand, etc.). The
+combination of react-hook-form + React Query covers the vast majority of
+use cases with less boilerplate.</p>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="authentication-and-permissions">Authentication and Permissions<a href="#authentication-and-permissions" class="hash-link" aria-label="Direct link to Authentication and Permissions" title="Direct link to Authentication and Permissions" translate="no">​</a></h2>
+<p>The browser platform integrates with <code>@feasibleone/blong-login</code>:</p>
+<ol>
+<li class="">On start, the <code>backend</code> adapter calls <code>login.token.create</code> to obtain
+a JWT.</li>
+<li class="">The JWT is stored in memory (not localStorage) and attached to every
+subsequent JSON-RPC request via the <code>Authorization</code> header.</li>
+<li class="">The JWT payload includes a permission bitmap. Component handlers
+inspect permissions to conditionally render actions (e.g. hide the
+&quot;Delete&quot; button when the user lacks the <code>remove</code> permission).</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="build-toolchain">Build Toolchain<a href="#build-toolchain" class="hash-link" aria-label="Direct link to Build Toolchain" title="Direct link to Build Toolchain" translate="no">​</a></h2>
+<p>The browser platform uses <strong>Vite</strong> as the bundler and dev server:</p>
+<ul>
+<li class="">Hot Module Replacement (HMR) for instant feedback during development</li>
+<li class="">Tree-shaking and code-splitting for production builds</li>
+<li class="">Native ESM support — no CommonJS compatibility layer needed</li>
+<li class="">TypeScript and JSX/TSX support out of the box</li>
+</ul>
+<p>Vite replaces the server-side <code>chokidar</code> watch mechanism. The
+framework&#x27;s <code>Watch</code> class is only active on the server; in the browser,
+Vite&#x27;s HMR handles live reloading.</p>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="testing">Testing<a href="#testing" class="hash-link" aria-label="Direct link to Testing" title="Direct link to Testing" translate="no">​</a></h2>
+<table><thead><tr><th>Tool</th><th>Purpose</th></tr></thead><tbody><tr><td><strong>Storybook</strong></td><td>Component development in isolation. Each component handler can export a Storybook story alongside the component.</td></tr><tr><td><strong>Chromatic</strong></td><td>Visual regression testing of Storybook stories in CI.</td></tr><tr><td><strong>Playwright</strong></td><td>End-to-end browser tests. Playwright tests run against the full Blong server + browser stack.</td></tr></tbody></table>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="storybook-with-mocked-apis">Storybook with Mocked APIs<a href="#storybook-with-mocked-apis" class="hash-link" aria-label="Direct link to Storybook with Mocked APIs" title="Direct link to Storybook with Mocked APIs" translate="no">​</a></h3>
+<p>Storybook stories can run without a real server by providing mocked API
+responses. A helper function creates a mock application context:</p>
+<div class="language-typescript codeBlockContainer_NJyj theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_LM5I"><pre tabindex="0" class="prism-code language-typescript codeBlock_zBfa thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_o4OG"><span class="token-line" style="color:#000000"><span class="token keyword" style="color:rgb(0, 0, 255)">import</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">app</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">from</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">&#x27;blong-ui/storybook&#x27;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token keyword" style="color:rgb(0, 0, 255)">const</span><span class="token plain"> page </span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">app</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">  implementation</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">&#x27;myApp&#x27;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">  </span><span class="token string-property property">&#x27;subject.object.fetch&#x27;</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token plain"> </span><span class="token operator" style="color:rgb(0, 0, 0)">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">object</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">[</span><span class="token operator" style="color:rgb(0, 0, 0)">...</span><span class="token punctuation" style="color:rgb(4, 81, 165)">]</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">  </span><span class="token string-property property">&#x27;subject.object.get&#x27;</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token plain"> </span><span class="token operator" style="color:rgb(0, 0, 0)">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">object</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token operator" style="color:rgb(0, 0, 0)">...</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">[</span><span class="token function" style="color:rgb(0, 0, 255)">portal</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">]</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">const</span><span class="token plain"> EntityBrowse </span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">page</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token string" style="color:rgb(163, 21, 21)">&#x27;subject.object.browse&#x27;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">const</span><span class="token plain"> EntityOpen </span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">page</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token string" style="color:rgb(163, 21, 21)">&#x27;subject.object.open&#x27;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><br></span></code></pre></div></div>
+<p>Mocks should include enough varied data to test long texts, pagination,
+multi-language labels and edge cases.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="chromatic-visual-regression">Chromatic Visual Regression<a href="#chromatic-visual-regression" class="hash-link" aria-label="Direct link to Chromatic Visual Regression" title="Direct link to Chromatic Visual Regression" translate="no">​</a></h3>
+<p>During CI builds, Chromatic captures screenshots of every Storybook
+story and compares them against the baseline. The workflow:</p>
+<ol>
+<li class="">Build triggers Chromatic publish</li>
+<li class="">If visual changes are detected, git commits show pending checks</li>
+<li class="">Reviewers use Chromatic&#x27;s visual diff tool to approve or deny changes</li>
+<li class="">Chromatic also hosts the published Storybook as online documentation</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="playwright-end-to-end-tests">Playwright End-to-End Tests<a href="#playwright-end-to-end-tests" class="hash-link" aria-label="Direct link to Playwright End-to-End Tests" title="Direct link to Playwright End-to-End Tests" translate="no">​</a></h3>
+<p>Playwright tests run against the full Blong server + browser stack:</p>
+<ul>
+<li class=""><strong>Test isolation</strong>: Each test script runs with a unique user (auto-
+generated credentials), enabling parallel execution without session
+conflicts.</li>
+<li class=""><strong>Widget identification</strong>: Use <code>data-testid=&quot;xxx&quot;</code> attributes and
+form input names <code>input[name=&quot;xxx&quot;]</code> as stable locators.</li>
+<li class=""><strong>Screenshot matching</strong>: <code>expect(page.screenshot()).toMatchSnapshot()</code>
+captures and compares screenshots. Screenshots must be taken on the
+same OS/browser used in CI (Chromium on Linux).</li>
+<li class=""><strong>Trace on failure</strong>: Failed tests are retried with Playwright tracing
+enabled. Traces include timeline, network requests, browser console
+and DOM snapshots. Trace files can be inspected at
+<a href="https://trace.playwright.dev" target="_blank" rel="noopener noreferrer" class="">Playwright Trace</a>.</li>
+<li class=""><strong>Test generator</strong>: <code>npx playwright codegen {url}</code> records user
+interactions and generates test scripts as a starting point.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="module-loading-in-the-browser">Module Loading in the Browser<a href="#module-loading-in-the-browser" class="hash-link" aria-label="Direct link to Module Loading in the Browser" title="Direct link to Module Loading in the Browser" translate="no">​</a></h2>
+<p>On the server, the framework discovers handlers by scanning the file
+system (<code>readdir</code>, <code>chokidar</code>). This is not available in the browser.
+Instead:</p>
+<ul>
+<li class=""><strong>At build time</strong>, Vite resolves all <code>import()</code> calls statically. Each
+realm&#x27;s <code>browser.ts</code> entry explicitly lists its children, so the
+import graph is known.</li>
+<li class=""><strong>Dynamic metadata</strong> (OpenAPI schemas, layout configuration) is
+fetched over HTTP at runtime from the server gateway.</li>
+<li class=""><strong>Handler registration</strong> follows the same pattern as on the server —
+handlers are registered in the local registry and dispatched via
+<code>Remote</code> — but file-system scanning is replaced by explicit imports in
+each layer&#x27;s entry point.</li>
+</ul></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/concepts/architecture"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Architecture</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/concepts/checkpoint"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Checkpoint</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_pAbt thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#core-idea" class="table-of-contents__link toc-highlight">Core Idea</a></li><li><a href="#layers-in-the-browser" class="table-of-contents__link toc-highlight">Layers in the Browser</a></li><li><a href="#metadata-driven-component-generation" class="table-of-contents__link toc-highlight">Metadata-Driven Component Generation</a><ul><li><a href="#schema-discovery" class="table-of-contents__link toc-highlight">Schema Discovery</a></li><li><a href="#component-factory" class="table-of-contents__link toc-highlight">Component Factory</a></li><li><a href="#react-hook-form-integration" class="table-of-contents__link toc-highlight">react-hook-form Integration</a></li><li><a href="#primereact-component-library" class="table-of-contents__link toc-highlight">PrimeReact Component Library</a></li><li><a href="#custom-widgets" class="table-of-contents__link toc-highlight">Custom Widgets</a></li><li><a href="#loading-states" class="table-of-contents__link toc-highlight">Loading States</a></li></ul></li><li><a href="#pages-cards-and-layouts" class="table-of-contents__link toc-highlight">Pages, Cards and Layouts</a><ul><li><a href="#cards" class="table-of-contents__link toc-highlight">Cards</a></li><li><a href="#layouts" class="table-of-contents__link toc-highlight">Layouts</a></li><li><a href="#pages" class="table-of-contents__link toc-highlight">Pages</a></li><li><a href="#runtime-model" class="table-of-contents__link toc-highlight">Runtime Model</a></li></ul></li><li><a href="#dropdown-and-lookup-fields" class="table-of-contents__link toc-highlight">Dropdown and Lookup Fields</a></li><li><a href="#form-submission-and-dirty-state" class="table-of-contents__link toc-highlight">Form Submission and Dirty State</a><ul><li><a href="#trigger-pattern" class="table-of-contents__link toc-highlight">Trigger Pattern</a></li><li><a href="#original-value-tracking" class="table-of-contents__link toc-highlight">Original Value Tracking</a></li><li><a href="#submit-flow" class="table-of-contents__link toc-highlight">Submit Flow</a></li></ul></li><li><a href="#customisation-persistence" class="table-of-contents__link toc-highlight">Customisation Persistence</a><ul><li><a href="#api" class="table-of-contents__link toc-highlight">API</a></li><li><a href="#customisation-structure" class="table-of-contents__link toc-highlight">Customisation Structure</a></li><li><a href="#design-editor-flow" class="table-of-contents__link toc-highlight">Design Editor Flow</a></li></ul></li><li><a href="#internal-form-state--prefix" class="table-of-contents__link toc-highlight">Internal Form State (<code>$</code> Prefix)</a></li><li><a href="#advanced-ui-patterns" class="table-of-contents__link toc-highlight">Advanced UI Patterns</a><ul><li><a href="#cascaded-dropdowns" class="table-of-contents__link toc-highlight">Cascaded Dropdowns</a></li><li><a href="#cascaded-tables" class="table-of-contents__link toc-highlight">Cascaded Tables</a></li><li><a href="#master-detail" class="table-of-contents__link toc-highlight">Master-Detail</a></li><li><a href="#static-pivot" class="table-of-contents__link toc-highlight">Static Pivot</a></li><li><a href="#dynamic-pivot" class="table-of-contents__link toc-highlight">Dynamic Pivot</a></li><li><a href="#polymorphic-layout" class="table-of-contents__link toc-highlight">Polymorphic Layout</a></li><li><a href="#polymorphic-master-detail" class="table-of-contents__link toc-highlight">Polymorphic Master-Detail</a></li></ul></li><li><a href="#page-naming-conventions" class="table-of-contents__link toc-highlight">Page Naming Conventions</a></li><li><a href="#portal-and-menu-configuration" class="table-of-contents__link toc-highlight">Portal and Menu Configuration</a></li><li><a href="#file-upload" class="table-of-contents__link toc-highlight">File Upload</a></li><li><a href="#state-management" class="table-of-contents__link toc-highlight">State Management</a></li><li><a href="#authentication-and-permissions" class="table-of-contents__link toc-highlight">Authentication and Permissions</a></li><li><a href="#build-toolchain" class="table-of-contents__link toc-highlight">Build Toolchain</a></li><li><a href="#testing" class="table-of-contents__link toc-highlight">Testing</a><ul><li><a href="#storybook-with-mocked-apis" class="table-of-contents__link toc-highlight">Storybook with Mocked APIs</a></li><li><a href="#chromatic-visual-regression" class="table-of-contents__link toc-highlight">Chromatic Visual Regression</a></li><li><a href="#playwright-end-to-end-tests" class="table-of-contents__link toc-highlight">Playwright End-to-End Tests</a></li></ul></li><li><a href="#module-loading-in-the-browser" class="table-of-contents__link toc-highlight">Module Loading in the Browser</a></li></ul></div></div></div></div></main></div></div></div></div>
+</body>
+</html>

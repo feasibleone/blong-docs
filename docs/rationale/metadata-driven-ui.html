@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-rationale/metadata-driven-ui" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.9.2">
+<title data-rh="true">Metadata-Driven UI | Blong</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="http://blong.feasible.one/img/blong-social-card.jpg"><meta data-rh="true" name="twitter:image" content="http://blong.feasible.one/img/blong-social-card.jpg"><meta data-rh="true" property="og:url" content="http://blong.feasible.one/docs/rationale/metadata-driven-ui"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Metadata-Driven UI | Blong"><meta data-rh="true" name="description" content="Problem"><meta data-rh="true" property="og:description" content="Problem"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="http://blong.feasible.one/docs/rationale/metadata-driven-ui"><link data-rh="true" rel="alternate" href="http://blong.feasible.one/docs/rationale/metadata-driven-ui" hreflang="en"><link data-rh="true" rel="alternate" href="http://blong.feasible.one/docs/rationale/metadata-driven-ui" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Rationale","item":"http://blong.feasible.one/docs/category/rationale"},{"@type":"ListItem","position":2,"name":"Metadata-Driven UI","item":"http://blong.feasible.one/docs/rationale/metadata-driven-ui"}]}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Blong RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Blong Atom Feed">
+
+
+
+
+<link rel="icon" sizes="32x32" href="img/manta32.png">
+<link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.1dece19a.css">
+<script src="/assets/js/runtime~main.b0032005.js" defer="defer"></script>
+<script src="/assets/js/main.90f59099.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||"light"),document.documentElement.setAttribute("data-theme-choice",t||"light")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><link rel="preload" as="image" href="/img/manta200.png"><div role="region" aria-label="Skip to main content"><a class="skipToContent_IlsH" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/"><div class="navbar__logo"><img src="/img/manta200.png" alt="Blong Logo" class="themedComponent_ZkrZ themedComponent--light_R3K2"><img src="/img/manta200.png" alt="Blong Logo" class="themedComponent_ZkrZ themedComponent--dark_XCbF"></div><b class="navbar__title text--truncate">Blong</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/docs/intro">Docs</a><a class="navbar__item navbar__link" href="/blog">Blog</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a href="https://github.com/feasibleone/blong" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_VfdW"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_de98 colorModeToggle_ZUmf"><button class="clean-btn toggleButton_CmOh toggleButtonDisabled_UxKf" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_C1nR lightToggleIcon_YITt"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_C1nR darkToggleIcon_pPda"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_C1nR systemToggleIcon_r_WW"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_f4h8"></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_G10U"><div class="docsWrapper_B3Lf"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_rB2q" type="button"></button><div class="docRoot_Xd1f"><aside class="theme-doc-sidebar-container docSidebarContainer_Kzjj"><div class="sidebarViewport_L2GY"><div class="sidebar_JWvH"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_FcT4"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/intro"><span title="Getting started" class="linkLabel_BlrG">Getting started</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_Tnbm menu__link menu__link--sublist menu__link--active" href="/docs/category/rationale"><span title="Rationale" class="categoryLinkLabel_D884">Rationale</span></a><button aria-label="Collapse sidebar category &#x27;Rationale&#x27;" aria-expanded="true" type="button" class="clean-btn menu__caret"></button></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/rationale/config-hot-reload"><span title="Configuration Hot Reload" class="linkLabel_BlrG">Configuration Hot Reload</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/rationale/error-proxy"><span title="Error Proxy System" class="linkLabel_BlrG">Error Proxy System</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/rationale/goals"><span title="Goals" class="linkLabel_BlrG">Goals</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/docs/rationale/metadata-driven-ui"><span title="Metadata-Driven UI" class="linkLabel_BlrG">Metadata-Driven UI</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/rationale/prior"><span title="Prior Art" class="linkLabel_BlrG">Prior Art</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/rationale/rationale-misalignment-todo"><span title="Rationale Misalignment TODO" class="linkLabel_BlrG">Rationale Misalignment TODO</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/rationale/real-time-log"><span title="Real-Time Log" class="linkLabel_BlrG">Real-Time Log</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/rationale/snapshot-testing"><span title="Snapshot Testing" class="linkLabel_BlrG">Snapshot Testing</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/rationale/test-rerun-diagnostics"><span title="Test Rerun with Diagnostics" class="linkLabel_BlrG">Test Rerun with Diagnostics</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/rationale/unified-handler-test"><span title="Unified Handler-Test Concept" class="linkLabel_BlrG">Unified Handler-Test Concept</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_Tnbm menu__link menu__link--sublist" href="/docs/category/concepts"><span title="Concepts" class="categoryLinkLabel_D884">Concepts</span></a><button aria-label="Expand sidebar category &#x27;Concepts&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_Tnbm menu__link menu__link--sublist" href="/docs/category/patterns"><span title="Patterns" class="categoryLinkLabel_D884">Patterns</span></a><button aria-label="Expand sidebar category &#x27;Patterns&#x27;" aria-expanded="false" type="button" class="clean-btn menu__caret"></button></div></li></ul></nav></div></div></aside><main class="docMainContainer_mHlX"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_ajdp"><div class="docItemContainer_gz7p"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_Bn9s" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_raq9"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><a class="breadcrumbs__link" href="/docs/category/rationale"><span>Rationale</span></a></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Metadata-Driven UI</span></li></ul></nav><div class="tocCollapsible_tTLy theme-doc-toc-mobile tocMobile_qgEr"><button type="button" class="clean-btn tocCollapsibleButton_VNmn">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Metadata-Driven UI</h1></header>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="problem">Problem<a href="#problem" class="hash-link" aria-label="Direct link to Problem" title="Direct link to Problem" translate="no">​</a></h2>
+<p>Building user interfaces for data-centric applications involves a large
+amount of repetitive work. For every API endpoint a developer must create
+a form, a table, a detail view — each with field labels, validation
+rules, formatters and layout. When the API changes (a new field, a
+renamed property, a tighter constraint), the UI must be updated in
+lockstep. This is error-prone, slow and expensive.</p>
+<p>Enterprise applications make the problem worse: they may have hundreds of
+entities, each with dozens of fields, multiple CRUD operations and
+role-based visibility rules. Writing bespoke React components for every
+screen does not scale.</p>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="prior-art-ut-prime-and-ut-model">Prior Art: ut-prime and ut-model<a href="#prior-art-ut-prime-and-ut-model" class="hash-link" aria-label="Direct link to Prior Art: ut-prime and ut-model" title="Direct link to Prior Art: ut-prime and ut-model" translate="no">​</a></h2>
+<p>The <a href="https://github.com/softwaregroup-bg/ut-prime" target="_blank" rel="noopener noreferrer" class="">UT framework</a>
+addressed this problem with a metadata-driven approach:</p>
+<ul>
+<li class="">
+<p><strong>ut-model</strong> defined declarative &quot;models&quot; — JavaScript objects that
+described pages, cards, fields and their relationships. Each model
+referenced API methods by name and described how the request/response
+properties should map to UI elements (columns, form fields, filters).</p>
+</li>
+<li class="">
+<p><strong>ut-prime</strong> consumed these models and translated them into a live
+React UI built on PrimeReact. It provided:</p>
+<ul>
+<li class="">Automatic form generation from models</li>
+<li class="">Automatic table generation with sorting, filtering and pagination</li>
+<li class="">An interactive <strong>design editor</strong> that allowed non-developers to
+rearrange fields, change widget types and persist the layout</li>
+<li class="">A component library (<code>Editor</code>, <code>Explorer</code>, <code>Inspector</code>, <code>Report</code>)
+that combined forms, tables and toolbars into standard CRUD patterns</li>
+</ul>
+</li>
+<li class="">
+<p>The result was that adding a new entity to the UI often required
+nothing more than defining a model and the corresponding API handlers.
+The framework took care of rendering.</p>
+</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="what-ut-prime-got-right">What ut-prime Got Right<a href="#what-ut-prime-got-right" class="hash-link" aria-label="Direct link to What ut-prime Got Right" title="Direct link to What ut-prime Got Right" translate="no">​</a></h3>
+<p>A review of ut-prime&#x27;s source code reveals a sophisticated and
+well-designed system that Blong should learn from, not just replace:</p>
+<ol>
+<li class="">
+<p><strong>react-hook-form integration</strong>: ut-prime already uses react-hook-form
+with <code>FormProvider</code>, <code>useForm</code>, <code>@hookform/resolvers/joi</code> for
+validation, and <code>@hookform/devtools</code> for debugging. The Form component
+uses <code>handleSubmit</code>, <code>formState</code> (errors, isDirty, isSubmitting,
+dirtyFields), <code>watch</code>, <code>setError</code>, <code>clearErrors</code> and <code>reset</code>. This is
+a mature integration — Blong replaces the Joi resolver with a
+TypeBox/JSON Schema resolver but keeps the same react-hook-form
+patterns.</p>
+</li>
+<li class="">
+<p><strong>Cards and layouts model</strong>: ut-prime has a rich composition model:</p>
+<ul>
+<li class=""><strong>Cards</strong> are named groups of fields (<code>widgets</code> arrays) with
+<code>label</code>, <code>className</code> for layout control, <code>hidden</code>, <code>watch</code>/<code>match</code>
+for conditional visibility, and <code>permission</code> for access control.</li>
+<li class=""><strong>Layouts</strong> are named configurations keyed by mode
+(<code>editDefault</code>, <code>createFoo</code>, etc.) supporting tabbed navigation
+(<code>ThumbIndex</code>), <code>orientation</code> (left/top), nested <code>items</code> following
+PrimeReact&#x27;s MenuModel API, and <code>disabled</code>/<code>enabled</code> field lists.</li>
+<li class="">The <code>useCustomization</code> hook merges default schema, cards and
+layouts with per-component customisations at runtime.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Design editor</strong>: The drag-and-drop design editor (<code>ConfigField</code>,
+<code>ConfigCard</code>, <code>Inspector</code>) allows rearranging fields between cards,
+adding/removing cards from layouts, and inspecting/editing individual
+field and card properties — all with live preview.</p>
+</li>
+<li class="">
+<p><strong>Dropdown workflow</strong>: Dropdown field names are discovered
+automatically from the schema/layout via <code>fieldNames()</code>. The
+<code>onDropdown</code> callback is called with the discovered names and returns
+a <code>Dropdowns</code> map. This avoids manual wiring of every select field.</p>
+</li>
+<li class="">
+<p><strong>Form submission pattern</strong>: ut-prime uses a <code>trigger</code> pattern —
+<code>setTrigger</code> sets a callback when the form is dirty, which the
+toolbar&#x27;s Save button calls. The submit function receives a 3-element
+tuple <code>[formData, layoutState.index, event]</code>. <code>prepareSubmit</code>
+transforms form data before sending to the API. The form tracks
+<code>$original</code> (snapshot of loaded data) and <code>$modified</code> (dirty flag).</p>
+</li>
+<li class="">
+<p><strong>Customisation persistence</strong>: Layout customisations are persisted via
+<code>portal.customization.edit</code> and retrieved via
+<code>portal.customization.get</code>, keyed by <code>componentId</code>. The stored
+config has <code>schema</code>, <code>card</code> and <code>layout</code> sections that are merged
+with the defaults at runtime.</p>
+</li>
+<li class="">
+<p><strong>Three widget categories</strong>: ut-prime classifies widgets into three
+categories that cover virtually all data-entry needs:</p>
+<ul>
+<li class=""><strong>Scalar</strong>: primitive-value widgets — input, password, text,
+mask, number, currency, integer, boolean, date, time, datetime,
+dropdown, dropdownTree, select.</li>
+<li class=""><strong>Scalar array</strong>: multi-select widgets backed by a list —
+multiSelect, multiSelectTree, selectTable, multiSelectPanel,
+multiSelectTreeTable. These represent arrays of scalar values
+(e.g. selected IDs from a relational database).</li>
+<li class=""><strong>Vector array</strong>: table widgets that edit arrays of objects. Columns
+are defined by nested <code>widgets</code> arrays.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Advanced UI patterns</strong>: ut-prime implements a family of composable
+patterns for complex data relationships:</p>
+<ul>
+<li class=""><strong>Cascaded dropdowns</strong> — a <code>parent</code> property on dropdown widgets
+links them hierarchically (e.g. continent → country → city).
+Dropdown data includes a <code>parent</code> field for automatic filtering.</li>
+<li class=""><strong>Cascaded tables</strong> — <code>master</code> and <code>parent</code> properties configure
+parent-child table filtering via <code>$.selected.xxx</code> form state.</li>
+<li class=""><strong>Master-detail</strong> — a detail card with <code>watch: &#x27;$.selected.xxx&#x27;</code>
+edits the selected table row. Edit widgets reference
+<code>$.edit.xxx.propertyName</code> from internal form state.</li>
+<li class=""><strong>Static pivot</strong> — pre-populates a table with static data (e.g.
+weekdays) via <code>pivot.examples</code> + <code>pivot.join</code>.</li>
+<li class=""><strong>Dynamic pivot</strong> — pre-populates a table with dropdown list data
+via <code>pivot.dropdown</code> + <code>pivot.join</code> (e.g. permission matrix).</li>
+<li class=""><strong>Polymorphic layout</strong> — a <code>typeField</code> property selects layouts
+dynamically based on the data type (e.g. <code>editPerson</code> vs
+<code>editOrganization</code>). Falls back from <code>createXyz</code> to <code>editXyz</code>.</li>
+<li class=""><strong>Polymorphic master-detail</strong> — combines master-detail with
+polymorphic card visibility via <code>watch</code>/<code>match</code>.</li>
+</ul>
+</li>
+<li class="">
+<p><strong>Custom widget escape hatch</strong>: An <code>editors</code> property on the Editor
+allows passing custom React components as widgets. Each receives
+<code>Input</code>, <code>Label</code>, <code>ErrorLabel</code> internal components as props and
+declares its properties via a static <code>.properties</code> array.</p>
+</li>
+<li class="">
+<p><strong>Internal form state with <code>$</code> prefix</strong>: The Editor maintains
+transient state under the <code>$</code> property — <code>$.edit.xxx</code> for the
+currently edited table row, <code>$.selected.xxx</code> for the selected row.
+These properties are automatically excluded during form submission.</p>
+</li>
+<li class="">
+<p><strong>File upload</strong>: ut-prime supports file upload by switching from
+<code>application/json</code> to <code>multipart/form-data</code>. Regular properties are
+serialized as a single JSON with name <code>$</code>; file properties are
+serialized individually with path-based names
+(e.g. <code>$.document.documentIcon</code>). The server handler receives objects
+with <code>originalFilename</code>, <code>headers</code> and temp file <code>filename</code>.</p>
+</li>
+<li class="">
+<p><strong>Portal menu structure</strong>: Portals define their menu via a
+<code>portal.params.get</code> handler returning <code>{theme, portalName, menu}</code>.
+Menu items are arrays of <code>{title, items}</code> using
+<code>portalMenuItem(component$xxx)</code>. Component handlers follow
+<code>subject.object.predicate</code> naming: <code>.browse</code> for lists, <code>.new</code> for
+creation, <code>.open</code> for editing (receives <code>{id}</code> prop).</p>
+</li>
+</ol>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="lessons-learned">Lessons Learned<a href="#lessons-learned" class="hash-link" aria-label="Direct link to Lessons Learned" title="Direct link to Lessons Learned" translate="no">​</a></h3>
+<p>While ut-prime proved the concept and contains genuinely good patterns,
+there are areas where Blong can improve:</p>
+<ol>
+<li class="">
+<p><strong>Separate model layer</strong>: ut-model defines models in a custom DSL-like
+JavaScript format, separate from both the API schema and the React
+components. This introduces a third source of truth alongside the
+TypeBox/OpenAPI schema and the handler types.</p>
+</li>
+<li class="">
+<p><strong>Joi-based validation</strong>: ut-prime uses <code>@hookform/resolvers/joi</code> for
+form validation. Blong uses TypeBox everywhere, so the resolver should
+use JSON Schema / TypeBox directly — eliminating the need for Joi as a
+dependency.</p>
+</li>
+<li class="">
+<p><strong>Older PrimeReact version</strong>: The component mappings target an older
+PrimeReact API. Newer versions have improved accessibility,
+unstyled mode and design token support.</p>
+</li>
+<li class="">
+<p><strong>Bundle size</strong>: The build used Webpack with limited tree-shaking. All
+components were bundled even if unused.</p>
+</li>
+<li class="">
+<p><strong>Runtime overhead</strong>: Models were resolved at runtime through multiple
+layers of merging and indirection, making debugging harder.</p>
+</li>
+<li class="">
+<p><strong>CI/CD</strong>: Jenkins pipelines were used; GitHub Actions offer tighter
+integration with the source repository.</p>
+</li>
+<li class="">
+<p><strong>JSS styling</strong>: ut-prime uses <code>react-jss</code> (JSS) for styling. Modern
+PrimeReact with unstyled mode and design tokens removes the need for
+a separate CSS-in-JS library.</p>
+</li>
+</ol>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="solution">Solution<a href="#solution" class="hash-link" aria-label="Direct link to Solution" title="Direct link to Solution" translate="no">​</a></h2>
+<p>Blong derives UI metadata directly from the <strong>TypeBox schemas</strong> that server-side
+handlers already define. Those schemas flow through to the OpenAPI document, and
+the UI reads that document to generate forms, tables, and validation rules
+automatically. The key principle: <strong>the TypeBox type written for a handler is
+the model</strong> — no separate model layer is needed.</p>
+<p>Implementation lives in <code>core/blong-ui</code>:</p>
+<ul>
+<li class=""><strong><code>FieldResolver.tsx</code></strong> — derives <code>widget</code>, <code>label</code>, <code>required</code>, <code>options</code>,
+and <code>x-blong-*</code> extensions from each JSON Schema property.</li>
+<li class=""><strong><code>FormFactory.tsx</code></strong> — takes the full OpenAPI schema + card/layout config
+and generates a <code>react-hook-form</code> form validated by the TypeBox resolver.</li>
+</ul>
+<div class="language-typescript codeBlockContainer_NJyj theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_LM5I"><pre tabindex="0" class="prism-code language-typescript codeBlock_zBfa thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_o4OG"><span class="token-line" style="color:#000000"><span class="token comment" style="color:rgb(0, 128, 0)">// FieldResolver.tsx — field metadata derived directly from the OpenAPI schema</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">interface</span><span class="token plain"> </span><span class="token class-name" style="color:rgb(38, 127, 153)">ResolvedField</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    name</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">    label</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">   widget</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    hidden</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">boolean</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> order</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">number</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">   group</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    required</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">boolean</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> readOnly</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">boolean</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    placeholder</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> tooltip</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    options</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> DropdownOption</span><span class="token punctuation" style="color:rgb(4, 81, 165)">[</span><span class="token punctuation" style="color:rgb(4, 81, 165)">]</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">           </span><span class="token comment" style="color:rgb(0, 128, 0)">// for select widgets, from enum</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    mask</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">  currency</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">  lookup</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    componentProps</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> Record</span><span class="token operator" style="color:rgb(0, 0, 0)">&lt;</span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">unknown</span><span class="token operator" style="color:rgb(0, 0, 0)">&gt;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">  </span><span class="token comment" style="color:rgb(0, 128, 0)">// x-blong-* extensions</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    schema</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> BlongSchemaProperty</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">          </span><span class="token comment" style="color:rgb(0, 128, 0)">// raw property from OpenAPI schema</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">function</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">resolveField</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token plain">name</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> property</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> requiredFields</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> ResolvedField </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token keyword" style="color:rgb(0, 0, 255)">const</span><span class="token plain"> widget </span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">resolveWidgetType</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token plain">property</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> </span><span class="token comment" style="color:rgb(0, 128, 0)">// from x-blong-widget or type</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token comment" style="color:rgb(0, 128, 0)">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><br></span></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="blongs-approach">Blong&#x27;s Approach<a href="#blongs-approach" class="hash-link" aria-label="Direct link to Blong&#x27;s Approach" title="Direct link to Blong&#x27;s Approach" translate="no">​</a></h2>
+<p>Blong improves on the ut-prime/ut-model concept by:</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="1-single-source-of-truth-openapi--typebox">1. Single Source of Truth: OpenAPI + TypeBox<a href="#1-single-source-of-truth-openapi--typebox" class="hash-link" aria-label="Direct link to 1. Single Source of Truth: OpenAPI + TypeBox" title="Direct link to 1. Single Source of Truth: OpenAPI + TypeBox" translate="no">​</a></h3>
+<p>Instead of a separate model layer, Blong derives UI metadata directly
+from the <strong>OpenAPI schema</strong> that the server already generates from
+TypeBox types. The schema contains:</p>
+<ul>
+<li class="">Property names, types, formats, constraints</li>
+<li class="">Descriptions and titles (used as labels)</li>
+<li class="">Required fields (used for validation)</li>
+<li class="">Enums (used for dropdowns)</li>
+<li class="">Extension fields (<code>x-blong-*</code>) for UI-specific hints that have no
+equivalent in standard JSON Schema</li>
+</ul>
+<p>This eliminates the need for ut-model&#x27;s custom model definitions. The
+TypeBox types that developers write for their handlers <strong>are</strong> the model.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="2-typebox-resolver-instead-of-joi">2. TypeBox Resolver Instead of Joi<a href="#2-typebox-resolver-instead-of-joi" class="hash-link" aria-label="Direct link to 2. TypeBox Resolver Instead of Joi" title="Direct link to 2. TypeBox Resolver Instead of Joi" translate="no">​</a></h3>
+<p>ut-prime already uses react-hook-form — so Blong does not need to
+introduce it. What Blong changes is the <strong>validation resolver</strong>: instead
+of <code>@hookform/resolvers/joi</code>, Blong uses a TypeBox / JSON Schema
+resolver so that the same TypeBox types that define the server handlers
+also drive browser-side form validation. This eliminates Joi as a
+dependency entirely.</p>
+<p>All generated components use functional React with hooks:</p>
+<ul>
+<li class=""><strong>react-hook-form</strong> manages form state, validation and submission
+(same as ut-prime, but with TypeBox resolver instead of Joi).</li>
+<li class=""><strong>React Query (TanStack Query)</strong> manages server state — caching,
+background refetching, optimistic updates and pagination. This
+replaces ut-prime&#x27;s custom per-component data loading.</li>
+<li class=""><strong>React Context</strong> replaces the need for a global store for
+cross-cutting concerns (auth, theme, locale).</li>
+<li class=""><strong>React Router</strong> handles client-side navigation with URL-based state.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="3-latest-primereact">3. Latest PrimeReact<a href="#3-latest-primereact" class="hash-link" aria-label="Direct link to 3. Latest PrimeReact" title="Direct link to 3. Latest PrimeReact" translate="no">​</a></h3>
+<p>Blong targets the current PrimeReact release, taking advantage of:</p>
+<ul>
+<li class=""><strong>Unstyled mode</strong> with design tokens — allows full theming without
+CSS overrides</li>
+<li class=""><strong>Pass-through props</strong> — fine-grained control over every DOM element</li>
+<li class=""><strong>Improved accessibility</strong> — WCAG 2.1 compliance out of the box</li>
+<li class=""><strong>Smaller bundle</strong> — unused components are tree-shaken by Vite</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="4-vite-toolchain">4. Vite Toolchain<a href="#4-vite-toolchain" class="hash-link" aria-label="Direct link to 4. Vite Toolchain" title="Direct link to 4. Vite Toolchain" translate="no">​</a></h3>
+<p>Vite replaces Webpack and provides:</p>
+<ul>
+<li class="">Instant HMR during development (no full rebuilds)</li>
+<li class="">Native ESM — the same module format Blong uses on the server</li>
+<li class="">Automatic code-splitting per route</li>
+<li class="">First-class TypeScript and JSX support</li>
+<li class="">Plugin ecosystem for SSR, PWA, etc. if needed later</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="5-extension-fields-for-ui-hints">5. Extension Fields for UI Hints<a href="#5-extension-fields-for-ui-hints" class="hash-link" aria-label="Direct link to 5. Extension Fields for UI Hints" title="Direct link to 5. Extension Fields for UI Hints" translate="no">​</a></h3>
+<p>Standard JSON Schema is not enough to describe every UI concern. Blong
+defines a set of <code>x-blong-*</code> extension fields that can be added to any
+schema property:</p>
+<table><thead><tr><th>Extension</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td><code>x-blong-widget</code></td><td>Override the default widget</td><td><code>&quot;x-blong-widget&quot;: &quot;richtext&quot;</code></td></tr><tr><td><code>x-blong-hidden</code></td><td>Hide from default views</td><td><code>&quot;x-blong-hidden&quot;: true</code></td></tr><tr><td><code>x-blong-order</code></td><td>Display order in forms/tables</td><td><code>&quot;x-blong-order&quot;: 5</code></td></tr><tr><td><code>x-blong-group</code></td><td>Group fields into sections</td><td><code>&quot;x-blong-group&quot;: &quot;address&quot;</code></td></tr><tr><td><code>x-blong-column</code></td><td>Table column configuration</td><td><code>&quot;x-blong-column&quot;: {&quot;width&quot;: 120, &quot;sortable&quot;: true}</code></td></tr><tr><td><code>x-blong-lookup</code></td><td>Populate dropdown from another API</td><td><code>&quot;x-blong-lookup&quot;: &quot;currency.currency.find&quot;</code></td></tr></tbody></table>
+<p>These extensions are set in the TypeBox schema (using <code>x-blong-*</code> custom
+keywords) and flow through to the OpenAPI document without any extra
+configuration.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="6-interactive-design-editor-improved">6. Interactive Design Editor (Improved)<a href="#6-interactive-design-editor-improved" class="hash-link" aria-label="Direct link to 6. Interactive Design Editor (Improved)" title="Direct link to 6. Interactive Design Editor (Improved)" translate="no">​</a></h3>
+<p>The design editor from ut-prime is retained and improved:</p>
+<ul>
+<li class=""><strong>Drag-and-drop</strong> card rearrangement on a page grid</li>
+<li class=""><strong>Field visibility</strong> toggle per role</li>
+<li class=""><strong>Widget type</strong> selector with live preview</li>
+<li class=""><strong>Validation rule</strong> editor (min, max, pattern, custom)</li>
+<li class=""><strong>Layout persistence</strong> — saved to the server as JSON, keyed by
+page + role</li>
+<li class=""><strong>Undo/redo</strong> support</li>
+<li class=""><strong>Diff view</strong> — compare the customised layout against the default
+schema-derived layout</li>
+</ul>
+<p>The editor is implemented as a Blong <code>component</code> layer that is only
+active when the <code>design</code> configuration activation is present.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="7-component-patterns">7. Component Patterns<a href="#7-component-patterns" class="hash-link" aria-label="Direct link to 7. Component Patterns" title="Direct link to 7. Component Patterns" translate="no">​</a></h3>
+<p>Blong defines four standard component patterns (analogous to ut-prime&#x27;s
+Editor, Explorer, Inspector, Report):</p>
+<table><thead><tr><th>Pattern</th><th>Description</th></tr></thead><tbody><tr><td><strong>FormCard</strong></td><td>A card wrapping a react-hook-form form generated from a request schema. Used for create/edit operations.</td></tr><tr><td><strong>TableCard</strong></td><td>A card wrapping a PrimeReact DataTable generated from a response array schema. Used for list/search operations.</td></tr><tr><td><strong>DetailCard</strong></td><td>A read-only card displaying a single entity.</td></tr><tr><td><strong>ReportCard</strong></td><td>A card combining filters, a table and optional charts.</td></tr></tbody></table>
+<p>Developers can use these patterns directly or let the component factory
+create them automatically from the OpenAPI schema.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="8-no-legacy-compatibility-burden">8. No Legacy Compatibility Burden<a href="#8-no-legacy-compatibility-burden" class="hash-link" aria-label="Direct link to 8. No Legacy Compatibility Burden" title="Direct link to 8. No Legacy Compatibility Burden" translate="no">​</a></h3>
+<p>ut-prime had to co-exist with older UT modules that used different
+patterns (Backbone, Angular, etc.). Blong has no such constraint. This
+allows:</p>
+<ul>
+<li class="">A cleaner component API without adaptation layers</li>
+<li class="">Consistent use of ESM throughout</li>
+<li class="">No polyfills for older browsers (targeting evergreen browsers)</li>
+<li class="">Simpler handler signatures that match the server-side pattern</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="trade-offs">Trade-offs<a href="#trade-offs" class="hash-link" aria-label="Direct link to Trade-offs" title="Direct link to Trade-offs" translate="no">​</a></h2>
+<ul>
+<li class=""><strong>Runtime schema fetching</strong> adds a network round-trip at startup. This
+is mitigated by caching and by bundling a schema snapshot for
+production builds.</li>
+<li class=""><strong>Extension fields</strong> (<code>x-blong-*</code>) are not part of the OpenAPI
+standard. They are valid per the specification&#x27;s extension mechanism,
+but third-party tools may ignore them.</li>
+<li class=""><strong>Generated UIs are generic</strong>. Highly custom screens still need
+hand-written components. The goal is to cover the 80 % of CRUD screens
+automatically and provide escape hatches for the remaining 20 %.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_HvSE" id="future-ideas">Future Ideas<a href="#future-ideas" class="hash-link" aria-label="Direct link to Future Ideas" title="Direct link to Future Ideas" translate="no">​</a></h2>
+<ol>
+<li class="">
+<p><strong>AI-assisted schema annotation</strong> — provide a tool that inspects handler
+signatures and TypeBox schemas and suggests <code>x-blong-*</code> annotations (widget
+types, labels, group names, lookup references). A developer reviews and
+accepts suggestions rather than writing annotations manually, reducing the
+time to a working UI to near zero for new handlers.</p>
+</li>
+<li class="">
+<p><strong>Schema diff UI notifications</strong> — when a deployed handler&#x27;s OpenAPI schema
+changes (new field, removed field, type narrowed), show a UI notification to
+developers that specific screens may need layout review. This closes the gap
+between server-side changes and UI updates without requiring manual
+synchronization.</p>
+</li>
+<li class="">
+<p><strong>Progressive disclosure via <code>x-blong-reveal-when</code></strong> — extend the layout
+model to support conditional card visibility based on form field values
+(e.g., show the &quot;Wire Transfer Details&quot; card only when <code>paymentMethod</code> is
+<code>&#x27;wire&#x27;</code>). This reduces form complexity for users without requiring custom
+React components for each conditional layout.</p>
+</li>
+</ol></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/rationale/goals"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Goals</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/rationale/prior"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Prior Art</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_pAbt thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#problem" class="table-of-contents__link toc-highlight">Problem</a></li><li><a href="#prior-art-ut-prime-and-ut-model" class="table-of-contents__link toc-highlight">Prior Art: ut-prime and ut-model</a><ul><li><a href="#what-ut-prime-got-right" class="table-of-contents__link toc-highlight">What ut-prime Got Right</a></li><li><a href="#lessons-learned" class="table-of-contents__link toc-highlight">Lessons Learned</a></li></ul></li><li><a href="#solution" class="table-of-contents__link toc-highlight">Solution</a></li><li><a href="#blongs-approach" class="table-of-contents__link toc-highlight">Blong&#39;s Approach</a><ul><li><a href="#1-single-source-of-truth-openapi--typebox" class="table-of-contents__link toc-highlight">1. Single Source of Truth: OpenAPI + TypeBox</a></li><li><a href="#2-typebox-resolver-instead-of-joi" class="table-of-contents__link toc-highlight">2. TypeBox Resolver Instead of Joi</a></li><li><a href="#3-latest-primereact" class="table-of-contents__link toc-highlight">3. Latest PrimeReact</a></li><li><a href="#4-vite-toolchain" class="table-of-contents__link toc-highlight">4. Vite Toolchain</a></li><li><a href="#5-extension-fields-for-ui-hints" class="table-of-contents__link toc-highlight">5. Extension Fields for UI Hints</a></li><li><a href="#6-interactive-design-editor-improved" class="table-of-contents__link toc-highlight">6. Interactive Design Editor (Improved)</a></li><li><a href="#7-component-patterns" class="table-of-contents__link toc-highlight">7. Component Patterns</a></li><li><a href="#8-no-legacy-compatibility-burden" class="table-of-contents__link toc-highlight">8. No Legacy Compatibility Burden</a></li></ul></li><li><a href="#trade-offs" class="table-of-contents__link toc-highlight">Trade-offs</a></li><li><a href="#future-ideas" class="table-of-contents__link toc-highlight">Future Ideas</a></li></ul></div></div></div></div></main></div></div></div></div>
+</body>
+</html>
