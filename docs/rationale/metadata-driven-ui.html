@@ -11,8 +11,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.1dece19a.css">
-<script src="/assets/js/runtime~main.b0032005.js" defer="defer"></script>
-<script src="/assets/js/main.90f59099.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.6709746f.js" defer="defer"></script>
+<script src="/assets/js/main.ae39a78f.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <svg style="display: none;"><defs>
@@ -30,6 +30,12 @@ lockstep. This is error-prone, slow and expensive.</p>
 entities, each with dozens of fields, multiple CRUD operations and
 role-based visibility rules. Writing bespoke React components for every
 screen does not scale.</p>
+<p>For how this vision is realised in blong-ui see:</p>
+<ul>
+<li class=""><a class="" href="/docs/concepts/browser-ui">Browser UI</a> — concept</li>
+<li class=""><a class="" href="/docs/concepts/blong-ui-model">blong-ui Model</a> — concept</li>
+<li class=""><a class="" href="/docs/patterns/blong-ui">blong-ui Pattern</a> — how-to guide</li>
+</ul>
 <h2 class="anchor anchorTargetStickyNavbar_HvSE" id="prior-art-ut-prime-and-ut-model">Prior Art: ut-prime and ut-model<a href="#prior-art-ut-prime-and-ut-model" class="hash-link" aria-label="Direct link to Prior Art: ut-prime and ut-model" title="Direct link to Prior Art: ut-prime and ut-model" translate="no">​</a></h2>
 <p>The <a href="https://github.com/softwaregroup-bg/ut-prime" target="_blank" rel="noopener noreferrer" class="">UT framework</a>
 addressed this problem with a metadata-driven approach:</p>
@@ -225,14 +231,11 @@ handlers already define. Those schemas flow through to the OpenAPI document, and
 the UI reads that document to generate forms, tables, and validation rules
 automatically. The key principle: <strong>the TypeBox type written for a handler is
 the model</strong> — no separate model layer is needed.</p>
-<p>Implementation lives in <code>core/blong-ui</code>:</p>
-<ul>
-<li class=""><strong><code>FieldResolver.tsx</code></strong> — derives <code>widget</code>, <code>label</code>, <code>required</code>, <code>options</code>,
-and <code>x-blong-*</code> extensions from each JSON Schema property.</li>
-<li class=""><strong><code>FormFactory.tsx</code></strong> — takes the full OpenAPI schema + card/layout config
-and generates a <code>react-hook-form</code> form validated by the TypeBox resolver.</li>
-</ul>
-<div class="language-typescript codeBlockContainer_NJyj theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_LM5I"><pre tabindex="0" class="prism-code language-typescript codeBlock_zBfa thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_o4OG"><span class="token-line" style="color:#000000"><span class="token comment" style="color:rgb(0, 128, 0)">// FieldResolver.tsx — field metadata derived directly from the OpenAPI schema</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">interface</span><span class="token plain"> </span><span class="token class-name" style="color:rgb(38, 127, 153)">ResolvedField</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    name</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">    label</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">   widget</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    hidden</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">boolean</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> order</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">number</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">   group</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    required</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">boolean</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> readOnly</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">boolean</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    placeholder</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> tooltip</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    options</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> DropdownOption</span><span class="token punctuation" style="color:rgb(4, 81, 165)">[</span><span class="token punctuation" style="color:rgb(4, 81, 165)">]</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">           </span><span class="token comment" style="color:rgb(0, 128, 0)">// for select widgets, from enum</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    mask</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">  currency</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">  lookup</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    componentProps</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> Record</span><span class="token operator" style="color:rgb(0, 0, 0)">&lt;</span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">unknown</span><span class="token operator" style="color:rgb(0, 0, 0)">&gt;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">  </span><span class="token comment" style="color:rgb(0, 128, 0)">// x-blong-* extensions</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    schema</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> BlongSchemaProperty</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain">          </span><span class="token comment" style="color:rgb(0, 128, 0)">// raw property from OpenAPI schema</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">function</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">resolveField</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token plain">name</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> property</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> requiredFields</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> ResolvedField </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token keyword" style="color:rgb(0, 0, 255)">const</span><span class="token plain"> widget </span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">resolveWidgetType</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token plain">property</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> </span><span class="token comment" style="color:rgb(0, 128, 0)">// from x-blong-widget or type</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token comment" style="color:rgb(0, 128, 0)">// ...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><br></span></code></pre></div></div>
+<p>The implementation (<code>core/blong-ui</code>) contains a schema registry that fetches and
+enriches per-subject OpenAPI documents at runtime, a widget resolution layer that
+maps JSON Schema types and extension fields to PrimeReact components, and four
+high-level page components (Editor, Explorer, Report, and their model-driven
+counterparts) that build complete CRUD screens from the enriched schema.</p>
 <h2 class="anchor anchorTargetStickyNavbar_HvSE" id="blongs-approach">Blong&#x27;s Approach<a href="#blongs-approach" class="hash-link" aria-label="Direct link to Blong&#x27;s Approach" title="Direct link to Blong&#x27;s Approach" translate="no">​</a></h2>
 <p>Blong improves on the ut-prime/ut-model concept by:</p>
 <h3 class="anchor anchorTargetStickyNavbar_HvSE" id="1-single-source-of-truth-openapi--typebox">1. Single Source of Truth: OpenAPI + TypeBox<a href="#1-single-source-of-truth-openapi--typebox" class="hash-link" aria-label="Direct link to 1. Single Source of Truth: OpenAPI + TypeBox" title="Direct link to 1. Single Source of Truth: OpenAPI + TypeBox" translate="no">​</a></h3>
@@ -244,11 +247,16 @@ TypeBox types. The schema contains:</p>
 <li class="">Descriptions and titles (used as labels)</li>
 <li class="">Required fields (used for validation)</li>
 <li class="">Enums (used for dropdowns)</li>
-<li class="">Extension fields (<code>x-blong-*</code>) for UI-specific hints that have no
-equivalent in standard JSON Schema</li>
+<li class="">Extension fields (<code>x-widget</code>, <code>x-filter</code>, <code>x-sort</code>, <code>x-hidden</code>) for
+UI-specific hints that have no equivalent in standard JSON Schema</li>
 </ul>
 <p>This eliminates the need for ut-model&#x27;s custom model definitions. The
 TypeBox types that developers write for their handlers <strong>are</strong> the model.</p>
+<p>A thin <strong>browser-side overlay</strong> (<code>IModelSpec</code>) can enrich the server
+schema with display hints and dropdown references that the server does
+not need to know about. This is how realms add per-object UI details
+without server changes. The overlay does not replace the server schema —
+it augments it.</p>
 <h3 class="anchor anchorTargetStickyNavbar_HvSE" id="2-typebox-resolver-instead-of-joi">2. TypeBox Resolver Instead of Joi<a href="#2-typebox-resolver-instead-of-joi" class="hash-link" aria-label="Direct link to 2. TypeBox Resolver Instead of Joi" title="Direct link to 2. TypeBox Resolver Instead of Joi" translate="no">​</a></h3>
 <p>ut-prime already uses react-hook-form — so Blong does not need to
 introduce it. What Blong changes is the <strong>validation resolver</strong>: instead
@@ -256,80 +264,67 @@ of <code>@hookform/resolvers/joi</code>, Blong uses a TypeBox / JSON Schema
 resolver so that the same TypeBox types that define the server handlers
 also drive browser-side form validation. This eliminates Joi as a
 dependency entirely.</p>
-<p>All generated components use functional React with hooks:</p>
+<p>The technology stack is:</p>
 <ul>
-<li class=""><strong>react-hook-form</strong> manages form state, validation and submission
-(same as ut-prime, but with TypeBox resolver instead of Joi).</li>
-<li class=""><strong>React Query (TanStack Query)</strong> manages server state — caching,
-background refetching, optimistic updates and pagination. This
-replaces ut-prime&#x27;s custom per-component data loading.</li>
-<li class=""><strong>React Context</strong> replaces the need for a global store for
-cross-cutting concerns (auth, theme, locale).</li>
-<li class=""><strong>React Router</strong> handles client-side navigation with URL-based state.</li>
+<li class=""><strong>react-hook-form</strong> — form state, validation and submission</li>
+<li class=""><strong>TanStack Query</strong> — server state caching (used inside the browser
+adapter layer only, never imported directly in UI components)</li>
+<li class=""><strong>Zustand</strong> — lightweight global portal and auth state</li>
+<li class=""><strong>PrimeReact</strong> — component library providing all rendered widgets</li>
 </ul>
 <h3 class="anchor anchorTargetStickyNavbar_HvSE" id="3-latest-primereact">3. Latest PrimeReact<a href="#3-latest-primereact" class="hash-link" aria-label="Direct link to 3. Latest PrimeReact" title="Direct link to 3. Latest PrimeReact" translate="no">​</a></h3>
-<p>Blong targets the current PrimeReact release, taking advantage of:</p>
-<ul>
-<li class=""><strong>Unstyled mode</strong> with design tokens — allows full theming without
-CSS overrides</li>
-<li class=""><strong>Pass-through props</strong> — fine-grained control over every DOM element</li>
-<li class=""><strong>Improved accessibility</strong> — WCAG 2.1 compliance out of the box</li>
-<li class=""><strong>Smaller bundle</strong> — unused components are tree-shaken by Vite</li>
-</ul>
+<p>Blong targets the current PrimeReact release, taking advantage of
+CSS-variable theming, improved accessibility, pass-through props, and
+tree-shakeable bundles via Vite.</p>
 <h3 class="anchor anchorTargetStickyNavbar_HvSE" id="4-vite-toolchain">4. Vite Toolchain<a href="#4-vite-toolchain" class="hash-link" aria-label="Direct link to 4. Vite Toolchain" title="Direct link to 4. Vite Toolchain" translate="no">​</a></h3>
-<p>Vite replaces Webpack and provides:</p>
+<p>Vite replaces Webpack and provides instant HMR, native ESM (the same
+module format used on the server), automatic code-splitting, and
+first-class TypeScript support.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="5-two-level-schema-enrichment">5. Two-Level Schema Enrichment<a href="#5-two-level-schema-enrichment" class="hash-link" aria-label="Direct link to 5. Two-Level Schema Enrichment" title="Direct link to 5. Two-Level Schema Enrichment" translate="no">​</a></h3>
+<p>Metadata flows through two levels:</p>
+<ol>
+<li class="">
+<p><strong>Server level</strong> — TypeBox schemas generate an OpenAPI document at
+<code>GET /rpc/{subject}/openapi.json</code>. Standard JSON Schema
+properties (type, format, enum, required, title) describe the data.
+Server-side UI hints (<code>x-filter</code>, <code>x-sort</code>, <code>x-widget</code>, <code>x-hidden</code>)
+communicate display preferences from the owner of the API.</p>
+</li>
+<li class="">
+<p><strong>Browser level</strong> — a browser-side <code>IModelSpec</code> overlay adds or
+overrides field metadata (widget type, dropdown references, card
+groupings, layout configuration) without any server change. These
+overrides are compiled into the realm&#x27;s component handler.</p>
+</li>
+</ol>
+<p>This layering lets server teams define clean TypeBox schemas and browser
+teams tune visual presentation independently.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="6-interactive-design-editor">6. Interactive Design Editor<a href="#6-interactive-design-editor" class="hash-link" aria-label="Direct link to 6. Interactive Design Editor" title="Direct link to 6. Interactive Design Editor" translate="no">​</a></h3>
+<p>The design editor from ut-prime is retained as a first-class feature:</p>
 <ul>
-<li class="">Instant HMR during development (no full rebuilds)</li>
-<li class="">Native ESM — the same module format Blong uses on the server</li>
-<li class="">Automatic code-splitting per route</li>
-<li class="">First-class TypeScript and JSX support</li>
-<li class="">Plugin ecosystem for SSR, PWA, etc. if needed later</li>
+<li class="">Drag-and-drop card rearrangement on a page grid</li>
+<li class="">Field visibility toggle per role</li>
+<li class="">Widget type selector with live preview</li>
+<li class="">Layout persistence — saved to the server keyed by page and tenant</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="5-extension-fields-for-ui-hints">5. Extension Fields for UI Hints<a href="#5-extension-fields-for-ui-hints" class="hash-link" aria-label="Direct link to 5. Extension Fields for UI Hints" title="Direct link to 5. Extension Fields for UI Hints" translate="no">​</a></h3>
-<p>Standard JSON Schema is not enough to describe every UI concern. Blong
-defines a set of <code>x-blong-*</code> extension fields that can be added to any
-schema property:</p>
-<table><thead><tr><th>Extension</th><th>Purpose</th><th>Example</th></tr></thead><tbody><tr><td><code>x-blong-widget</code></td><td>Override the default widget</td><td><code>&quot;x-blong-widget&quot;: &quot;richtext&quot;</code></td></tr><tr><td><code>x-blong-hidden</code></td><td>Hide from default views</td><td><code>&quot;x-blong-hidden&quot;: true</code></td></tr><tr><td><code>x-blong-order</code></td><td>Display order in forms/tables</td><td><code>&quot;x-blong-order&quot;: 5</code></td></tr><tr><td><code>x-blong-group</code></td><td>Group fields into sections</td><td><code>&quot;x-blong-group&quot;: &quot;address&quot;</code></td></tr><tr><td><code>x-blong-column</code></td><td>Table column configuration</td><td><code>&quot;x-blong-column&quot;: {&quot;width&quot;: 120, &quot;sortable&quot;: true}</code></td></tr><tr><td><code>x-blong-lookup</code></td><td>Populate dropdown from another API</td><td><code>&quot;x-blong-lookup&quot;: &quot;currency.currency.find&quot;</code></td></tr></tbody></table>
-<p>These extensions are set in the TypeBox schema (using <code>x-blong-*</code> custom
-keywords) and flow through to the OpenAPI document without any extra
-configuration.</p>
-<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="6-interactive-design-editor-improved">6. Interactive Design Editor (Improved)<a href="#6-interactive-design-editor-improved" class="hash-link" aria-label="Direct link to 6. Interactive Design Editor (Improved)" title="Direct link to 6. Interactive Design Editor (Improved)" translate="no">​</a></h3>
-<p>The design editor from ut-prime is retained and improved:</p>
-<ul>
-<li class=""><strong>Drag-and-drop</strong> card rearrangement on a page grid</li>
-<li class=""><strong>Field visibility</strong> toggle per role</li>
-<li class=""><strong>Widget type</strong> selector with live preview</li>
-<li class=""><strong>Validation rule</strong> editor (min, max, pattern, custom)</li>
-<li class=""><strong>Layout persistence</strong> — saved to the server as JSON, keyed by
-page + role</li>
-<li class=""><strong>Undo/redo</strong> support</li>
-<li class=""><strong>Diff view</strong> — compare the customised layout against the default
-schema-derived layout</li>
-</ul>
-<p>The editor is implemented as a Blong <code>component</code> layer that is only
-active when the <code>design</code> configuration activation is present.</p>
-<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="7-component-patterns">7. Component Patterns<a href="#7-component-patterns" class="hash-link" aria-label="Direct link to 7. Component Patterns" title="Direct link to 7. Component Patterns" translate="no">​</a></h3>
-<p>Blong defines four standard component patterns (analogous to ut-prime&#x27;s
-Editor, Explorer, Inspector, Report):</p>
-<table><thead><tr><th>Pattern</th><th>Description</th></tr></thead><tbody><tr><td><strong>FormCard</strong></td><td>A card wrapping a react-hook-form form generated from a request schema. Used for create/edit operations.</td></tr><tr><td><strong>TableCard</strong></td><td>A card wrapping a PrimeReact DataTable generated from a response array schema. Used for list/search operations.</td></tr><tr><td><strong>DetailCard</strong></td><td>A read-only card displaying a single entity.</td></tr><tr><td><strong>ReportCard</strong></td><td>A card combining filters, a table and optional charts.</td></tr></tbody></table>
-<p>Developers can use these patterns directly or let the component factory
-create them automatically from the OpenAPI schema.</p>
-<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="8-no-legacy-compatibility-burden">8. No Legacy Compatibility Burden<a href="#8-no-legacy-compatibility-burden" class="hash-link" aria-label="Direct link to 8. No Legacy Compatibility Burden" title="Direct link to 8. No Legacy Compatibility Burden" translate="no">​</a></h3>
-<p>ut-prime had to co-exist with older UT modules that used different
-patterns (Backbone, Angular, etc.). Blong has no such constraint. This
-allows:</p>
-<ul>
-<li class="">A cleaner component API without adaptation layers</li>
-<li class="">Consistent use of ESM throughout</li>
-<li class="">No polyfills for older browsers (targeting evergreen browsers)</li>
-<li class="">Simpler handler signatures that match the server-side pattern</li>
-</ul>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="7-micro-frontend-model">7. Micro-Frontend Model<a href="#7-micro-frontend-model" class="hash-link" aria-label="Direct link to 7. Micro-Frontend Model" title="Direct link to 7. Micro-Frontend Model" translate="no">​</a></h3>
+<p>Realms contribute pages, actions, and portal configuration without
+importing each other&#x27;s code. The portal orchestrator discovers component
+handlers by file-name convention (<code>*.component</code>, <code>*.actions</code>, <code>*.portal</code>)
+and wires them through the handler namespace — the same mechanism used
+for server-side inter-realm communication.</p>
+<h3 class="anchor anchorTargetStickyNavbar_HvSE" id="8-model-driven-crud-factory">8. Model-Driven CRUD Factory<a href="#8-model-driven-crud-factory" class="hash-link" aria-label="Direct link to 8. Model-Driven CRUD Factory" title="Direct link to 8. Model-Driven CRUD Factory" translate="no">​</a></h3>
+<p>For the common 80 % of CRUD screens, the <code>createModelHandlers()</code>
+function accepts an array of <code>IModelSpec</code> objects and automatically
+generates Browse / New / Open / Report pages for each entity.
+This eliminates the need to write individual page components for standard
+list/edit workflows.</p>
 <h2 class="anchor anchorTargetStickyNavbar_HvSE" id="trade-offs">Trade-offs<a href="#trade-offs" class="hash-link" aria-label="Direct link to Trade-offs" title="Direct link to Trade-offs" translate="no">​</a></h2>
 <ul>
 <li class=""><strong>Runtime schema fetching</strong> adds a network round-trip at startup. This
-is mitigated by caching and by bundling a schema snapshot for
-production builds.</li>
-<li class=""><strong>Extension fields</strong> (<code>x-blong-*</code>) are not part of the OpenAPI
+is mitigated by per-subject caching and by the option to bundle schema
+snapshots for production builds.</li>
+<li class=""><strong>Extension fields</strong> (<code>x-widget</code>, etc.) are not part of the OpenAPI
 standard. They are valid per the specification&#x27;s extension mechanism,
 but third-party tools may ignore them.</li>
 <li class=""><strong>Generated UIs are generic</strong>. Highly custom screens still need
@@ -339,26 +334,23 @@ automatically and provide escape hatches for the remaining 20 %.</li>
 <h2 class="anchor anchorTargetStickyNavbar_HvSE" id="future-ideas">Future Ideas<a href="#future-ideas" class="hash-link" aria-label="Direct link to Future Ideas" title="Direct link to Future Ideas" translate="no">​</a></h2>
 <ol>
 <li class="">
-<p><strong>AI-assisted schema annotation</strong> — provide a tool that inspects handler
-signatures and TypeBox schemas and suggests <code>x-blong-*</code> annotations (widget
-types, labels, group names, lookup references). A developer reviews and
-accepts suggestions rather than writing annotations manually, reducing the
-time to a working UI to near zero for new handlers.</p>
+<p><strong>AI-assisted schema annotation</strong> — a tool that inspects handler
+signatures and TypeBox schemas and suggests <code>x-widget</code> annotations.
+A developer reviews and accepts suggestions rather than writing
+annotations manually.</p>
 </li>
 <li class="">
-<p><strong>Schema diff UI notifications</strong> — when a deployed handler&#x27;s OpenAPI schema
-changes (new field, removed field, type narrowed), show a UI notification to
-developers that specific screens may need layout review. This closes the gap
-between server-side changes and UI updates without requiring manual
-synchronization.</p>
+<p><strong>Schema diff notifications</strong> — when a deployed handler&#x27;s OpenAPI
+schema changes, notify developers that specific screens may need
+layout review, closing the gap between server-side changes and UI
+updates.</p>
 </li>
 <li class="">
-<p><strong>Progressive disclosure via <code>x-blong-reveal-when</code></strong> — extend the layout
-model to support conditional card visibility based on form field values
-(e.g., show the &quot;Wire Transfer Details&quot; card only when <code>paymentMethod</code> is
-<code>&#x27;wire&#x27;</code>). This reduces form complexity for users without requiring custom
-React components for each conditional layout.</p>
+<p><strong>Progressive disclosure</strong> — conditional card visibility based on
+form field values (e.g., show the &quot;Wire Transfer Details&quot; card only
+when <code>paymentMethod</code> is <code>&#x27;wire&#x27;</code>), reducing form complexity without
+custom React code.</p>
 </li>
-</ol></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/rationale/goals"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Goals</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/rationale/prior"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Prior Art</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_pAbt thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#problem" class="table-of-contents__link toc-highlight">Problem</a></li><li><a href="#prior-art-ut-prime-and-ut-model" class="table-of-contents__link toc-highlight">Prior Art: ut-prime and ut-model</a><ul><li><a href="#what-ut-prime-got-right" class="table-of-contents__link toc-highlight">What ut-prime Got Right</a></li><li><a href="#lessons-learned" class="table-of-contents__link toc-highlight">Lessons Learned</a></li></ul></li><li><a href="#solution" class="table-of-contents__link toc-highlight">Solution</a></li><li><a href="#blongs-approach" class="table-of-contents__link toc-highlight">Blong&#39;s Approach</a><ul><li><a href="#1-single-source-of-truth-openapi--typebox" class="table-of-contents__link toc-highlight">1. Single Source of Truth: OpenAPI + TypeBox</a></li><li><a href="#2-typebox-resolver-instead-of-joi" class="table-of-contents__link toc-highlight">2. TypeBox Resolver Instead of Joi</a></li><li><a href="#3-latest-primereact" class="table-of-contents__link toc-highlight">3. Latest PrimeReact</a></li><li><a href="#4-vite-toolchain" class="table-of-contents__link toc-highlight">4. Vite Toolchain</a></li><li><a href="#5-extension-fields-for-ui-hints" class="table-of-contents__link toc-highlight">5. Extension Fields for UI Hints</a></li><li><a href="#6-interactive-design-editor-improved" class="table-of-contents__link toc-highlight">6. Interactive Design Editor (Improved)</a></li><li><a href="#7-component-patterns" class="table-of-contents__link toc-highlight">7. Component Patterns</a></li><li><a href="#8-no-legacy-compatibility-burden" class="table-of-contents__link toc-highlight">8. No Legacy Compatibility Burden</a></li></ul></li><li><a href="#trade-offs" class="table-of-contents__link toc-highlight">Trade-offs</a></li><li><a href="#future-ideas" class="table-of-contents__link toc-highlight">Future Ideas</a></li></ul></div></div></div></div></main></div></div></div></div>
+</ol></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/rationale/goals"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Goals</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/rationale/prior"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Prior Art</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_pAbt thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#problem" class="table-of-contents__link toc-highlight">Problem</a></li><li><a href="#prior-art-ut-prime-and-ut-model" class="table-of-contents__link toc-highlight">Prior Art: ut-prime and ut-model</a><ul><li><a href="#what-ut-prime-got-right" class="table-of-contents__link toc-highlight">What ut-prime Got Right</a></li><li><a href="#lessons-learned" class="table-of-contents__link toc-highlight">Lessons Learned</a></li></ul></li><li><a href="#solution" class="table-of-contents__link toc-highlight">Solution</a></li><li><a href="#blongs-approach" class="table-of-contents__link toc-highlight">Blong&#39;s Approach</a><ul><li><a href="#1-single-source-of-truth-openapi--typebox" class="table-of-contents__link toc-highlight">1. Single Source of Truth: OpenAPI + TypeBox</a></li><li><a href="#2-typebox-resolver-instead-of-joi" class="table-of-contents__link toc-highlight">2. TypeBox Resolver Instead of Joi</a></li><li><a href="#3-latest-primereact" class="table-of-contents__link toc-highlight">3. Latest PrimeReact</a></li><li><a href="#4-vite-toolchain" class="table-of-contents__link toc-highlight">4. Vite Toolchain</a></li><li><a href="#5-two-level-schema-enrichment" class="table-of-contents__link toc-highlight">5. Two-Level Schema Enrichment</a></li><li><a href="#6-interactive-design-editor" class="table-of-contents__link toc-highlight">6. Interactive Design Editor</a></li><li><a href="#7-micro-frontend-model" class="table-of-contents__link toc-highlight">7. Micro-Frontend Model</a></li><li><a href="#8-model-driven-crud-factory" class="table-of-contents__link toc-highlight">8. Model-Driven CRUD Factory</a></li></ul></li><li><a href="#trade-offs" class="table-of-contents__link toc-highlight">Trade-offs</a></li><li><a href="#future-ideas" class="table-of-contents__link toc-highlight">Future Ideas</a></li></ul></div></div></div></div></main></div></div></div></div>
 </body>
 </html>
