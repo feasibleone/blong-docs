@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunk_feasibleone_blong_docs=globalThis.webpackChunk_feasibleone_blong_docs||[]).push([[6313],{6313(e,s,c){c.d(s,{createArchitectureServices:()=>a.S});var a=c(6887);c(8327)}}]);
