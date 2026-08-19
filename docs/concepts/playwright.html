@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.32300666.js" defer="defer"></script>
-<script src="/assets/js/main.a74b746c.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.3b533281.js" defer="defer"></script>
+<script src="/assets/js/main.722d0ecc.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -103,10 +103,13 @@ sensible defaults (test directory, viewport, reporters, <code>webServer</code> e
 test runs (as long as the server stays running). This creates a challenge for edit tests: if the
 record already contains the same values from a previous run, react-hook-form doesn&#x27;t mark the
 form as dirty and the Save button stays disabled.</p>
-<p>The <code>createAndEditModel()</code> helper solves this with a <strong>dirty cycle</strong>: it first saves with a random
-suffix appended to text fields (forcing a dirty state), then fills the actual edit values (which
-differ from the suffixed values, so the form is dirty again). This ensures the edit test works
-regardless of prior server state.</p>
+<p>The <code>createAndEditModel()</code> helper solves this with a <strong>dirty cycle</strong>: text/textarea fields first
+get a random suffix and are saved (forcing a dirty state); other widgets (date/select/dropdown/
+number) keep their value because the <code>editFields</code> values already differ from the loaded record, so
+a single save suffices. It then fills the actual edit values (which differ from the suffixed
+values, so the form is dirty again). This ensures the edit test works regardless of prior server
+state. A <code>search</code> option lets the edit test filter the browse table to a specific (e.g.
+test-created) row before opening it, so it never edits seeded data.</p>
 <p>Similarly, the <code>waitForFormData()</code> method on the Portal helper waits for API data to populate form
 inputs before filling fields, preventing race conditions.</p>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="static-keys-for-hot-reload-survival">Static Keys for Hot Reload Survival<a href="#static-keys-for-hot-reload-survival" class="hash-link" aria-label="Direct link to Static Keys for Hot Reload Survival" title="Direct link to Static Keys for Hot Reload Survival" translate="no">​</a></h2>

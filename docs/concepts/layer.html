@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.32300666.js" defer="defer"></script>
-<script src="/assets/js/main.a74b746c.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.3b533281.js" defer="defer"></script>
+<script src="/assets/js/main.722d0ecc.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -29,7 +29,8 @@ lowercase words.</p>
 <code>layer.server.ts</code> file is required:</p>
 <ul>
 <li class="">
-<p><code>error</code> - domain-specific error definitions, always active on the server.</p>
+<p><code>error</code> - domain-specific error definitions, auto-activated under the <code>integration</code> intent on
+the server.</p>
 </li>
 <li class="">
 <p><a class="" href="/docs/concepts/adapter">adapter</a> - the part of the functionality that implements
@@ -52,8 +53,10 @@ route handlers, etc. Usually it includes almost no <code>business logic</code>.<
 <p><code>sim</code> - simulated external backends used during integration testing only.</p>
 </li>
 <li class="">
-<p><code>test</code> - this layer holds the test automation functionality, which is
-usually only activated during the development and build stages.</p>
+<p><code>server/test</code> - server-side tap tests (see <a class="" href="/docs/patterns/test">test</a>).</p>
+</li>
+<li class="">
+<p><code>api</code>, <code>init</code>, <code>meta</code> - registered by default on the server.</p>
 </li>
 </ul>
 <h3 class="anchor anchorTargetStickyNavbar_HEgF" id="browser-side-layers">Browser-Side Layers<a href="#browser-side-layers" class="hash-link" aria-label="Direct link to Browser-Side Layers" title="Direct link to Browser-Side Layers" translate="no">​</a></h3>
@@ -69,14 +72,30 @@ that talks to the server.</p>
 to implement specific React components for the UI.</p>
 </li>
 <li class="">
-<p><code>browser</code> - this layer holds the server-side code, used to serve
-the assets needed for the browser.</p>
+<p><code>test</code> - top-level <code>test/</code> is a browser layer holding Playwright tests (<code>*.play.ts</code>),
+auto-activated under the <code>integration</code> intent. Browser-side tap tests live in
+<code>browser/test/</code>.</p>
 </li>
 </ul>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="auto-discovery-and-activation-defaults">Auto-Discovery and Activation Defaults<a href="#auto-discovery-and-activation-defaults" class="hash-link" aria-label="Direct link to Auto-Discovery and Activation Defaults" title="Direct link to Auto-Discovery and Activation Defaults" translate="no">​</a></h2>
 <p>Well-known folder names are automatically detected and activated in the correct environment.
-Custom folder names require a <code>layer.server.ts</code> or <code>layer.browser.ts</code> file.</p>
-<table><thead><tr><th>Folder</th><th>Server active in</th><th>Browser active in</th></tr></thead><tbody><tr><td><code>error</code></td><td>always</td><td>—</td></tr><tr><td><code>adapter</code></td><td>always</td><td>—</td></tr><tr><td><code>orchestrator</code></td><td>always</td><td>—</td></tr><tr><td><code>gateway</code></td><td>always</td><td>—</td></tr><tr><td><code>sim</code></td><td><code>integration</code> only</td><td>—</td></tr><tr><td><code>test</code></td><td><code>test</code> only</td><td><code>integration</code> only</td></tr><tr><td><code>backend</code></td><td>—</td><td>always</td></tr><tr><td><code>component</code></td><td>—</td><td>always</td></tr><tr><td><code>browser</code></td><td>always (serves assets)</td><td>—</td></tr></tbody></table>
+<code>default</code> means the layer loads regardless of intents; <code>integration</code> means it loads when the
+<code>integration</code> intent is active (the default for dev/test). Custom folder names require a
+<code>layer.server.ts</code> or <code>layer.browser.ts</code> file.</p>
+<table><thead><tr><th>Folder</th><th>Server active in</th><th>Browser active in</th></tr></thead><tbody><tr><td><code>api</code></td><td>default</td><td>default</td></tr><tr><td><code>init</code></td><td>default</td><td>default</td></tr><tr><td><code>meta</code></td><td>default</td><td>default</td></tr><tr><td><code>error</code></td><td>integration</td><td>—</td></tr><tr><td><code>sim</code></td><td>integration</td><td>—</td></tr><tr><td><code>adapter</code></td><td>integration</td><td>—</td></tr><tr><td><code>orchestrator</code></td><td>integration</td><td>—</td></tr><tr><td><code>gateway</code></td><td>integration</td><td>—</td></tr><tr><td><code>server/api</code></td><td>integration</td><td>—</td></tr><tr><td><code>server/init</code></td><td>default</td><td>—</td></tr><tr><td><code>server/test</code></td><td>integration</td><td>—</td></tr><tr><td><code>backend</code></td><td>—</td><td>integration</td></tr><tr><td><code>component</code></td><td>—</td><td>integration</td></tr><tr><td><code>action</code> / <code>actions</code></td><td>—</td><td>integration</td></tr><tr><td><code>test</code></td><td>—</td><td>integration</td></tr><tr><td><code>browser/api</code></td><td>—</td><td>integration</td></tr><tr><td><code>browser/init</code></td><td>—</td><td>default</td></tr><tr><td><code>browser/test</code></td><td>—</td><td>integration</td></tr><tr><td><code>browser/orchestrator</code></td><td>—</td><td>integration</td></tr></tbody></table>
+<h2 class="anchor anchorTargetStickyNavbar_HEgF" id="dev-only-handler-groups-dev-suffix">Dev-Only Handler Groups (<code>.dev</code> suffix)<a href="#dev-only-handler-groups-dev-suffix" class="hash-link" aria-label="Direct link to dev-only-handler-groups-dev-suffix" title="Direct link to dev-only-handler-groups-dev-suffix" translate="no">​</a></h2>
+<p>A handler-group folder whose name ends in <code>.dev</code> (e.g. <code>gateway/vision.dev/</code>,
+<code>orchestrator/vision.dev/</code>) is loaded <strong>only under the <code>dev</code> intent</strong>. Under any other
+intent (e.g. <code>prod</code>), the folder is skipped entirely, so its validations, handlers and
+orchestrator namespaces are not registered.</p>
+<p>This is the general convention for making specific handler groups dev-only, mirroring the
+<code>adapter/dbTest</code> pattern (which is scoped to the db adapter&#x27;s import regex). It works for any
+layer folder:</p>
+<div class="language-text codeBlockContainer_mnH6 theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_Amt0"><pre tabindex="0" class="prism-code language-text codeBlock_dwH7 thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_x3Qn"><div class="token-line" style="color:#000000"><span class="token plain">gateway/</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">├── subject/            # loaded in every environment</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">└── vision.dev/         # loaded only under `dev` (demo metered API)</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">orchestrator/</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">├── subject/            # loaded in every environment</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">└── vision.dev/         # loaded only under `dev` (namespace: &#x27;vision&#x27;)</span><br></div></code></pre></div></div>
+<p>The <code>.dev</code> suffix is purely a loading gate — it does <strong>not</strong> change names. Gateway validations
+are keyed by their function name (<code>visionCompute</code> → <code>vision.compute</code>) and orchestrator
+namespaces are declared explicitly in their <code>init.ts</code> (<code>{namespace: &#x27;vision&#x27;}</code>), so a <code>.dev</code>
+folder keeps the same routes and namespaces as its non-<code>.dev</code> equivalent.</p>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="co-located-configuration">Co-Located Configuration<a href="#co-located-configuration" class="hash-link" aria-label="Direct link to Co-Located Configuration" title="Direct link to Co-Located Configuration" translate="no">​</a></h2>
 <p>Layers are <strong>self-contained</strong> — each layer file defines its own configuration and validation,
 co-located with its implementation. There is no need to maintain activation config in the parent
@@ -88,6 +107,6 @@ layers.</p>
 <code>layer.browser.ts</code> to declare when the layer should be active:</p>
 <div class="language-ts codeBlockContainer_mnH6 theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_Amt0"><pre tabindex="0" class="prism-code language-ts codeBlock_dwH7 thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_x3Qn"><div class="token-line" style="color:#000000"><span class="token comment" style="color:rgb(0, 128, 0)">// myCustomLayer/layer.server.ts</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token keyword" style="color:rgb(0, 0, 255)">import</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">layer</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">from</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">&#x27;@feasibleone/blong&#x27;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">default</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">layer</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token keyword" style="color:rgb(0, 0, 255)">default</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token boolean">true</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain">       </span><span class="token comment" style="color:rgb(0, 128, 0)">// active in all environments</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    microservice</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token boolean">true</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain">  </span><span class="token comment" style="color:rgb(0, 128, 0)">// also active in microservice deployment</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><br></div></code></pre></div></div>
 <p>For the full implementation patterns, including handler group naming, folder structure, and
-activation options, see the <a class="" href="/docs/patterns/layer">Layer patterns</a> page.</p></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/concepts/interactions"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Interactions</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/concepts/modules"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Modules</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_oAgZ thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#recommended-layer-names" class="table-of-contents__link toc-highlight">Recommended Layer Names</a><ul><li><a href="#server-side-layers" class="table-of-contents__link toc-highlight">Server-Side Layers</a></li><li><a href="#browser-side-layers" class="table-of-contents__link toc-highlight">Browser-Side Layers</a></li></ul></li><li><a href="#auto-discovery-and-activation-defaults" class="table-of-contents__link toc-highlight">Auto-Discovery and Activation Defaults</a></li><li><a href="#co-located-configuration" class="table-of-contents__link toc-highlight">Co-Located Configuration</a></li><li><a href="#custom-layers" class="table-of-contents__link toc-highlight">Custom Layers</a></li></ul></div></div></div></div></main></div></div></div></div>
+activation options, see the <a class="" href="/docs/patterns/layer">Layer patterns</a> page.</p></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/concepts/interactions"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Interactions</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/concepts/modules"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Modules</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_oAgZ thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#recommended-layer-names" class="table-of-contents__link toc-highlight">Recommended Layer Names</a><ul><li><a href="#server-side-layers" class="table-of-contents__link toc-highlight">Server-Side Layers</a></li><li><a href="#browser-side-layers" class="table-of-contents__link toc-highlight">Browser-Side Layers</a></li></ul></li><li><a href="#auto-discovery-and-activation-defaults" class="table-of-contents__link toc-highlight">Auto-Discovery and Activation Defaults</a></li><li><a href="#dev-only-handler-groups-dev-suffix" class="table-of-contents__link toc-highlight">Dev-Only Handler Groups (<code>.dev</code> suffix)</a></li><li><a href="#co-located-configuration" class="table-of-contents__link toc-highlight">Co-Located Configuration</a></li><li><a href="#custom-layers" class="table-of-contents__link toc-highlight">Custom Layers</a></li></ul></div></div></div></div></main></div></div></div></div>
 </body>
 </html>

@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.32300666.js" defer="defer"></script>
-<script src="/assets/js/main.a74b746c.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.3b533281.js" defer="defer"></script>
+<script src="/assets/js/main.722d0ecc.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -84,9 +84,11 @@ or folder position.</p>
 <li class="">
 <p><strong>Layers are activation boundaries</strong> — a layer groups handlers, adapters,
 and orchestrators that activate or deactivate together. Well-known folder
-names (<code>error</code>, <code>adapter</code>, <code>orchestrator</code>, <code>gateway</code>, <code>sim</code>, <code>test</code>,
-<code>backend</code>, <code>component</code>) are auto-discovered and activated per their default
-environment without any registration call.</p>
+names (<code>api</code>, <code>init</code>, <code>meta</code>, <code>error</code>, <code>sim</code>, <code>adapter</code>, <code>orchestrator</code>,
+<code>gateway</code>, <code>server/api</code>, <code>server/init</code>, <code>server/test</code>, <code>backend</code>,
+<code>component</code>, <code>action</code>, <code>actions</code>, <code>test</code>, <code>browser/api</code>, <code>browser/init</code>,
+<code>browser/test</code>, <code>browser/orchestrator</code>) are auto-discovered and activated
+per their default environment without any registration call.</p>
 </li>
 <li class="">
 <p><strong>Dual registration (Local + RpcServer)</strong> — every method is registered in

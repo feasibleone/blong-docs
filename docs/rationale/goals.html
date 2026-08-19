@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.32300666.js" defer="defer"></script>
-<script src="/assets/js/main.a74b746c.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.3b533281.js" defer="defer"></script>
+<script src="/assets/js/main.722d0ecc.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -54,7 +54,7 @@ approach:</p>
 realms. A realm is an isolated business domain with its own handlers, adapters,
 and orchestrators. Realms compose into suites that define multi-platform entry
 points.</p>
-<div class="language-text codeBlockContainer_mnH6 theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_Amt0"><pre tabindex="0" class="prism-code language-text codeBlock_dwH7 thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_x3Qn"><div class="token-line" style="color:#000000"><span class="token plain">core/handler-test-poc/order/</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">├── orchestrator/order/    ← business logic</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">│   ├── orderOrderCreate.ts</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">│   └── orderFlowExecute.ts</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">├── adapter/               ← integration</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">└── test/test/             ← test handlers, same pattern</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    └── testOrderCheckpoint.ts</span><br></div></code></pre></div></div>
+<div class="language-text codeBlockContainer_mnH6 theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_Amt0"><pre tabindex="0" class="prism-code language-text codeBlock_dwH7 thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_x3Qn"><div class="token-line" style="color:#000000"><span class="token plain">core/handler-test-poc/order/</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">├── orchestrator/order/    ← business logic</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">│   ├── orderOrderCreate.ts</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">│   └── orderFlowExecute.ts</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">├── adapter/               ← integration</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">└── server/test/         ← server test handlers, same pattern</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    └── testOrderCheckpoint.ts</span><br></div></code></pre></div></div>
 <h3 class="anchor anchorTargetStickyNavbar_HEgF" id="deployment-flexibility">Deployment Flexibility<a href="#deployment-flexibility" class="hash-link" aria-label="Direct link to Deployment Flexibility" title="Direct link to Deployment Flexibility" translate="no">​</a></h3>
 <p>The same codebase runs as a modular monolith during development or as
 independent microservices in production. The deployment architecture is

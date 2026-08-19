@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.32300666.js" defer="defer"></script>
-<script src="/assets/js/main.a74b746c.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.3b533281.js" defer="defer"></script>
+<script src="/assets/js/main.722d0ecc.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -46,6 +46,13 @@ are nullable.</li>
 <li class="">Use <code>dropColumns: true</code> in the <code>ISchemaTable</code> spec to let the adapter remove columns that are
 no longer present in the TypeBox schema.</li>
 </ul>
+<p><strong>Structured JSON columns (<code>*JSON</code> suffix):</strong> any column whose name ends in <code>JSON</code> is
+auto-(de)serialized by the knex adapter — object/array values are <code>JSON.stringify</code>&#x27;d on
+<code>insert</code>/<code>update</code> and <code>JSON.parse</code>&#x27;d on read (lenient, non-JSON strings untouched). Declare such
+columns as plain strings (<code>Type.String()</code> / <code>type.stringNull()</code> → <code>VARCHAR</code>); no manual
+(de)serialization is needed in handlers. This is a name-based convention applied to every
+queryBuilder produced by the shared <code>srv.db</code> adapter — see
+<code>core/blong-gogo/src/adapter/schema/knex/json.ts</code>. Example: <code>access_credential.credentialParamsJSON</code>.</p>
 <h3 class="anchor anchorTargetStickyNavbar_HEgF" id="typebox--sql-type-mapping">TypeBox → SQL type mapping<a href="#typebox--sql-type-mapping" class="hash-link" aria-label="Direct link to TypeBox → SQL type mapping" title="Direct link to TypeBox → SQL type mapping" translate="no">​</a></h3>
 <table><thead><tr><th>TypeBox type</th><th>SQL column type</th></tr></thead><tbody><tr><td><code>Type.Integer()</code></td><td><code>INT</code> / <code>AUTO_INCREMENT</code> (if name ends <code>Id</code>)</td></tr><tr><td><code>Type.String({maxLength: N≤255})</code></td><td><code>VARCHAR(N)</code></td></tr><tr><td><code>Type.String({maxLength: N&gt;255})</code></td><td><code>TEXT</code></td></tr><tr><td><code>Type.String()</code> (no maxLength)</td><td><code>VARCHAR(255)</code> (default when no maxLength given)</td></tr><tr><td><code>Type.String({format: &#x27;date-time&#x27;})</code></td><td><code>DATETIME</code></td></tr><tr><td><code>Type.String({format: &#x27;date&#x27;})</code></td><td><code>DATE</code></td></tr><tr><td><code>Type.String({format: &#x27;uuid&#x27;})</code></td><td><code>UUID</code></td></tr><tr><td><code>Type.Boolean()</code></td><td><code>BOOLEAN</code></td></tr><tr><td><code>Type.Number()</code></td><td><code>DOUBLE</code></td></tr><tr><td><code>Type.Unknown()</code> / <code>Type.Object()</code></td><td><code>JSON</code></td></tr><tr><td><code>Type.Optional(T)</code></td><td>nullable column</td></tr></tbody></table>
 <hr>
@@ -137,7 +144,7 @@ imperative control is needed (e.g., integration test cleanup or one-off migratio
 <hr>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="integration-test-pattern">Integration test pattern<a href="#integration-test-pattern" class="hash-link" aria-label="Direct link to Integration test pattern" title="Direct link to Integration test pattern" translate="no">​</a></h2>
 <p>The <code>blong-int-adapter</code> mysql suite demonstrates the full declarative path in
-<code>mysql/test/test/testMysqlSchema.ts</code>.  The table and procedure are created by the adapter&#x27;s
+<code>mysql/server/test/test/testMysqlSchema.ts</code>.  The table and procedure are created by the adapter&#x27;s
 <code>ready()</code> hook before any test step runs — the test does not call <code>sqlSchemaTableSync</code> or
 <code>sqlSchemaProcedureSync</code> for setup.</p>
 <div class="language-text codeBlockContainer_mnH6 theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_Amt0"><pre tabindex="0" class="prism-code language-text codeBlock_dwH7 thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_x3Qn"><div class="token-line" style="color:#000000"><span class="token plain">Step 1 — cleanData:           sqlItemFind → sqlItemRemove (auto-bound CRUD)</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">Step 2 — addActiveItem:       sqlItemAdd   (auto-bound CRUD)</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">Step 3 — callSyntheticProc:   sqlItemListActive (synthetic procedure handler)</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">Step 4 — verifyIdempotency:   sqlSchemaTableSync → assert created:false, added:[]</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">Step 5 — dropTable:           sqlSchemaTableDrop  (cleanup so next run exercises CREATE)</span><br></div></code></pre></div></div>
