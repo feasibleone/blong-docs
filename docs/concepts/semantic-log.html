@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.77406931.js" defer="defer"></script>
-<script src="/assets/js/main.4cb91cca.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.d1954d6d.js" defer="defer"></script>
+<script src="/assets/js/main.ed640d44.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -24,7 +24,7 @@
 id</strong>, so a human or an agent can reach the full detail on demand instead of grepping. It lives in
 <code>core/semantic-log/</code>.</p>
 <!-- -->
-<p>It goes beyond ordinary logging in five ways.</p>
+<p>It goes beyond ordinary logging in six ways.</p>
 <ul>
 <li class=""><strong>Identity comes from structure, not text.</strong> Timestamps, ids, IP addresses, numbers and home paths
 are masked, and the masked message is hashed — so two occurrences of one code path share one
@@ -45,6 +45,11 @@ retained and released onto the record that reports the failure, so the happy pat
 the failure explains itself.</li>
 <li class=""><strong>One fact, several audiences.</strong> The same stored entry is projected into operational, diagnostic
 or compliance views when it is read, rather than emitted three times.</li>
+<li class=""><strong>The logic says what it was doing, not only that it happened.</strong> A <strong>progress point</strong> is reported
+from the code itself — a <code>checkpoint</code> names a moment, a <code>decide</code> branch names the choice taken and
+the candidates it weighed — and travels with the next record in its scope, so the diagram can draw
+the moments as notes and the alternatives as <code>alt</code> blocks
+(<a class="" href="/docs/rationale/semantic-log">R26, R27</a>).</li>
 </ul>
 <p>The cluster service is optional. An emitter writes readable lines and retains every record in a
 local cache with no service anywhere, and ships the same records to one when configured. It keeps
@@ -66,7 +71,7 @@ nothing is a statement about the service rather than the page.</p>
 <p>A <strong>call</strong> is recorded on a channel of its own, beside the level log rather than part of it: a
 call&#x27;s two ends are not louder or quieter than anything else, they are either wanted for a whole
 flow or they are not. <code>log.calls</code> writes them — <code>start</code>/<code>end</code>/<code>error</code> from the caller, <code>received</code>
-from the receiver — and the observed-flow ledger is built from nothing else.</p>
+and <code>answered</code> from the receiver — and the observed-flow ledger is built from nothing else.</p>
 <p>Three switches, in the order they are consulted:</p>
 <ul>
 <li class=""><strong>A grant, for one request.</strong> <code>blong grant calls --ttl=15m</code> mints a short-lived signed token; the
@@ -87,6 +92,28 @@ something an outside caller gets to set.</li>
 default, and stdout only when <code>log.calls.stdout</code> was asked for — which is what keeps a development
 run readable while its diagrams still have something to draw. A process that records no calls pays a
 scope read per call and nothing else: nothing is assembled, rendered or retained for a flow that
-opted out.</p></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/concepts/schema-sync"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Declarative Schema Management (knex adapter)</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/concepts/sessions"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Sessions, Refresh Tokens &amp; Audit</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_oAgZ thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#what-is-recorded-and-how-it-is-switched-on" class="table-of-contents__link toc-highlight">What is recorded, and how it is switched on</a></li></ul></div></div></div></div></main></div></div></div></div>
+opted out.</p>
+<h2 class="anchor anchorTargetStickyNavbar_HEgF" id="who-a-record-speaks-for">Who a record speaks for<a href="#who-a-record-speaks-for" class="hash-link" aria-label="Direct link to Who a record speaks for" title="Direct link to Who a record speaks for" translate="no">​</a></h2>
+<p>A leg is recorded by <strong>both</strong> of its ends, and the two ends say different things. The caller writes
+the declaration, which names where the call went and which flow caused it; the receiver writes the
+receipt and the answer, which name the leg and nothing else — &quot;who did I expect to answer&quot; is the
+caller&#x27;s statement, and inventing a second one would be the receiver guessing. That asymmetry is
+what lets a reader tell the ends apart in one process or in many — and the field that carries it is
+the <strong>phase</strong> each record was written in (<code>start</code>/<code>end</code>/<code>error</code> from the caller, <code>received</code>/
+<code>answered</code> from the receiver), because a receiver adopts the identity the caller sent and the target
+on it is therefore the caller&#x27;s statement about both of them.</p>
+<p>What a handler announces while it runs — <code>$meta.checkpoint</code> for a milestone, <code>$meta.decide</code> for a
+branch — is staged in the scope around the handler, and the records of a call are written by the
+framework <em>around</em> that scope, before the handler starts and after it returns. So a handler&#x27;s work
+has no record of its own to be written on; the receiver reads it once the handler is done and writes
+it on the <strong>answer</strong>. That is what the <code>answered</code> phase is for, and it is why a milestone is drawn
+over the participant that announced it rather than over the caller that declared the call.</p>
+<p>Reading it works only if the collection was installed first. The boxes it reads are entered with
+<code>enterWith</code>, which reaches the current context and what follows it — never a frame that is already
+suspended. A handler that waits for something (an inner call, a promise) before it announces
+anything resumes in a context whose boxes were created after the receiver&#x27;s own continuation was
+bound, so the receiver installs them before it runs the handler, not after. A handler with no wait
+before its first checkpoint hides this entirely, which is how the gap survived a unit test and
+showed up only when a real handler went over the wire (T-136).</p></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/concepts/schema-sync"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Declarative Schema Management (knex adapter)</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/concepts/sessions"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Sessions, Refresh Tokens &amp; Audit</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_oAgZ thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#what-is-recorded-and-how-it-is-switched-on" class="table-of-contents__link toc-highlight">What is recorded, and how it is switched on</a></li><li><a href="#who-a-record-speaks-for" class="table-of-contents__link toc-highlight">Who a record speaks for</a></li></ul></div></div></div></div></main></div></div></div></div>
 </body>
 </html>

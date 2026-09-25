@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.77406931.js" defer="defer"></script>
-<script src="/assets/js/main.4cb91cca.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.d1954d6d.js" defer="defer"></script>
+<script src="/assets/js/main.ed640d44.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -62,10 +62,18 @@ a naming alias, which is how a test report, a log line or a trace says <em>which
 than only which method (see the
 <a class="" href="/docs/rationale/unified-handler-test">unified handler-test rationale</a>)</li>
 <li class=""><code>expect</code>: used during tests to suppress logging of expected error types</li>
-<li class=""><code>checkpoint</code>: function that records a named checkpoint during execution, <code>(name, data?) =&gt; void</code>,
-used to observe the intermediate state of a flow (see <a class="" href="/docs/concepts/checkpoint">checkpoints</a>)</li>
+<li class=""><code>checkpoint</code>: function that records a named progress point during execution,
+<code>(name, data?) =&gt; void</code>, used to observe the intermediate state of a flow. Absent in production,
+so callers optional-chain it (see <a class="" href="/docs/concepts/checkpoint">checkpoints</a> and
+<a class="" href="/docs/rationale/unified-handler-test">progress points</a>)</li>
 <li class=""><code>checkpoints</code>: what has been recorded so far — one <code>{name, data?, timestamp}</code> entry per call to
 <code>checkpoint</code></li>
+<li class=""><code>decide</code>: takes a branch and keeps which one it was — <code>decide(discriminator, values, branches)</code>,
+returning the chosen branch&#x27;s result. Present in <strong>every</strong> mode, because a branch has to be taken
+whether or not anything is recording</li>
+<li class=""><code>decisions</code>: the branches this invocation took, in the order it took them — one
+<code>{discriminator, candidates, chosen, values}</code> entry per call to <code>decide</code>, so a test can assert on
+the selection as it asserts on <code>checkpoints</code></li>
 <li class=""><code>forward</code>: contains <a href="https://github.com/openzipkin/b3-propagation" target="_blank" rel="noopener noreferrer" class="">b3-propagation</a> data used for
 tracing</li>
 <li class=""><code>dispatch</code>: optional function to be called during the <code>dispatch</code> step of the
