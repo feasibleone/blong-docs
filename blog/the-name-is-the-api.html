@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.09c8d9d4.js" defer="defer"></script>
-<script src="/assets/js/main.9d1ed5a4.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.fc0cd78a.js" defer="defer"></script>
+<script src="/assets/js/main.d681f249.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -46,8 +46,8 @@ of taste either. Before inventing a verb, reuse one:</p>
 <code>customerId</code> rather than <code>id</code>. It reads as pedantry until a generated form labels a field, and then
 it is the difference between &quot;Name&quot; being obvious and being ambiguous in six places at once.</p>
 <p>Older conventions leak through, and the framework does not pretend otherwise: a function whose name
-is not a valid triple — <code>sum</code>, <code>hashPassword</code> — is treated as a library function, visible to its
-siblings and not published anywhere else. The rule is a gate, not a law of physics.</p>
+is not a valid triple — <code>sum</code>, <code>hashPassword</code> — is treated as a injected library function, visible
+to its siblings and not published anywhere else. The rule is a gate, not a law of physics.</p>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="the-framework-checks">The framework checks<a href="#the-framework-checks" class="hash-link" aria-label="Direct link to The framework checks" title="Direct link to The framework checks" translate="no">​</a></h2>
 <p>A convention that lives only in a style guide erodes. Blong enforces this one at load time: when a
 file defines a single handler, the exported function name must match the file name, and the loader

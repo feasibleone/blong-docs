@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.09c8d9d4.js" defer="defer"></script>
-<script src="/assets/js/main.9d1ed5a4.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.fc0cd78a.js" defer="defer"></script>
+<script src="/assets/js/main.d681f249.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -59,23 +59,36 @@ every folder that is already a real realm (or any other package) untouchable, so
 never overwrite work. A load error that is not &quot;module not found&quot; is rethrown rather than scaffolded
 over.</p>
 <p>The template writes a complete realm: <code>server.ts</code>, <code>browser.ts</code> and their entries, <code>error/</code>, <code>meta/</code>
-(the schema, the seed and a model spec), <code>orchestrator/subject/init.ts</code>, <code>server/test/</code>, a
-Playwright spec, the toolchain files and a <code>package.json</code>. The scaffolded realm contributes only
-what is its own — the namespace in <code>orchestrator/subject/init.ts</code>, the schema and the model spec —
-and reuses <code>blong-server</code>&#x27;s subject orchestrator and its <code>db</code> adapter, which is the same rule every
-hand-written realm follows.</p>
+(the schema, the seed, a model spec and the Storybook fixture), <code>.storybook/</code> with the model and
+portal stories, <code>orchestrator/subject/init.ts</code>, <code>server/test/</code>, a Playwright spec, the toolchain
+files and a <code>package.json</code>. The scaffolded realm contributes only what is its own — the namespace in
+<code>orchestrator/subject/init.ts</code>, the schema and the model spec — and reuses <code>blong-server</code>&#x27;s subject
+orchestrator and its <code>db</code> adapter, which is the same rule every hand-written realm follows.</p>
+<p>Generated <em>output</em> is not part of the template: <code>node_modules</code>, <code>dist</code>, <code>.tap</code>, <code>coverage</code>,
+<code>.ci-report</code>, <code>allure-*</code>, <code>.playwright</code>, <code>storybook-static</code>, <code>*-snapshots</code> and the template&#x27;s own
+<code>.github/memory</code> are excluded by the shared ignore list, so a new realm does not inherit another
+package&#x27;s reports or development notes. <code>package.json</code> is rewritten rather than copied — the scoped
+<code>@feasibleone/blong-&lt;realm&gt;</code> name, version <code>0.1.0</code> and a description of the realm.</p>
 <p>Files the template generates carry an <code>import unchanged …</code> marker and are only rewritten while that
 marker is present, so a generated file you have adopted is never overwritten by a later run. Rename
-the realm and its <code>package.json</code> name after the scaffold, and delete what the realm does not use
+the entity the template modelled (<code>entry</code>) after the scaffold and delete what the realm does not use
 (<code>browser.ts</code> for a server-only service, for instance).</p>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="the-explicit-form">The explicit form<a href="#the-explicit-form" class="hash-link" aria-label="Direct link to The explicit form" title="Direct link to The explicit form" translate="no">​</a></h2>
 <p>The same template, without the auto-trigger:</p>
-<div class="language-bash codeBlockContainer_mnH6 theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_Amt0"><pre tabindex="0" class="prism-code language-bash codeBlock_dwH7 thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_x3Qn"><div class="token-line" style="color:#000000"><span class="token plain">blong realm payment                 # or: blong create realm payment</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong realm order --object order    # pick the entity the scaffold should model</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">kukum realm add --subject=shop      # the same thing through the primitive API</span><br></div></code></pre></div></div>
+<div class="language-bash codeBlockContainer_mnH6 theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_Amt0"><pre tabindex="0" class="prism-code language-bash codeBlock_dwH7 thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_x3Qn"><div class="token-line" style="color:#000000"><span class="token plain">blong realm payment                 # or: blong create realm payment</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong realm order --object order    # pick the entity the scaffold should model</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong realm blong-order             # the same realm: the folder prefix is not part of its name</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">kukum realm add --subject=shop      # the same thing through the primitive API</span><br></div></code></pre></div></div>
 <p>The CLI form creates the folder, changes into it and runs it. It refuses to start when the name is
 missing, or when the word <code>realm</code> names an existing path — a real folder wins over the intent, so
 running a folder called <code>realm</code> is never mistaken for creating one. The <code>kukum</code> form is the one to
 use from a script or an agent: it takes <code>--target</code>, <code>--object</code> and <code>--dry-run</code>, and it validates the
-name against <code>^[a-z][a-z0-9]*$</code>.</p>
+name against <code>^[a-z][a-z0-9]*$</code> (it takes the realm name, where the CLI takes a folder name and
+drops a <code>blong-</code> prefix from it).</p>
+<p>That prefix is what makes a scaffolded realm fit the repository: the realm name is the part after
+<code>blong-</code>, and it is the name the template substitutes — the subject namespace (<code>order.entry.add</code>),
+the identifiers inside the generated handlers (<code>async function orderFixture</code>), the file names and
+the config key a suite sets. <code>blong-</code> is added back where the template needs the app or package
+name, so <code>blong realm blong-order</code> produces the package <code>@feasibleone/blong-order</code> from the realm
+<code>order</code>. A folder whose name cannot be a realm name (<code>my-realm</code>, <code>MyRealm</code>) is refused before
+anything is written, because the template would otherwise emit code that does not parse.</p>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="see-also">See also<a href="#see-also" class="hash-link" aria-label="Direct link to See also" title="Direct link to See also" translate="no">​</a></h2>
 <ul>
 <li class=""><a class="" href="/docs/patterns/realm">Realm patterns</a> — the realm layout the template produces, and the <code>blong-server</code>

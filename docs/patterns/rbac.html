@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.09c8d9d4.js" defer="defer"></script>
-<script src="/assets/js/main.9d1ed5a4.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.fc0cd78a.js" defer="defer"></script>
+<script src="/assets/js/main.d681f249.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -43,7 +43,7 @@ the two halves are shaped so differently:</p>
 <p>Realm-specific grants belong in the owning realm&#x27;s own merge file (same handler, same format); both
 files are additive and idempotent.</p>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="4-role-bits">4. Role bits<a href="#4-role-bits" class="hash-link" aria-label="Direct link to 4. Role bits" title="Direct link to 4. Role bits" translate="no">​</a></h2>
-<table><thead><tr><th>Situation</th><th>Behaviour</th><th>Error</th></tr></thead><tbody><tr><td>No bit given</td><td>allocated as <code>MAX(roleBit) + 1</code>; a freed bit is reused only when it was the highest in use</td><td>—</td></tr><tr><td>Bit given and free</td><td>used</td><td>—</td></tr><tr><td>Bit given and owned by another role</td><td>refused</td><td><code>role.bitTaken</code></td></tr><tr><td>Bit that is not a number in 0–1023</td><td>refused</td><td><code>role.bitInvalid</code></td></tr><tr><td>Edit that changes an existing role&#x27;s bit</td><td>refused; the column is never written</td><td><code>role.bitImmutable</code></td></tr></tbody></table>
+<table><thead><tr><th>Situation</th><th>Behaviour</th><th>Error</th></tr></thead><tbody><tr><td>No bit given</td><td>allocated as <code>max(high-water mark, MAX(roleBit)) + 1</code>; a bit is never re-issued</td><td>—</td></tr><tr><td>Bit given and free</td><td>used</td><td>—</td></tr><tr><td>Bit given and owned by another role</td><td>refused</td><td><code>role.bitTaken</code></td></tr><tr><td>Bit that is not a number in 0–1023</td><td>refused</td><td><code>role.bitInvalid</code></td></tr><tr><td>Edit that changes an existing role&#x27;s bit</td><td>refused; the column is never written</td><td><code>role.bitImmutable</code></td></tr></tbody></table>
 <p>All five rows are one decision, taken in one place:</p>
 <!-- -->
 <p>Every creation path — the model&#x27;s add, registration, the authorization merge, the seed merge and the

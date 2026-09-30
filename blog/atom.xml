@@ -258,13 +258,15 @@ the check cheap, and what makes revocation a separate problem that sessions exis
 <strong>capabilities</strong>, which group <strong>actions</strong>, and an action <em>is</em> a method name. So a role is a named
 bundle of methods, a caller's roles are a bitmask, and the question at the gateway is whether the
 requested method appears in the expansion of that mask.</p>
-<p>Allocation is <code>MAX(roleBit) + 1</code>, starting at 0, and the bit is immutable: an edit that tries to
-change one is refused with a typed error. Two properties follow, and they are worth stating
-precisely because the loose version is wrong. Bits are unique and are not recycled — <strong>except for
-the highest one in use</strong>: allocation is <code>MAX + 1</code>, so deleting the role that owns the current
-maximum hands that same bit to the next role created. And exhausting the range throws, at 1024
-roles, with a message that names the limit; it is not a typed <code>role.*</code> error, which is a gap in an
-otherwise tidy error model.</p>
+<p>Allocation is <code>max(high-water mark, MAX(roleBit)) + 1</code>, starting at 0, and the bit is immutable: an
+edit that tries to change one is refused with a typed error. Two properties follow, and they are
+worth stating precisely because the loose version kept being wrong. The mark is a <code>core.counter</code> row
+that outlives the rows it numbered, so <strong>no bit is ever re-issued</strong> — the highest one in use
+included, which an earlier version of this section had to describe as an exception, because
+<code>MAX + 1</code> alone hands that bit on the moment the role holding it is deleted. And exhausting the
+range throws: the 1024 values are consumed by every role ever created rather than only the live
+ones, so a long-lived database can reach the limit and has to have the counter reset. The throw is a
+plain <code>Error</code>, not a typed <code>role.*</code> one — a gap in an otherwise tidy error model.</p>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="the-materialized-paths-and-where-they-are-actually-read">The materialized paths, and where they are actually read<a href="http://blong.feasible.one/blog/roles-as-bits-in-the-token#the-materialized-paths-and-where-they-are-actually-read" class="hash-link" aria-label="Direct link to The materialized paths, and where they are actually read" title="Direct link to The materialized paths, and where they are actually read" translate="no">​</a></h2>
 <p>The graph is not walked per request. <code>CALL access_pathRefresh()</code> rebuilds <code>core_path</code> for three path
 types — <code>access.effectiveRole</code>, <code>access.effectiveAction</code> and <code>access.effectiveScope</code> — from two SQL
@@ -297,11 +299,13 @@ method is guarded by naming it in an action; the actions are grouped by capabili
 capabilities by roles, and none of those names appears in a handler's code. Adding a permission is a
 row, not a branch in an <code>if</code>.</p>
 <p>The cost is paid in three places, and all three are visible in the schema rather than hidden. The
-bitmask bounds you to 1024 roles — comfortable, and a hard ceiling. Permissions are evaluated from
-the token, so they are as fresh as the token is: the 30-second cache is a deliberate staleness
-window, and anything that must take effect <em>immediately</em> needs the session gate rather than the
-bitmask. And since the graph is materialized, a hierarchy change needs <code>access_pathRefresh()</code> before
-it is reflected in a login's expansion — the paths do not maintain themselves.</p>
+bitmask bounds you to 1024 role values, and because none is ever re-issued they are consumed by
+every role ever created — comfortable for a realm that adds roles rarely, and a ceiling that a
+long-lived database clears only by resetting the counter. Permissions are evaluated from the token,
+so they are as fresh as the token is: the 30-second cache is a deliberate staleness window, and
+anything that must take effect <em>immediately</em> needs the session gate rather than the bitmask. And
+since the graph is materialized, a hierarchy change needs <code>access_pathRefresh()</code> before it is
+reflected in a login's expansion — the paths do not maintain themselves.</p>
 <p>Read next: <a class="" href="http://blong.feasible.one/docs/concepts/rbac">the RBAC concept</a> for the graph and the gate,
 <a class="" href="http://blong.feasible.one/docs/patterns/rbac">the pattern</a> for seeding and granting, and
 <a class="" href="http://blong.feasible.one/docs/concepts/resource-graph">the resource graph</a> for the tables the roles are stored in.</p>]]></content>
@@ -1086,10 +1090,12 @@ own, so they get a plain table instead of a resource. ## Three lenses, one set o
 <p><strong>Party</strong> reads the hierarchy — membership through <code>belongsTo</code>, the unit tree through <code>isPartOf</code>,
 the human behind an account through <code>hasProfile</code>. <strong>RBAC</strong> walks user → role → capability → action,
 directly or through the unit the user belongs to, and materializes the answer into <code>core.path</code> as
-<code>access.effectiveRole</code>, <code>access.effectiveAction</code> and <code>access.effectiveScope</code>, so a permission check
-is one indexed lookup instead of a recursive walk. <strong>The record-level ACL</strong> adds the narrowing
-direction: <code>access_acl</code> is a table whose principal, action and target are all resources, so a rule
-can attach to any of them, and its implicit half is a <code>hasScope</code> edge in the same graph.</p>
+<code>access.effectiveRole</code>, <code>access.effectiveAction</code> and <code>access.effectiveScope</code>, so the caller's
+effective actions are one indexed lookup instead of a recursive walk — read at login, to pack the
+token's bitmask, while the per-request check expands that bitmask with a cache. <strong>The record-level
+ACL</strong> adds the narrowing direction: <code>access_acl</code> is a table whose principal, action and target are
+all resources, so a rule can attach to any of them, and its implicit half is a <code>hasScope</code> edge in
+the same graph.</p>
 <p>Note what is <em>not</em> claimed here: the graph does not replace the tables. A role is still a table with
 a <code>roleBit</code> column; <code>access_acl</code> is still a table with rules in it; the unit hierarchy is
 materialized into <code>core_path</code> rather than computed on every read. What the graph changes is that the

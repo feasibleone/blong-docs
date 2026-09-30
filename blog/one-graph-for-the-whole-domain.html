@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.09c8d9d4.js" defer="defer"></script>
-<script src="/assets/js/main.9d1ed5a4.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.fc0cd78a.js" defer="defer"></script>
+<script src="/assets/js/main.d681f249.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -77,10 +77,12 @@ own, so they get a plain table instead of a resource. ## Three lenses, one set o
 <p><strong>Party</strong> reads the hierarchy — membership through <code>belongsTo</code>, the unit tree through <code>isPartOf</code>,
 the human behind an account through <code>hasProfile</code>. <strong>RBAC</strong> walks user → role → capability → action,
 directly or through the unit the user belongs to, and materializes the answer into <code>core.path</code> as
-<code>access.effectiveRole</code>, <code>access.effectiveAction</code> and <code>access.effectiveScope</code>, so a permission check
-is one indexed lookup instead of a recursive walk. <strong>The record-level ACL</strong> adds the narrowing
-direction: <code>access_acl</code> is a table whose principal, action and target are all resources, so a rule
-can attach to any of them, and its implicit half is a <code>hasScope</code> edge in the same graph.</p>
+<code>access.effectiveRole</code>, <code>access.effectiveAction</code> and <code>access.effectiveScope</code>, so the caller&#x27;s
+effective actions are one indexed lookup instead of a recursive walk — read at login, to pack the
+token&#x27;s bitmask, while the per-request check expands that bitmask with a cache. <strong>The record-level
+ACL</strong> adds the narrowing direction: <code>access_acl</code> is a table whose principal, action and target are
+all resources, so a rule can attach to any of them, and its implicit half is a <code>hasScope</code> edge in
+the same graph.</p>
 <p>Note what is <em>not</em> claimed here: the graph does not replace the tables. A role is still a table with
 a <code>roleBit</code> column; <code>access_acl</code> is still a table with rules in it; the unit hierarchy is
 materialized into <code>core_path</code> rather than computed on every read. What the graph changes is that the
