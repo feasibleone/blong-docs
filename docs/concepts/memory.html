@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.fc0cd78a.js" defer="defer"></script>
-<script src="/assets/js/main.d681f249.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.1bccd2d2.js" defer="defer"></script>
+<script src="/assets/js/main.d26a6a7b.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -28,13 +28,17 @@ package:</p>
 command owns the ids, the date/area/status line, the 100-column wrapping and the generated index.
 Each entry has a stable id (<code>F-014</code>, <code>T-003</code>, <code>D-081</code>), so a note can cite another one without a
 line number that rots.</p>
+<p>Each entry is also pushed into a local <strong>semantic index</strong> as it is written, so the notes can be
+searched by meaning rather than by the words an entry happens to use. That index is derived and
+disposable: the markdown stays the source of truth, an unreachable server never fails a write, and
+<code>blong-dev memory index --semantic</code> rebuilds the whole thing.</p>
 <p>Entries are filed by <strong>area</strong>: a package folder from <code>rush.json</code> (<code>core/blong-browser</code>) or one of
 the reserved cross-cutting labels <code>cross-cutting</code>, <code>ci</code>, <code>docs</code>, <code>skills</code>. A package&#x27;s entries live
 in that package&#x27;s own file; the root file keeps only what concerns the workspace as a whole.</p>
 <ul>
-<li class=""><a class="" href="/docs/patterns/memory">Pattern guide</a> — the commands, the entry shape, the checks.</li>
+<li class=""><a class="" href="/docs/patterns/memory">Pattern guide</a> — the commands, the entry shape, the checks, semantic search.</li>
 <li class=""><a class="" href="/docs/rationale/memory">Rationale</a> — why the notes are files with ids instead of prose and a
-tracker.</li>
+tracker, and why the index over them is disposable.</li>
 </ul>
 </div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/concepts/layer"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Layer</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/concepts/modules"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Modules</div></a></nav></div></div></div></div></main></div></div></div></div>
 </body>

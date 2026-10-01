@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.fc0cd78a.js" defer="defer"></script>
-<script src="/assets/js/main.d681f249.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.1bccd2d2.js" defer="defer"></script>
+<script src="/assets/js/main.d26a6a7b.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -81,6 +81,10 @@ through a Storybook parameter:</p>
 story, so the story always renders the variant it names. The checkout contains paired stories bound
 from the same page — <code>editor--glass</code> and <code>editor--wood</code>, plus a toolbar and a tilt pair — which is
 the cheapest way to confirm that a change to one variant did not disturb the other.</p>
+<p>A reviewer can also switch theme, palette and text direction from the story toolbar (see
+<a class="" href="/docs/patterns/blong-browser#the-story-toolbar">the story toolbar</a>), which writes the same app-store
+selection the portal&#x27;s own theme switcher writes. A hero story that sets <code>parameters.theme</code> keeps
+its variant until the toolbar is used — only a changed choice is applied.</p>
 <p>Tests worth knowing about: <code>themeRegistry.test.ts</code> asserts that option ids are unique and that every
 referenced PrimeReact folder has a loader (the failure mode being a theme option that silently loads
 nothing); <code>Theme.test.tsx</code> and <code>ThemeSwitcher.test.tsx</code> cover variant selection, the palette toggle

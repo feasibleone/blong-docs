@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.fc0cd78a.js" defer="defer"></script>
-<script src="/assets/js/main.d681f249.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.1bccd2d2.js" defer="defer"></script>
+<script src="/assets/js/main.d26a6a7b.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -63,7 +63,10 @@ over.</p>
 portal stories, <code>orchestrator/subject/init.ts</code>, <code>server/test/</code>, a Playwright spec, the toolchain
 files and a <code>package.json</code>. The scaffolded realm contributes only what is its own — the namespace in
 <code>orchestrator/subject/init.ts</code>, the schema and the model spec — and reuses <code>blong-server</code>&#x27;s subject
-orchestrator and its <code>db</code> adapter, which is the same rule every hand-written realm follows.</p>
+orchestrator and its <code>db</code> adapter, which is the same rule every hand-written realm follows. Its
+<code>.storybook/preview.tsx</code> is one line, <code>defineBlongStorybookPreview(browser, {backend: true})</code>, which
+brings the story toolbar (mock or live backend, role, theme, language, direction) with it; the
+fixture it ships mirrors the test seed&#x27;s record ids, so the Open story loads in both backend modes.</p>
 <p>Generated <em>output</em> is not part of the template: <code>node_modules</code>, <code>dist</code>, <code>.tap</code>, <code>coverage</code>,
 <code>.ci-report</code>, <code>allure-*</code>, <code>.playwright</code>, <code>storybook-static</code>, <code>*-snapshots</code> and the template&#x27;s own
 <code>.github/memory</code> are excluded by the shared ignore list, so a new realm does not inherit another

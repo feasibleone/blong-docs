@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.fc0cd78a.js" defer="defer"></script>
-<script src="/assets/js/main.d681f249.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.1bccd2d2.js" defer="defer"></script>
+<script src="/assets/js/main.d26a6a7b.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -67,6 +67,10 @@ inside a translated sentence.</p>
 <p>A Storybook story takes a <code>lang</code> arg, and the dispatcher decorator applies it — dictionary, locale
 and language — for that story alone:</p>
 <div class="language-ts codeBlockContainer_mnH6 theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_Amt0"><pre tabindex="0" class="prism-code language-ts codeBlock_dwH7 thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_x3Qn"><div class="token-line" style="color:#000000"><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">const</span><span class="token plain"> ToolbarBG</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> Story </span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token operator" style="color:rgb(0, 0, 0)">...</span><span class="token plain">Toolbar</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">ToolbarBG</span><span class="token punctuation" style="color:rgb(4, 81, 165)">.</span><span class="token plain">args </span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">lang</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">&#x27;bg&#x27;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><br></div></code></pre></div></div>
+<p>The toolbar&#x27;s <strong>Language</strong> item switches every story at once, through <code>useAppStore.setLanguage</code>. The
+two do not fight: only a value the reviewer <em>changed</em> in the toolbar is applied, so a story that
+names its own language keeps it until someone reaches for the item. The item&#x27;s own list defaults to
+<code>en</code> and <code>bg</code> and can be widened with the toolbar options.</p>
 <p>That is how a component&#x27;s behaviour in another language is reviewed next to its English story,
 without a running suite in the background.</p>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="testing-translation">Testing translation<a href="#testing-translation" class="hash-link" aria-label="Direct link to Testing translation" title="Direct link to Testing translation" translate="no">​</a></h2>

@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.fc0cd78a.js" defer="defer"></script>
-<script src="/assets/js/main.d681f249.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.1bccd2d2.js" defer="defer"></script>
+<script src="/assets/js/main.d26a6a7b.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -70,7 +70,7 @@ development defaults, deriving the database name as <code>&lt;suite&gt;-&lt;user
 Multiple statements separated by <code>;</code> run in one round trip. <code>--output json</code> exists for the non-TTY
 case, which is what makes the command usable from an agent as well as from a terminal.</p>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="docs-and-memory">Docs and memory<a href="#docs-and-memory" class="hash-link" aria-label="Direct link to Docs and memory" title="Direct link to Docs and memory" translate="no">​</a></h2>
-<div class="language-bash codeBlockContainer_mnH6 theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_Amt0"><pre tabindex="0" class="prism-code language-bash codeBlock_dwH7 thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_x3Qn"><div class="token-line" style="color:#000000"><span class="token plain">blong-dev docs list            # the register of generated artefacts</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev docs check           # regenerate, compare, restore — non-zero when stale</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev docs verify          # build/serve the site and load every page in Chromium</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory add friction --title &quot;…&quot; --area core/blong-browser --body &quot;…&quot;</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory check</span><br></div></code></pre></div></div>
+<div class="language-bash codeBlockContainer_mnH6 theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_Amt0"><pre tabindex="0" class="prism-code language-bash codeBlock_dwH7 thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_x3Qn"><div class="token-line" style="color:#000000"><span class="token plain">blong-dev docs list            # the register of generated artefacts</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev docs check           # regenerate, compare, restore — non-zero when stale</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev docs verify          # build/serve the site and load every page in Chromium</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory add friction --title &quot;…&quot; --area core/blong-browser --body &quot;…&quot;</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory search &quot;why do agents edit memory files by hand&quot;</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory check</span><br></div></code></pre></div></div>
 <p><code>docs</code> reads <code>docs/blong/docs-artifacts.json</code>, the register of everything in the documentation site
 that is generated rather than written. <code>check</code> snapshots the destinations, runs the generators and
 restores them, so a stale diagram is a non-zero exit rather than a silent difference in review;
@@ -79,7 +79,11 @@ restores them, so a stale diagram is a non-zero exit rather than a silent differ
 expected against those that rendered.</p>
 <p><code>memory</code> is the writer and validator of the agent memory files: it owns the identifiers, the section
 an entry belongs to, the wrapping and the generated index, and <code>check</code> is the gate — it is wired
-into the staged-file lint, so a malformed memory file fails a commit rather than a review comment.</p>
+into the staged-file lint, so a malformed memory file fails a commit rather than a review comment.
+Every write also pushes the entry it touched into a local Hindsight index, which is what
+<code>memory search</code> reads; the markdown stays the source of truth, so an unreachable server costs a
+warning and <code>memory index --semantic</code> rebuilds. See the
+<a class="" href="/docs/patterns/memory#searching-by-meaning">memory pattern</a> for the settings and the backfill.</p>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="why-agents-and-people-use-the-same-commands">Why agents and people use the same commands<a href="#why-agents-and-people-use-the-same-commands" class="hash-link" aria-label="Direct link to Why agents and people use the same commands" title="Direct link to Why agents and people use the same commands" translate="no">​</a></h2>
 <p>The reason this is one CLI rather than a set of convenience scripts is that the development loop and
 the agent loop have the same shape. An agent asked to fix a failing test needs the same four things

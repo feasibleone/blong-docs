@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.fc0cd78a.js" defer="defer"></script>
-<script src="/assets/js/main.d681f249.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.1bccd2d2.js" defer="defer"></script>
+<script src="/assets/js/main.d26a6a7b.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -101,8 +101,9 @@ uses) activates in <code>storybook</code> and <code>integration</code> environme
 from <code>.model</code> and <code>.fixture</code> handlers. No manual mock setup is needed — add a fixture handler named
 <code>{subject}Fixture</code> that returns sample data keyed by <code>&#x27;{subject}.{object}&#x27;</code>.</p>
 <p>The <code>Model</code> React component (exported from <code>@feasibleone/blong-browser</code>) is the canonical way to
-render model pages in Storybook stories. It uses the full blong platform (loaded via
-<code>withBlong(browser)</code> in <code>.storybook/preview.tsx</code>) so all handlers are available.</p>
+render model pages in Storybook stories. It uses the full blong platform (loaded by
+<code>defineBlongStorybookPreview</code> in <code>.storybook/preview.tsx</code>) so all handlers are available — from the
+realm&#x27;s fixture, or from a live gateway when the story toolbar&#x27;s Backend item says so.</p>
 <p>See <code>demo/blong-marine/</code> for a working Storybook example using the marine biology realm. Stories
 live in <code>demo/blong-marine/src/stories/</code> and use <code>page()</code> / <code>portal()</code> helpers from
 <code>@feasibleone/blong-browser/storyHelper</code>. The suite wrapper <code>suite/blong-suite/</code> also exposes all
