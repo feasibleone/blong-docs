@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.1bccd2d2.js" defer="defer"></script>
-<script src="/assets/js/main.d26a6a7b.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.8d693689.js" defer="defer"></script>
+<script src="/assets/js/main.99395b2c.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -31,7 +31,9 @@ line number that rots.</p>
 <p>Each entry is also pushed into a local <strong>semantic index</strong> as it is written, so the notes can be
 searched by meaning rather than by the words an entry happens to use. That index is derived and
 disposable: the markdown stays the source of truth, an unreachable server never fails a write, and
-<code>blong-dev memory index --semantic</code> rebuilds the whole thing.</p>
+<code>blong-dev memory index --semantic</code> rebuilds the whole thing. The same bank also holds the published
+documentation pages and the agent skills, each keyed by its path so an edit replaces rather than
+duplicates — a search asks for the entries unless it names another stream.</p>
 <p>Entries are filed by <strong>area</strong>: a package folder from <code>rush.json</code> (<code>core/blong-browser</code>) or one of
 the reserved cross-cutting labels <code>cross-cutting</code>, <code>ci</code>, <code>docs</code>, <code>skills</code>. A package&#x27;s entries live
 in that package&#x27;s own file; the root file keeps only what concerns the workspace as a whole.</p>

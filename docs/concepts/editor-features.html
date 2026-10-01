@@ -12,8 +12,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.c03880b3.css">
-<script src="/assets/js/runtime~main.1bccd2d2.js" defer="defer"></script>
-<script src="/assets/js/main.d26a6a7b.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.8d693689.js" defer="defer"></script>
+<script src="/assets/js/main.99395b2c.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -27,9 +27,10 @@ use cases.</p>
 <p>This document is a <strong>feature guide</strong>: one section per capability, each with the goal it serves, the
 props and schema keys that drive it, and — where one exists — the Storybook story that shows it
 running. The interactive examples live in the <code>Editor/…</code> story group under
-<code>core/blong-browser/src/components/Editor/stories/</code>. The pictures on this page come from the
-<code>demo/blong-marine</code> Coral entity and are captured by <code>demo/blong-marine/test/docs.play.ts</code>.</p>
-<p>The stories are runnable: <code>cd demo/blong-marine &amp;&amp; npm run storybook</code> serves them on port 6007 (the
+<code>core/blong-browser/src/components/Editor/stories/</code>, and the pictures of them are captured by
+<code>core/blong-browser/test/docs.play.ts</code>; the loaded and empty forms at the top of the page are the
+<code>demo/blong-marine</code> Coral entity, captured by <code>demo/blong-marine/test/docs.play.ts</code>.</p>
+<p>The stories are runnable: <code>cd core/blong-browser &amp;&amp; npm run storybook</code> serves them on port 6006 (the
 conventions are in the <a class="" href="/docs/patterns/blong-browser#storybook-pattern">Storybook pattern</a>).</p>
 <p>The Editor with a record loaded — a tabbed portal, the toolbar, and a form whose widgets are all
 derived from the model&#x27;s schema: a text field, a select-button group, dropdowns, a number spinner, a
@@ -71,7 +72,8 @@ actions.</p>
 </ul>
 <p>The <code>Editor</code> and <code>Editor/TableToolbar</code> stories cover the toolbar states: the Edit button in read
 mode, the Save / Reset pair in both enabled and untouched states, and the extra left and right
-button slots.</p>
+button slots. The <code>Toolbar</code> story fills the left slot with four realm actions beside Save and Reset:</p>
+<p><img decoding="async" loading="lazy" alt="The editor toolbar with four realm actions in its left-hand slot" src="/assets/images/editor-toolbar-6bf2b10f05899d0707e6279882f9b876.png" width="1400" height="954" class="img_uRFP"></p>
 <hr>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="3-validation">3. Validation<a href="#3-validation" class="hash-link" aria-label="Direct link to 3. Validation" title="Direct link to 3. Validation" translate="no">​</a></h2>
 <p><strong>Goal:</strong> Provide immediate, precise feedback when the user makes an error — both from client-side
@@ -88,6 +90,9 @@ button</li>
 <p>The <code>Editor/Validation</code> story exercises both halves: submitting an empty required field shows the
 client-side rule, and a failing save shows a <code>{validation: [{field, message}]}</code> response pushed back
 under the offending field with <code>error.print</code> in the popover.</p>
+<p>The client half, photographed from that story: the required Name was cleared and the form submitted,
+so the rule appears beneath the field and the app raises its own summary toast:</p>
+<p><img decoding="async" loading="lazy" alt="A required field showing its inline error and the validation toast" src="/assets/images/editor-validation-d83414699f87f6ecde0c30fe0d4c3879.png" width="1400" height="899" class="img_uRFP"></p>
 <hr>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="4-cards-and-layouts">4. Cards and Layouts<a href="#4-cards-and-layouts" class="hash-link" aria-label="Direct link to 4. Cards and Layouts" title="Direct link to 4. Cards and Layouts" translate="no">​</a></h2>
 <p><strong>Goal:</strong> Organise fields into named groups (cards) and arrange those groups on the page in a
@@ -114,6 +119,9 @@ an <code>Explorer</code>) instead of a list of cards.</p>
 <p>Each layout has a story: <code>Editor/TabbedLayout</code>, <code>Editor/ThumbIndexLayout</code> (tab orientation),
 <code>Editor/Explorer</code> (the split layout, with an <code>Explorer</code> injected into a panel),
 <code>Editor/ResponsiveLayout</code> and <code>Editor/PortalComponent</code>.</p>
+<p>The tab layout on the Coral entity, from the <code>Tabs</code> story — <code>layouts.edit</code> is an object carrying
+<code>items</code> here, where the flat layout is an array:</p>
+<p><img decoding="async" loading="lazy" alt="A form under a horizontal tab bar with three tabs" src="/assets/images/editor-tabs-e371fa056cfa301fe41cf4183a675c02.png" width="1400" height="339" class="img_uRFP"></p>
 <hr>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="5-schema-driven-widget-resolution">5. Schema-Driven Widget Resolution<a href="#5-schema-driven-widget-resolution" class="hash-link" aria-label="Direct link to 5. Schema-Driven Widget Resolution" title="Direct link to 5. Schema-Driven Widget Resolution" translate="no">​</a></h2>
 <p><strong>Goal:</strong> Automatically select the correct input widget for each field from the JSON Schema type,
@@ -157,7 +165,8 @@ silently ignored.</p>
 <p>A realm can supply its own widget through the <code>editors</code> prop of <code>Form</code> or <code>Editor</code>: a component that
 receives <code>Input</code>, <code>Label</code> and <code>ErrorLabel</code> factories and declares the fields it owns in a static
 <code>properties</code> array, so the layout treats those fields as one row. The <code>Editor/CustomEditors</code> story
-shows the smallest real one — a period and a unit rendered together.</p>
+shows the smallest real one — a period and a unit rendered together:</p>
+<p><img decoding="async" loading="lazy" alt="A custom editor rendering a number and a unit side by side in one row" src="/assets/images/editor-custom-editors-2258d8e9a697fbb80a67523e22dfe0ba.png" width="1400" height="201" class="img_uRFP"></p>
 <p>A widget talks back to the form with a method name rather than an emitter. <code>methods</code> on the form
 maps a name to a function, and a field&#x27;s <code>widget.onChange: &#x27;handleA&#x27;</code> (or the form&#x27;s <code>onFieldChange</code>
 default) is dispatched before the value is written: the method receives <code>{field, value, form}</code> with
@@ -172,8 +181,9 @@ is not the per-field mechanism.</p>
 something is happening and does not interact with stale data.</p>
 <p>While the <code>loadAction</code> is pending, each field renders an animated <code>&lt;Skeleton&gt;</code> placeholder at the
 same size as the real input. The toolbar is disabled during loading.</p>
-<p>No picture of this state has been captured yet. The skeleton is rendered for as long as <code>loadAction</code>
-is pending, and the toolbar is disabled for the same period.</p>
+<p>The <code>Editor/Loading</code> story holds that state still — its <code>coralCoralLoad</code> never resolves — so the
+skeletons are the whole picture, in the layout the fields will have:</p>
+<p><img decoding="async" loading="lazy" alt="Every field of the form replaced by a skeleton placeholder" src="/assets/images/editor-loading-0ab35700ef0f00803c8d8cf801f3b6e8.png" width="1400" height="701" class="img_uRFP"></p>
 <hr>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="7-design-mode">7. Design Mode<a href="#7-design-mode" class="hash-link" aria-label="Direct link to 7. Design Mode" title="Direct link to 7. Design Mode" translate="no">​</a></h2>
 <p><strong>Goal:</strong> Allow authorised users (e.g. system administrators) to rearrange the field layout, change
@@ -191,8 +201,9 @@ effort.</p>
 <p>The persistence is the host&#x27;s job, and <strong>nothing is persisted today</strong>: <code>Editor</code> wraps its content in
 <code>DesignModeProvider</code> without an <code>onSave</code>, so <code>saveConfig()</code> returns immediately and the edits live
 only in the provider&#x27;s state for the lifetime of the page.</p>
-<p>No walkthrough has been captured yet; <code>Editor/Explorer</code> is the story that runs design mode over a
-real layout.</p>
+<p>The <code>Design</code> story opens in design mode over the Coral entity — the card grips, the design toolbar
+in place of Save, and the <code>PropertyEditor</code> on the right for the field the play function selected:</p>
+<p><img decoding="async" loading="lazy" alt="Design mode: gripped cards and a property panel open beside the form" src="/assets/images/editor-design-6737c628bb09781f8f38bd8a1168d4d4.png" width="1400" height="1186" class="img_uRFP"></p>
 <hr>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="8-master-detail">8. Master-Detail<a href="#8-master-detail" class="hash-link" aria-label="Direct link to 8. Master-Detail" title="Direct link to 8. Master-Detail" translate="no">​</a></h2>
 <p><strong>Goal:</strong> Edit the selected row of an inline table directly in a detail card, without opening a
@@ -202,7 +213,10 @@ separate page, for compact relational editing workflows.</p>
 form&#x27;s Save button persists the whole structure.</p>
 <p>Polymorphic variant: multiple detail cards each with a <code>match</code> condition on the selected row — only
 the matching card is shown at a time.</p>
-<p>See the <code>Editor/MasterDetail</code> story, and <code>Editor/MasterDetailPolymorphic</code> for the <code>match</code> variant.</p>
+<p>See the <code>Editor/MasterDetail</code> story, and <code>Editor/MasterDetailPolymorphic</code> for the <code>match</code> variant.
+The picture is the first of those with its first row selected, so the detail card holds the row a
+reader would otherwise have to imagine:</p>
+<p><img decoding="async" loading="lazy" alt="A table and a detail card editing the selected row" src="/assets/images/editor-master-detail-86dccb9f632e295e5e4278d3977c2628.png" width="1400" height="265" class="img_uRFP"></p>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="8b-declared-master-detail">8b. Declared master-detail<a href="#8b-declared-master-detail" class="hash-link" aria-label="Direct link to 8b. Declared master-detail" title="Direct link to 8b. Declared master-detail" translate="no">​</a></h2>
 <p>The card above is hand-built. A model can declare the relationship instead, and the generator
 expands it: <code>IModelSpec.details</code> takes one entry per child object, and the defaults turn each into a
@@ -226,7 +240,9 @@ enabling hierarchical selection (e.g. continent → country → city) without an
 <p>A child dropdown widget declares <code>widget.parent: &#x27;parentFieldName&#x27;</code>. When the parent value changes,
 the child dropdown filters its options to entries whose <code>parent</code> property matches the new parent
 value.</p>
-<p>See the <code>Editor/CascadedDropdowns</code> story.</p>
+<p>See the <code>Editor/CascadedDropdowns</code> story. Its three fields are the continent → country → city chain,
+and the open city list holds the one city of the selected country rather than all ten:</p>
+<p><img decoding="async" loading="lazy" alt="Cascaded dropdowns with the city list filtered to the selected country" src="/assets/images/editor-cascaded-dropdowns-e63aaa3bbb0ac568c0537791f11ecf1a.png" width="700" height="380" class="img_uRFP"></p>
 <hr>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="10-cascaded-tables">10. Cascaded Tables<a href="#10-cascaded-tables" class="hash-link" aria-label="Direct link to 10. Cascaded Tables" title="Direct link to 10. Cascaded Tables" translate="no">​</a></h2>
 <p><strong>Goal:</strong> Filter a child table&#x27;s rows based on the selected row of a parent table, enabling
@@ -234,7 +250,10 @@ parent-child list views in a single page.</p>
 <p>The child table widget declares <code>widget.parent: &#x27;$.selected.parentTable&#x27;</code> and
 <code>widget.master: {childKey: &#x27;parentKey&#x27;}</code>. Rows in the child table are filtered to those matching the
 selected parent row.</p>
-<p>See <code>Editor/CascadedTables</code>, and <code>Editor/CascadedTablesVariant</code> for the three-level case.</p>
+<p>See <code>Editor/CascadedTables</code>, and <code>Editor/CascadedTablesVariant</code> for the three-level case. In the
+first, the document table holds the selected person&#x27;s three documents and the attachment table that
+document&#x27;s two pages:</p>
+<p><img decoding="async" loading="lazy" alt="Three tables, each filtered by the selection in the one before it" src="/assets/images/editor-cascaded-tables-6c00d6951077551795301c05e0b92201.png" width="1400" height="333" class="img_uRFP"></p>
 <hr>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="11-polymorphic-layout-typefield">11. Polymorphic Layout (typeField)<a href="#11-polymorphic-layout-typefield" class="hash-link" aria-label="Direct link to 11. Polymorphic Layout (typeField)" title="Direct link to 11. Polymorphic Layout (typeField)" translate="no">​</a></h2>
 <p><strong>Goal:</strong> Switch the active editor layout automatically when a discriminator field changes (e.g.
@@ -266,7 +285,8 @@ toggle-only, with no row editor. A named pivot dropdown is loaded once through t
 registry, so rows are as fresh as that load. And writing a pivot needs a handler that reconciles the
 whole array: the generic CRUD adapter does not do it.</p>
 <p>See the <code>Editor/Pivot</code> story, which shows both halves — a weekday schedule built from
-<code>pivot.examples</code>, and a permissions matrix whose rows come from <code>pivot.dropdown</code>.</p>
+<code>pivot.examples</code>, and a permissions matrix whose rows come from <code>pivot.dropdown</code>:</p>
+<p><img decoding="async" loading="lazy" alt="A weekday schedule and a permissions matrix, each seeded from a different source" src="/assets/images/editor-pivot-c08d7421c346abab963b5592b0cda0dd.png" width="1400" height="806" class="img_uRFP"></p>
 <hr>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="13-file-upload">13. File Upload<a href="#13-file-upload" class="hash-link" aria-label="Direct link to 13. File Upload" title="Direct link to 13. File Upload" translate="no">​</a></h2>
 <p><strong>Goal:</strong> Let a user pick a file — an image, a document — inside the form, with a preview where a
@@ -299,6 +319,7 @@ table with a <code>listAction</code> in the middle, a detail panel on the right,
 editor&#x27;s toolbar. The <code>Editor/Explorer</code> stories are that composition written out by hand, and they
 supersede the older standalone <code>Explorer</code> component&#x27;s stories for generated pages: the standalone
 component is still there for a page that wants a table and filters without an editor around them.</p>
+<p><img decoding="async" loading="lazy" alt="The explorer: a category tree, a table and a detail panel under the editor toolbar" src="/assets/images/editor-explorer-76a5368cce19a0f9a84a78fd8cd30483.png" width="1400" height="617" class="img_uRFP"></p>
 <h2 class="anchor anchorTargetStickyNavbar_HEgF" id="16-what-made-it-usable">16. What made it usable<a href="#16-what-made-it-usable" class="hash-link" aria-label="Direct link to 16. What made it usable" title="Direct link to 16. What made it usable" translate="no">​</a></h2>
 <p>Three defects in the generated editor were worth fixing at the framework level, because every page
 inherits them.</p>
