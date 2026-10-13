@@ -247,15 +247,18 @@ commit message, exactly as if you had grepped it.</p>
 <p>The feature is small on purpose. The files are the source of truth and the index is downstream of
 them, in both directions:</p>
 <!-- -->
-<p>The <strong>write path</strong> is a hook, not a second thing to remember to run: <code>add</code>, <code>edit</code>, <code>close</code>, <code>move</code>
-and <code>prune</code> push the entry they touched into the index after the file is written. The markdown is
-unchanged by it, and a hook that cannot reach the server costs a warning rather than a failure.</p>
+<p>The <strong>write path</strong> is a hook, not a second thing to remember to run: whatever command changes an
+entry pushes it into the index after the file is written, and whatever removes one takes its
+document out again. The markdown is unchanged by it, and a hook that cannot reach the server costs a
+warning rather than a failure.</p>
 <p>The <strong>read path</strong> is one command with filters for kind, area and status, so "find the decision about
 this" is one keystroke away from "find anything about this".</p>
 <p>The <strong>backfill</strong> exists because the index is derived and therefore disposable:
-<code>memory index --semantic</code> walks the whole tree and re-ingests every entry, which is the recovery for
-a wiped bank, a new machine, or a question about whether the index still matches the files. Today it
-rebuilds all 596 entries in about half a minute.</p>
+<code>memory index --semantic</code> re-ingests the tree — every entry by default, and with <code>--sources</code> the
+documentation pages and skills the search can compare on equal terms — which is the recovery for a
+wiped bank, a new machine, or a question about whether the index still matches the files. Today that
+is 1 049 entries in about four seconds, and it reports what the bank holds that the tree no longer
+does, which is how that drift gets noticed instead of being assumed away.</p>
 <h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-files-stay-the-source-of-truth">The files stay the source of truth<a href="http://blong.feasible.one/blog/the-repo-answers-by-meaning#the-files-stay-the-source-of-truth" class="hash-link" aria-label="Direct link to The files stay the source of truth" title="Direct link to The files stay the source of truth" translate="no">​</a></h2>
 <p>Three properties keep the index from becoming a second, quietly diverging record:</p>
 <ul>
@@ -271,6 +274,8 @@ server exits non-zero and says which URL it tried, because an empty answer would
 of it.</li>
 </ul>
 <table><thead><tr><th>Setting</th><th>Default</th><th>Turns</th></tr></thead><tbody><tr><td><code>HINDSIGHT_API_URL</code></td><td><code>http://localhost:8888</code></td><td>which server the index lives on</td></tr><tr><td><code>HINDSIGHT_BANK</code></td><td><code>blong</code></td><td>which collection of entries to read and write</td></tr><tr><td><code>HINDSIGHT_DISABLED</code></td><td>unset</td><td>the write hook off, for a machine without a server</td></tr></tbody></table>
+<p>The first two may also live in <code>.blong_devrc</code>, as <code>hindsight.url</code> and <code>hindsight.bank</code> — which is
+how a machine stores them once rather than exporting them in every shell.</p>
 <h2 class="anchor anchorTargetStickyNavbar_l5nE" id="one-choice-that-could-not-be-undone">One choice that could not be undone<a href="http://blong.feasible.one/blog/the-repo-answers-by-meaning#one-choice-that-could-not-be-undone" class="hash-link" aria-label="Direct link to One choice that could not be undone" title="Direct link to One choice that could not be undone" translate="no">​</a></h2>
 <p>Almost everything about the index is reversible by deleting it — except the width of the vectors it
 stores, which the schema fixes the first time a document is written. So the embedding model was
@@ -297,7 +302,10 @@ both claims.</p>
 <a class="" href="http://blong.feasible.one/docs/patterns/memory">the memory pattern guide</a>; <a class="" href="http://blong.feasible.one/docs/concepts/memory">the concept page</a> covers
 what the notes are, and <a class="" href="http://blong.feasible.one/docs/rationale/memory">the rationale</a> explains why the files are markdown
 with ids rather than a database — which is also why the index beside them is allowed to be
-disposable.</p>]]></content>
+disposable.</p>
+<p>The post that follows takes the same ids out of the notes and back into the code:
+<a class="" href="http://blong.feasible.one/blog/prose-cross-reference">prose cross references</a> are how a comment cites the reasoning it
+depends on instead of restating it.</p>]]></content>
         <author>
             <name>Kalin Krustev</name>
             <uri>https://github.com/kalinkrustev</uri>
