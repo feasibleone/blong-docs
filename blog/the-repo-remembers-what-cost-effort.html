@@ -12,7 +12,7 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.604b85df.css">
-<script src="/assets/js/runtime~main.375525f8.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.e384827f.js" defer="defer"></script>
 <script src="/assets/js/main.b1150ca2.js" defer="defer"></script>
 </head>
 <body>
@@ -46,10 +46,12 @@ plan, a commit message can all say <code>see T-136</code> and the reference keep
 reordered, split or moved. A line number in a note rots the first time anybody adds a paragraph
 above it; an id does not.</p>
 <p>Ids are allocated by the command, never reused, and shared across the whole workspace, so <code>F-292</code> is
-one specific afternoon wherever it is filed. The files themselves are filed by <strong>area</strong>: a package
-folder from <code>rush.json</code> (<code>core/blong-browser</code>), or one of the reserved labels <code>cross-cutting</code>, <code>ci</code>,
-<code>docs</code> and <code>skills</code>. A package&#x27;s notes live in that package, next to the code they are about, and
-the root file keeps only what concerns the workspace as a whole.</p>
+one specific afternoon wherever it is filed. An entry that is closed or removed leaves its id behind
+in a <code>## Retired</code> ledger at the foot of the file, so a reference to it still resolves — as done,
+with the date — instead of pointing at whatever number came next. The files themselves are filed by
+<strong>area</strong>: a package folder from <code>rush.json</code> (<code>core/blong-browser</code>), or one of the reserved labels
+<code>cross-cutting</code>, <code>ci</code>, <code>docs</code> and <code>skills</code>. A package&#x27;s notes live in that package, next to the code
+they are about, and the root file keeps only what concerns the workspace as a whole.</p>
 <h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-command-owns-the-format">The command owns the format<a href="#the-command-owns-the-format" class="hash-link" aria-label="Direct link to The command owns the format" title="Direct link to The command owns the format" translate="no">​</a></h2>
 <div class="language-bash codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-bash codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory add friction --area core/blong-gogo --title &quot;…&quot; --body &quot;…&quot;</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory list --kind friction --area core/blong-browser --status open</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory list --search &quot;connection pool&quot; --json</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory show F-014</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory close F-014 --note &quot;fixed in b1f3c9a&quot;</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory close D-018 --by D-042 --reason &quot;the union is no longer debounced&quot;</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory check</span><br></div></code></pre></div></div>
 <p>Nobody hand-edits these files, and the reason is not tidiness. The command owns the id allocation,
@@ -59,9 +61,10 @@ refuses what it cannot render: a title over eighty characters is rejected with t
 folder nor a reserved label. The index is derived from the entries, so a drifted index is a <code>check</code>
 failure rather than a stale file, and the same command is wired into the pre-commit hook: staged
 changes under <code>.github/memory/</code> are checked before the commit is recorded.</p>
-<p>Two consequences are worth naming. The index is how the files stay cheap to read: an agent opens the
-first forty lines and sees every entry in the file, one line each, grouped by status. And a batch
-import validates <em>before</em> writing anything, so it lands whole or not at all.</p>
+<p>Two consequences are worth naming. The index is how the files stay cheap to read: the top of the
+file lists every entry in it, one line each, grouped by status, so a reader knows what a file holds
+before reading a single entry. And a batch import validates <em>before</em> writing anything, so it lands
+whole or not at all.</p>
 <h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-it-does-not-do-said-plainly">What it does not do, said plainly<a href="#what-it-does-not-do-said-plainly" class="hash-link" aria-label="Direct link to What it does not do, said plainly" title="Direct link to What it does not do, said plainly" translate="no">​</a></h2>
 <p>The memory files are not a tracker, and the failure mode would be pretending otherwise: no
 assignment, no priority, no due date, nothing that reminds anybody. <code>audit</code> finds dangling
@@ -85,6 +88,7 @@ same thing again.</p>
 <p>How it works, with the commands and the entry shape, is in
 <a class="" href="/docs/patterns/memory">the memory pattern guide</a>; <a class="" href="/docs/concepts/memory">the concept page</a> covers
 the three kinds, and <a class="" href="/docs/rationale/memory">the rationale</a> explains why this is markdown with ids
-rather than a database or a tracker.</p></div><footer class="docusaurus-mt-lg"><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class="col"><b>Tags:</b><ul class="tags_sJh7 padding--none margin-left--sm"><li class="tag_nuXM"><a rel="tag" title="The framework itself — how it is shaped and why." class="tag_Lugz tagRegular_t_fA" href="/blog/tags/blong">Blong</a></li><li class="tag_nuXM"><a rel="tag" title="The commands and generators that build Blong itself." class="tag_Lugz tagRegular_t_fA" href="/blog/tags/tooling">Tooling</a></li></ul></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Blog post page navigation"><a class="pagination-nav__link pagination-nav__link--prev" href="/blog/one-sticky-comment-for-the-whole-monorepo"><div class="pagination-nav__sublabel">Newer post</div><div class="pagination-nav__label">One sticky comment for the whole monorepo</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/blog/the-log-line-that-knows-its-own-structure"><div class="pagination-nav__sublabel">Older post</div><div class="pagination-nav__label">The log line that knows its own structure</div></a></nav></main><div class="col col--2"><div class="tableOfContents_sOzr thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#three-kinds-three-statuses" class="table-of-contents__link toc-highlight">Three kinds, three statuses</a></li><li><a href="#a-note-has-an-id-and-the-id-is-the-point" class="table-of-contents__link toc-highlight">A note has an id, and the id is the point</a></li><li><a href="#the-command-owns-the-format" class="table-of-contents__link toc-highlight">The command owns the format</a></li><li><a href="#what-it-does-not-do-said-plainly" class="table-of-contents__link toc-highlight">What it does not do, said plainly</a></li></ul></div></div></div></div></div></div>
+rather than a database or a tracker. The next post in the series adds a way to read the same notes
+by meaning instead of by phrase: <a class="" href="/blog/the-repo-answers-by-meaning">the repo answers by meaning</a>.</p></div><footer class="docusaurus-mt-lg"><div class="row margin-top--sm theme-blog-footer-edit-meta-row"><div class="col"><b>Tags:</b><ul class="tags_sJh7 padding--none margin-left--sm"><li class="tag_nuXM"><a rel="tag" title="The framework itself — how it is shaped and why." class="tag_Lugz tagRegular_t_fA" href="/blog/tags/blong">Blong</a></li><li class="tag_nuXM"><a rel="tag" title="The commands and generators that build Blong itself." class="tag_Lugz tagRegular_t_fA" href="/blog/tags/tooling">Tooling</a></li></ul></div></div></footer></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Blog post page navigation"><a class="pagination-nav__link pagination-nav__link--prev" href="/blog/one-sticky-comment-for-the-whole-monorepo"><div class="pagination-nav__sublabel">Newer post</div><div class="pagination-nav__label">One sticky comment for the whole monorepo</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/blog/the-log-line-that-knows-its-own-structure"><div class="pagination-nav__sublabel">Older post</div><div class="pagination-nav__label">The log line that knows its own structure</div></a></nav></main><div class="col col--2"><div class="tableOfContents_sOzr thin-scrollbar"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#three-kinds-three-statuses" class="table-of-contents__link toc-highlight">Three kinds, three statuses</a></li><li><a href="#a-note-has-an-id-and-the-id-is-the-point" class="table-of-contents__link toc-highlight">A note has an id, and the id is the point</a></li><li><a href="#the-command-owns-the-format" class="table-of-contents__link toc-highlight">The command owns the format</a></li><li><a href="#what-it-does-not-do-said-plainly" class="table-of-contents__link toc-highlight">What it does not do, said plainly</a></li></ul></div></div></div></div></div></div>
 </body>
 </html>
