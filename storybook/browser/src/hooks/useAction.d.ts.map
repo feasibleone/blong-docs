@@ -1,0 +1,1 @@
+{"version":3,"file":"useAction.d.ts","sourceRoot":"","sources":["../../../src/hooks/useAction.ts"],"names":[],"mappings":"AASA,OAAO,KAAK,EAMR,gBAAgB,EACnB,MAAM,oBAAoB,CAAC;AAa5B;;;;;GAKG;AACH,wBAAgB,SAAS,CAAC,OAAO,GAAG,OAAO,EACvC,UAAU,EAAE,MAAM,EAClB,IAAI,CAAC,EAAE,MAAM,GAAG,OAAO,GAAG,UAAU,EACpC,MAAM,CAAC,EAAE,MAAM,CAAC,MAAM,EAAE,OAAO,CAAC,GACjC,gBAAgB,CAAC,OAAO,CAAC,CAsJ3B"}

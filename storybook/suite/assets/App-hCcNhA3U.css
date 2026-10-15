@@ -1,0 +1,374 @@
+/* AccountMenu — top-right avatar + dropdown in the portal menubar */
+
+.blong-account-menu {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.5rem;
+}
+
+.blong-account-menu__avatar {
+    cursor: pointer;
+    background: var(--surface-300, #e5e7eb);
+    color: var(--text-color, #334155);
+    font-weight: 600;
+}
+
+.blong-account-menu__avatar:hover {
+    background: var(--surface-400, #d1d5db);
+}
+
+.blong-account-menu__menu {
+    min-width: 14rem;
+}
+/* App — outermost theme wrapper fills the parent / viewport */
+.blong-app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+/* LanguageSwitcher — compact UI-language selector in the portal menubar */
+
+.blong-language-switcher {
+    margin-right: 0.5rem;
+    min-width: 7rem;
+    max-width: 12rem;
+}
+
+.blong-language-switcher .p-dropdown-label {
+    font-weight: 600;
+}
+/*
+ * Login component styles.
+ *
+ * Layout uses CSS grid with three symmetric rows:
+ *  - row 1 (1fr): product area    — content end-aligned (pushed toward card)
+ *  - row 2 (auto): login card     — perfectly centred
+ *  - row 3 (1fr): org brand area  — content start-aligned (pushed toward card)
+ *
+ * Both outer rows are 1fr so the card is always visually centred regardless
+ * of how much content the product or org areas contain.
+ *
+ *  ┌──────────────────────────────────────────┐
+ *  │                              [Register]  │  ← fixed top-right
+ *  │                                          │
+ *  │  ┌── product area (1fr, end-aligned) ──┐ │
+ *  │  │  [titleComponent slot]              │ │
+ *  │  │  [icon]  Product Title              │ │
+ *  │  └─────────────────────────────────────┘ │
+ *  │                                          │
+ *  │  ┌── card (auto) ──────────────────────┐ │
+ *  │  │  Login with password                │ │
+ *  │  │  Username: [__________]             │ │
+ *  │  │  Password: [__________][👁]         │ │
+ *  │  │  [          Login      ]            │ │
+ *  │  └─────────────────────────────────────┘ │
+ *  │                                          │
+ *  │  ┌── org brand area (1fr, start) ──────┐ │
+ *  │  │  [orgComponent / orgIcon + name]    │ │
+ *  │  └─────────────────────────────────────┘ │
+ *  └──────────────────────────────────────────┘
+ */
+
+/* Full-screen fixed overlay — bypasses .blong-app overflow:hidden */
+.blong-login {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    grid-template-rows: 1fr auto 1fr;
+    background: var(--surface-ground);
+    overflow-y: auto;
+}
+
+/* Register / Back-to-Login button — fixed top-right, above all content */
+.blong-login__register-area {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1;
+}
+
+/* ── Product area (above card) ─────────────────────────────────────── */
+/* Content end-aligned so it sits flush against the card */
+.blong-login__top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 2rem 1rem 2rem;
+    box-sizing: border-box;
+}
+
+/* Pluggable product header slot (titleComponent prop) */
+.blong-login__title-slot {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--text-color-secondary);
+}
+
+/* Brand row: icon + product name */
+.blong-login__brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.blong-login__brand-icon {
+    font-size: 4rem;
+    color: var(--primary-color);
+}
+
+.blong-login__brand-img {
+    height: 5rem;
+    object-fit: contain;
+}
+
+.blong-login__brand-name {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* ── Login card (auto height, middle row) ──────────────────────────── */
+.blong-login__card {
+    justify-self: center;
+    width: min(380px, 100% - 2rem);
+    background: var(--surface-card);
+    border-radius: var(--border-radius);
+    padding: 1.75rem 2rem 2rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+}
+
+.blong-login__card-heading {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-color-secondary);
+    margin: 0 0 1.25rem;
+}
+
+/* Error message full-width inside the card */
+.blong-login__error {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+/* Form fields */
+.blong-login__form .blong-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+/* Input + Password wrapper fill the card width */
+.blong-login__input,
+.blong-login__input .p-password,
+.blong-login__input>.p-icon-field,
+.blong-login__input .p-password .p-inputtext {
+    width: 100%;
+}
+
+/* Submit button full-width */
+.blong-login__submit {
+    width: 100%;
+    margin-top: 0.25rem;
+    justify-content: center;
+}
+
+/* Divider between the form and the social-login button */
+.blong-login__divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.25rem 0 1rem;
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+}
+
+.blong-login__divider::before,
+.blong-login__divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--surface-border);
+}
+
+/* Hint text inside multi-step forms */
+.blong-login__hint {
+    margin: 0 0 1rem;
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+}
+
+/* The command that produces the credential, inside the hint panel */
+.blong-login__hint-command {
+    display: block;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.8125rem;
+    overflow-wrap: anywhere;
+    background: var(--surface-ground);
+    border-radius: 4px;
+}
+
+/* ── Org brand area (below card) ───────────────────────────────────── */
+/* Content start-aligned so it sits flush against the card */
+.blong-login__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 1rem 2rem;
+    box-sizing: border-box;
+}
+
+/* Default org brand row: icon + name */
+.blong-login__org-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0.85;
+}
+
+.blong-login__org-icon {
+    font-size: 2rem;
+    color: var(--text-color-secondary);
+}
+
+.blong-login__org-img {
+    height: 3rem;
+    object-fit: contain;
+}
+
+.blong-login__org-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-color-secondary);
+}
+
+/* ── Registration overlay ──────────────────────────────────────────── */
+/* Spans all three grid rows, taking the full viewport height */
+.blong-login__register-view {
+    grid-row: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem 1rem 2rem;
+    box-sizing: border-box;
+}.blong-social-login__button {
+    width: 100%;
+    justify-content: center;
+}
+
+.blong-social-login__mark {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-right: 0.5rem;
+}
+.blong-login-popup__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.25rem 0;
+}
+
+.blong-login-popup__error {
+    width: 100%;
+}
+
+.blong-login-popup__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.blong-login-popup__field label {
+    font-size: 0.85rem;
+    color: var(--blong-text-secondary, #6b7280);
+}
+
+.blong-login-popup__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+.blong-oauth-callback {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-ground);
+}
+
+.blong-oauth-callback__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: min(380px, 100% - 2rem);
+    background: var(--surface-card);
+    border-radius: var(--border-radius);
+    padding: 2.5rem 2rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.blong-oauth-callback__icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+}
+
+.blong-oauth-callback__heading {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.blong-oauth-callback__error {
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.blong-oauth-callback__back {
+    width: 100%;
+    justify-content: center;
+}
+
+.blong-oauth-callback__brand {
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+    margin: 0.5rem 0 0;
+}
+/* ThemeSwitcher — theme dropdown + dark/light mode toggle in the portal menubar */
+
+.blong-theme-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.blong-theme-switcher__select {
+    min-width: 9rem;
+    max-width: 14rem;
+}
+
+.blong-theme-switcher__select .p-dropdown-label {
+    font-weight: 600;
+}
+
+.blong-theme-switcher__mode.p-button {
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+}
+
+.blong-theme-switcher__mode.p-button .p-button-icon {
+    font-size: 1.1rem;
+}

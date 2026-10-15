@@ -11,9 +11,9 @@
 
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
-<link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.604b85df.css">
-<script src="/assets/js/runtime~main.e384827f.js" defer="defer"></script>
-<script src="/assets/js/main.b1150ca2.js" defer="defer"></script>
+<link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.e012de6e.css">
+<script src="/assets/js/runtime~main.3246ae66.js" defer="defer"></script>
+<script src="/assets/js/main.d63f3687.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -72,7 +72,9 @@ two do not fight: only a value the reviewer <em>changed</em> in the toolbar is a
 names its own language keeps it until someone reaches for the item. The item&#x27;s own list defaults to
 <code>en</code> and <code>bg</code> and can be widened with the toolbar options.</p>
 <p>That is how a component&#x27;s behaviour in another language is reviewed next to its English story,
-without a running suite in the background.</p>
+without a running suite in the background. The same story, opened with the language already set to
+<code>bg</code> — which is what reading the page with a <code>?globals=language:bg</code> URL does to any story:</p>
+<figure class="story_WYKZ" data-storybook-site="browser" data-storybook-id="editor--toolbar"><iframe class="frame_D1P8" style="height:560px" src="/storybook/browser/iframe.html?id=editor--toolbar&amp;viewMode=story&amp;globals=language%3Abg" title="Editor/Toolbar opened in Bulgarian through the toolbar&#x27;s Language global" loading="lazy" allowfullscreen=""></iframe><figcaption class="caption_YlWw"><span>Editor/Toolbar opened in Bulgarian through the toolbar&#x27;s Language global</span><a class="open_cdoh" href="/storybook/browser/?path=/story/editor--toolbar&amp;globals=language%3Abg" target="_blank" rel="noreferrer">Open in Storybook</a></figcaption></figure>
 <h2 class="anchor anchorTargetStickyNavbar_l5nE" id="testing-translation">Testing translation<a href="#testing-translation" class="hash-link" aria-label="Direct link to Testing translation" title="Direct link to Testing translation" translate="no">​</a></h2>
 <p>A test that switches the language is asserting on strings, so it has to switch back: the storybook
 dispatcher and the unit tests reset the dictionary and the language in a <code>finally</code>, and the

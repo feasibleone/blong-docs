@@ -1,0 +1,1 @@
+{"version":3,"file":"subjectObjectOpen.d.ts","sourceRoot":"","sources":["../../../../src/model/component/subjectObjectOpen.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAGR,aAAa,EACb,kBAAkB,EACrB,MAAM,oBAAoB,CAAC;AAG5B,wBAAsB,iBAAiB,CAAC,KAAK,EAAE,kBAAkB,EAAE,KAAK,EAAE,aAAa,CAAC,OAAO,CAAC;;;;yBAO7D,MAAM,CAAC,MAAM,EAAE,OAAO,CAAC,qBAQrB,MAAM,CAAC,MAAM,EAAE,OAAO,CAAC;IAmB3D"}

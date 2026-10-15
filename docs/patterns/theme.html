@@ -11,9 +11,9 @@
 
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
-<link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.604b85df.css">
-<script src="/assets/js/runtime~main.e384827f.js" defer="defer"></script>
-<script src="/assets/js/main.b1150ca2.js" defer="defer"></script>
+<link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.e012de6e.css">
+<script src="/assets/js/runtime~main.3246ae66.js" defer="defer"></script>
+<script src="/assets/js/main.d63f3687.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -81,6 +81,10 @@ through a Storybook parameter:</p>
 story, so the story always renders the variant it names. The checkout contains paired stories bound
 from the same page — <code>editor--glass</code> and <code>editor--wood</code>, plus a toolbar and a tilt pair — which is
 the cheapest way to confirm that a change to one variant did not disturb the other.</p>
+<p>Both halves of that pair, embedded side by side. They are the same story, the same page and the same
+schema; only the variant differs — which is the whole claim a scoped stylesheet has to make:</p>
+<figure class="story_WYKZ" data-storybook-site="browser" data-storybook-id="editor--glass"><iframe class="frame_D1P8" style="height:620px" src="/storybook/browser/iframe.html?id=editor--glass&amp;viewMode=story" title="Editor/Glass — the glass variant" loading="lazy" allowfullscreen=""></iframe><figcaption class="caption_YlWw"><span>Editor/Glass — the glass variant</span><a class="open_cdoh" href="/storybook/browser/?path=/story/editor--glass" target="_blank" rel="noreferrer">Open in Storybook</a></figcaption></figure>
+<figure class="story_WYKZ" data-storybook-site="browser" data-storybook-id="editor--wood"><iframe class="frame_D1P8" style="height:620px" src="/storybook/browser/iframe.html?id=editor--wood&amp;viewMode=story" title="Editor/Wood — the same story in the wood variant" loading="lazy" allowfullscreen=""></iframe><figcaption class="caption_YlWw"><span>Editor/Wood — the same story in the wood variant</span><a class="open_cdoh" href="/storybook/browser/?path=/story/editor--wood" target="_blank" rel="noreferrer">Open in Storybook</a></figcaption></figure>
 <p>A reviewer can also switch theme, palette and text direction from the story toolbar (see
 <a class="" href="/docs/patterns/blong-browser#the-story-toolbar">the story toolbar</a>), which writes the same app-store
 selection the portal&#x27;s own theme switcher writes. A hero story that sets <code>parameters.theme</code> keeps

@@ -1,0 +1,1 @@
+{"version":3,"file":"useLoader.d.ts","sourceRoot":"","sources":["../../../src/hooks/useLoader.ts"],"names":[],"mappings":"AAKA,MAAM,WAAW,gBAAgB;IAC7B,OAAO,EAAE,OAAO,CAAC;IACjB,OAAO,CAAC,EAAE,MAAM,CAAC;IACjB,UAAU,EAAE,CAAC,MAAM,EAAE,OAAO,EAAE,OAAO,CAAC,EAAE,MAAM,KAAK,IAAI,CAAC;CAC3D;AAED,wBAAgB,SAAS,IAAI,gBAAgB,CAI5C"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"DropZone.d.ts","sourceRoot":"","sources":["../../../src/design/DropZone.tsx"],"names":[],"mappings":"AAWA,MAAM,WAAW,cAAc;IAC3B,EAAE,EAAE,MAAM,CAAC;IACX;iDAC6C;IAC7C,MAAM,EAAE,MAAM,GAAG,OAAO,CAAC;IACzB;;;;OAIG;IACH,QAAQ,CAAC,EAAE,MAAM,GAAG,MAAM,CAAC;CAC9B;AAED,wBAAgB,QAAQ,CAAC,EAAC,EAAE,EAAE,MAAM,EAAE,QAAQ,EAAC,EAAE,cAAc,kDA+B9D"}

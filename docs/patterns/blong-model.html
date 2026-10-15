@@ -11,9 +11,9 @@
 
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
-<link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.604b85df.css">
-<script src="/assets/js/runtime~main.e384827f.js" defer="defer"></script>
-<script src="/assets/js/main.b1150ca2.js" defer="defer"></script>
+<link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.e012de6e.css">
+<script src="/assets/js/runtime~main.3246ae66.js" defer="defer"></script>
+<script src="/assets/js/main.d63f3687.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -78,6 +78,10 @@ table with its search box and paging, and the detail pane that fills in when a r
 Coral picture is filtered to <code>Staghorn</code> by the spec used in the test, which is why it shows one row;
 Species and Habitat differ only in their <code>IModelSpec</code>. Nothing beyond the spec above draws any of
 it.</p>
+<p>The other half of a model page is the one the pictures do not show — a form nobody wrote either. The
+<code>create</code> block in the spec above is what the toolbar&#x27;s Create button runs, and this is the page it
+opens, live:</p>
+<figure class="story_WYKZ" data-storybook-site="suite" data-storybook-id="marine-coral--new"><iframe class="frame_D1P8" style="height:620px" src="/storybook/suite/iframe.html?id=marine-coral--new&amp;viewMode=story" title="Marine/Coral/New — the generated create page, before anything is typed" loading="lazy" allowfullscreen=""></iframe><figcaption class="caption_YlWw"><span>Marine/Coral/New — the generated create page, before anything is typed</span><a class="open_cdoh" href="/storybook/suite/?path=/story/marine-coral--new" target="_blank" rel="noreferrer">Open in Storybook</a></figcaption></figure>
 <p>The images are written by <code>demo/blong-marine/test/docs.play.ts</code>, which opens each page and captures
 it only under <code>BLONG_CAPTURE_DOCS=1</code>; the <code>blong-docs</code> skill documents the conventions for
 publishing one.</p>

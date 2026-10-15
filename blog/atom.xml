@@ -2,11 +2,91 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://blong.feasible.one/blog</id>
     <title>Blong Blog</title>
-    <updated>2026-10-13T00:00:00.000Z</updated>
+    <updated>2026-10-15T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://blong.feasible.one/blog"/>
     <subtitle>Blong Blog</subtitle>
     <icon>http://blong.feasible.one/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[The Storybook in the page]]></title>
+        <id>http://blong.feasible.one/blog/the-storybook-in-the-page</id>
+        <link href="http://blong.feasible.one/blog/the-storybook-in-the-page"/>
+        <updated>2026-10-15T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[A page in these docs has always been able to describe a screen. The Storybook next door could]]></summary>
+        <content type="html"><![CDATA[<p>A page in these docs has always been able to <em>describe</em> a screen. The Storybook next door could
+always <em>show</em> it. This week the two moved in together: the Storybooks are published with the
+documentation, and a page embeds a story the way it embeds a picture.</p>
+<div class="language-mdx codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-mdx codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">&lt;StorybookStory</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    site="browser"</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    id="editor--toolbar"</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    title="The Editor's toolbar"</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">/&gt;</span><br></div></code></pre></div></div>
+<p>That is a real call, and this is its result:</p>
+<figure class="story_WYKZ" data-storybook-site="browser" data-storybook-id="editor--toolbar"><iframe class="frame_D1P8" style="height:520px" src="/storybook/browser/iframe.html?id=editor--toolbar&amp;viewMode=story" title="Editor/Toolbar — the toolbar story, running in this page" loading="lazy" allowfullscreen=""></iframe><figcaption class="caption_YlWw"><span>Editor/Toolbar — the toolbar story, running in this page</span><a class="open_cdoh" href="http://blong.feasible.one/storybook/browser/?path=/story/editor--toolbar" target="_blank" rel="noreferrer">Open in Storybook</a></figcaption></figure>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="a-screenshot-is-a-claim-a-story-is-a-component">A screenshot is a claim; a story is a component<a href="http://blong.feasible.one/blog/the-storybook-in-the-page#a-screenshot-is-a-claim-a-story-is-a-component" class="hash-link" aria-label="Direct link to A screenshot is a claim; a story is a component" title="Direct link to A screenshot is a claim; a story is a component" translate="no">​</a></h2>
+<p>Every picture in these docs was already taken from a story — the
+<a class="" href="http://blong.feasible.one/docs/concepts/editor-features">Editor feature guide</a> photographs the very stories it describes,
+which is why a section can say "see <code>Editor/Design</code>" and mean one command. What a picture cannot do
+is answer a question. It shows the state the capture driver arranged, and nothing about what happens
+when a reader presses the button that state is about.</p>
+<p>An embedded story answers it, because it is not a rendering of the component: it is the component,
+with its fixture data and its platform, in a frame on the page. The picture still matters — it is
+what a reader sees before deciding whether to wait for a Storybook to boot, and it is what a build
+with no Storybook staged shows instead. So an embed takes a <code>poster</code> and becomes live on a click,
+and a page that leaves the poster out opens the story immediately.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="three-decisions-and-the-reasoning-behind-each">Three decisions, and the reasoning behind each<a href="http://blong.feasible.one/blog/the-storybook-in-the-page#three-decisions-and-the-reasoning-behind-each" class="hash-link" aria-label="Direct link to Three decisions, and the reasoning behind each" title="Direct link to Three decisions, and the reasoning behind each" translate="no">​</a></h2>
+<p><strong>The Storybooks are published beside the pages, not beside the stories.</strong> Each site is built by its
+own package and staged into the docs site's own tree, so it is served from the same origin as the
+page that embeds it — under <code>/storybook/&lt;name&gt;/</code> — and published by the same <code>npm run deploy</code>. Same
+origin is not a detail: a cross-site frame is a policy question, a second certificate and a second
+deploy to forget, and a doc deploy that publishes the pages while the storybook stays behind is a
+page full of empty frames nobody sees until a reader reports it.</p>
+<!-- -->
+<p><strong>The staged trees are not committed.</strong> A Storybook build is 10 to 30 MB, and the docs package
+installs its own <code>node_modules</code> with npm precisely so that no monorepo build stands between a docs
+change and a <code>docusaurus build</code>. Staging is therefore a step of the <em>deploy</em>, not of the build: CI
+builds the pages without it, every embed renders its poster, and the verification run counts the
+embeds that rendered rather than the stories they would have loaded.</p>
+<p><strong>Publishing checks the embeds it is about to publish.</strong> A story id is a name in a URL, and a name
+is exactly the thing that rots when somebody renames a story. So staging resolves every
+<code>&lt;StorybookStory&gt;</code> in the docs and the blog against the <code>index.json</code> the build itself wrote, and the
+verification run then loads each embedded story in a browser and waits for the story to render. Both
+failures it catches are invisible otherwise: an id nobody serves yet, and a preview that cannot boot
+standalone. The second one is the more interesting of the two — a story only ever opened from a
+Storybook dev server can depend on something the dev server provides, and a static build is where
+that dependency shows up.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-a-page-can-now-ask-for">What a page can now ask for<a href="http://blong.feasible.one/blog/the-storybook-in-the-page#what-a-page-can-now-ask-for" class="hash-link" aria-label="Direct link to What a page can now ask for" title="Direct link to What a page can now ask for" translate="no">​</a></h2>
+<p>A story opened at <code>theme:wood</code> is the wood skin of the same editor, <code>language:bg</code> renders its
+toolbar in Bulgarian and <code>direction:rtl</code> mirrors the layout — the same globals a Storybook URL
+takes, so a page about a variant embeds the variant instead of describing where to click to see it:</p>
+<figure class="story_WYKZ" data-storybook-site="browser" data-storybook-id="editor--wood"><iframe class="frame_D1P8" style="height:560px" src="/storybook/browser/iframe.html?id=editor--wood&amp;viewMode=story" title="The wood variant of the same story, one globals attribute away" loading="lazy" allowfullscreen=""></iframe><figcaption class="caption_YlWw"><span>The wood variant of the same story, one globals attribute away</span><a class="open_cdoh" href="http://blong.feasible.one/storybook/browser/?path=/story/editor--wood" target="_blank" rel="noreferrer">Open in Storybook</a></figcaption></figure>
+<p>The theme page uses exactly that to put the glass and wood halves of a pair side by side, and the
+i18n page embeds its story in Bulgarian. The <code>chrome</code> attribute is for the pages that document the
+story toolbar itself: the toolbar is Storybook's own UI, outside the story canvas, so the only way
+to show it is to embed the manager rather than the frame.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-was-not-built">What was not built<a href="http://blong.feasible.one/blog/the-storybook-in-the-page#what-was-not-built" class="hash-link" aria-label="Direct link to What was not built" title="Direct link to What was not built" translate="no">​</a></h2>
+<p>The published Storybooks run on <strong>fixtures</strong>. The toolbar's live-backend modes are a dev-server
+plugin, and a static build has no dev server — so an embedded story shows the fixture-backed page,
+which is the right thing for documentation and not a substitute for the toolbar. Reviewing a story
+against a real gateway stays a local act.</p>
+<p>There is also no hosted Storybook service in the middle: no build per pull request, no visual diff,
+no account. Chromatic already covers the visual-baseline half of that in CI, and the embedded story
+covers the half a reader needs — the page they are reading and the component they are reading about,
+served from one origin, deployed together.</p>
+<p>One sharp edge worth recording: <code>docusaurus serve</code> redirects <code>iframe.html?id=…</code> to a query-less
+<code>iframe</code>, so an embed cannot be checked with <code>npm run serve</code>. <code>npm start</code> serves it, the published
+site serves it, and <code>blong-dev docs verify</code> both serves and checks it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="where-to-use-one">Where to use one<a href="http://blong.feasible.one/blog/the-storybook-in-the-page#where-to-use-one" class="hash-link" aria-label="Direct link to Where to use one" title="Direct link to Where to use one" translate="no">​</a></h2>
+<p>The <a class="" href="http://blong.feasible.one/docs/patterns/blong-browser#embedding-a-story">Storybook pattern</a> is the how-to, with the
+attribute table and the two sites' names; the
+<a class="" href="http://blong.feasible.one/docs/concepts/editor-features">Editor feature guide</a>, the
+<a class="" href="http://blong.feasible.one/docs/concepts/blong-model">model system</a>, the <a class="" href="http://blong.feasible.one/docs/patterns/theme">theme pattern</a> and the
+<a class="" href="http://blong.feasible.one/docs/patterns/i18n">i18n pattern</a> are the worked examples. Adding one to a page you are already
+writing is one line — and if the story you want is not in a published site yet,
+<code>storybook-sites.json</code> is where a site is added.</p>]]></content>
+        <author>
+            <name>Kalin Krustev</name>
+            <uri>https://github.com/kalinkrustev</uri>
+        </author>
+        <category label="Blong" term="Blong"/>
+        <category label="UI" term="UI"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Prose that points instead of copying]]></title>
         <id>http://blong.feasible.one/blog/prose-cross-reference</id>
@@ -1705,74 +1785,5 @@ how a suite is wired.</p>]]></content>
         </author>
         <category label="Blong" term="Blong"/>
         <category label="Testing" term="Testing"/>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[A UI generated from the schema]]></title>
-        <id>http://blong.feasible.one/blog/a-ui-generated-from-the-schema</id>
-        <link href="http://blong.feasible.one/blog/a-ui-generated-from-the-schema"/>
-        <updated>2026-05-22T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Every framework that generates CRUD screens eventually meets the same objection: the generated page]]></summary>
-        <content type="html"><![CDATA[<p>Every framework that generates CRUD screens eventually meets the same objection: the generated page
-is never quite the page you need, so you write it by hand — and then the entity has two
-descriptions, a server-side one that validates and a client-side one that renders, which drift apart
-the first time somebody adds a field.</p>
-<p>Blong answers by removing the second description. The type written for a handler <em>is</em> the model: it
-validates the request at the edge, creates the table that stores it, appears in the API document,
-and is what a generated form reads. A page is a declaration on top of that, not a parallel universe.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="four-pages-from-one-declaration">Four pages from one declaration<a href="http://blong.feasible.one/blog/a-ui-generated-from-the-schema#four-pages-from-one-declaration" class="hash-link" aria-label="Direct link to Four pages from one declaration" title="Direct link to Four pages from one declaration" translate="no">​</a></h2>
-<p>A realm declares its entities in a model spec — subject, object, the title a person sees, which
-field names a row — and the browser realm's component factory registers four pages per entity, plus
-the menu entries that open them:</p>
-<!-- -->
-<p>The last two boxes are what keeps the two halves honest. The schema a form renders is fetched from
-the running server, so a field added to a handler's <code>type Handler</code> arrives at the form through
-<code>~.schema.ts</code> and the schema handler, merged on top of whatever the model declares. The declaration
-adds presentation — which card a field belongs to, which widget renders it, what the column is
-called — and does not have to repeat the field.</p>
-<p><img decoding="async" loading="lazy" alt="The generated browse page for the coral entity: the navigator, the table of corals and the selected
-record&amp;#39;s detail" src="http://blong.feasible.one/assets/images/marine-coral-browse-e9129dcd3b2757964ad7a648108121be.png" width="1600" height="700" class="img_T0Il"></p>
-<p><img decoding="async" loading="lazy" alt="The generated report page for the same entity: its filter bar and the resulting table" src="http://blong.feasible.one/assets/images/marine-coral-report-0feb965fb4ffab80dd26fb5396fb836a.png" width="1600" height="700" class="img_T0Il"></p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-the-declaration-can-say">What the declaration can say<a href="http://blong.feasible.one/blog/a-ui-generated-from-the-schema#what-the-declaration-can-say" class="hash-link" aria-label="Direct link to What the declaration can say" title="Direct link to What the declaration can say" translate="no">​</a></h2>
-<p>The interesting part of a model specification is what it can <em>add</em> to the generated page without
-leaving the model. Cards and their widgets; a toolbar of actions, each naming a method and the
-parameters it takes; a dropdown whose options come from another entity's declared key and name
-fields; a report definition with its own columns; and master-detail as a <code>details</code> declaration,
-which expands into a sibling collection with its own table widget, its own card and a tabbed edit
-layout.</p>
-<p>Where those are not enough, the escape hatch is a component handler: a page written by hand that
-uses the same <code>Editor</code>, <code>Explorer</code> or <code>Report</code> components with its own props. The generator covers
-the common part of CRUD, and the hand-written page is the deliberate answer for the rest rather than
-a failure of the generator.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-limits-stated-by-the-code">The limits, stated by the code<a href="http://blong.feasible.one/blog/a-ui-generated-from-the-schema#the-limits-stated-by-the-code" class="hash-link" aria-label="Direct link to The limits, stated by the code" title="Direct link to The limits, stated by the code" translate="no">​</a></h2>
-<p>Three limits are worth knowing before adopting this, and each is visible in the implementation.</p>
-<p><strong>A field needs both a schema entry and a mention.</strong> The form renders the fields a card names; a
-field that exists in the server schema but appears in no card and no column does not render. The
-defaults compensate for the common case — the name field, the key field and a default card when a
-model declares no cards at all — but the rule is a whitelist, not "render everything the server
-knows".</p>
-<p><strong>A generated report cannot narrow itself.</strong> Its filter fields are not editable in the generated
-layout, so a report with a parameter to choose needs a hand-written page. This is a known limitation
-rather than a design position.</p>
-<p><strong>Master-detail is a layout, not an ORM.</strong> The declaration produces the sibling collection, the card
-and the tabs; the validation that accepts a master and its lines in one call comes from the same
-schema generation, not from a relationship the UI discovered.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="verified-not-asserted">Verified, not asserted<a href="http://blong.feasible.one/blog/a-ui-generated-from-the-schema#verified-not-asserted" class="hash-link" aria-label="Direct link to Verified, not asserted" title="Direct link to Verified, not asserted" translate="no">​</a></h2>
-<p>The four page kinds were rendered from one marine model — <code>browse</code>, <code>new</code>, <code>open</code> and <code>report</code> — in
-the suite's Storybook against fixture data, with no page errors: the browse page builds its
-navigator, table and detail panels, the create form renders the coral fields with the dropdowns
-resolved, and the report page builds its filters and its result columns. The two screenshots above
-are the repository's own captures of those pages from the running suite, cropped to a column-width
-window so the text arrives at its own size; the full-page versions are on the
-<a class="" href="http://blong.feasible.one/docs/patterns/blong-model">model pages</a>.</p>
-<p>The argument for the whole approach is in the
-<a class="" href="http://blong.feasible.one/docs/rationale/metadata-driven-ui">metadata-driven UI rationale</a> — including the trade-off that
-generated pages are generic by construction — and the specification itself in the
-<a class="" href="http://blong.feasible.one/docs/patterns/blong-model">model patterns</a> and the <a class="" href="http://blong.feasible.one/docs/concepts/blong-model">model concept</a>.</p>]]></content>
-        <author>
-            <name>Kalin Krustev</name>
-            <uri>https://github.com/kalinkrustev</uri>
-        </author>
-        <category label="Blong" term="Blong"/>
-        <category label="UI" term="UI"/>
     </entry>
 </feed>
