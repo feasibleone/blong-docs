@@ -6,14 +6,18 @@
 <title data-rh="true">Why the CI report is one document | Blong</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="http://blong.feasible.one/img/blong-social-card.jpg"><meta data-rh="true" name="twitter:image" content="http://blong.feasible.one/img/blong-social-card.jpg"><meta data-rh="true" property="og:url" content="http://blong.feasible.one/docs/rationale/ci-report"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Why the CI report is one document | Blong"><meta data-rh="true" name="description" content="A monorepo of forty packages that each report their own test results produces the failure mode every"><meta data-rh="true" property="og:description" content="A monorepo of forty packages that each report their own test results produces the failure mode every"><link data-rh="true" rel="icon" href="/img/favicon.ico"><link data-rh="true" rel="canonical" href="http://blong.feasible.one/docs/rationale/ci-report"><link data-rh="true" rel="alternate" href="http://blong.feasible.one/docs/rationale/ci-report" hreflang="en"><link data-rh="true" rel="alternate" href="http://blong.feasible.one/docs/rationale/ci-report" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Rationale","item":"http://blong.feasible.one/docs/category/rationale"},{"@type":"ListItem","position":2,"name":"Why the CI report is one document","item":"http://blong.feasible.one/docs/rationale/ci-report"}]}</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Blong RSS Feed">
 <link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Blong Atom Feed">
 
+<link rel="preconnect" href="https://www.google-analytics.com">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0BL8LQFK7D"></script>
+<script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-0BL8LQFK7D",{anonymize_ip:!0})</script>
 
 
 
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.e012de6e.css">
-<script src="/assets/js/runtime~main.3246ae66.js" defer="defer"></script>
-<script src="/assets/js/main.d63f3687.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.fdf75037.js" defer="defer"></script>
+<script src="/assets/js/main.fba57153.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -53,13 +57,32 @@ in afterwards, so the document is complete before anything is published.</li>
 </ul>
 <h2 class="anchor anchorTargetStickyNavbar_l5nE" id="three-runners-one-contract">Three runners, one contract<a href="#three-runners-one-contract" class="hash-link" aria-label="Direct link to Three runners, one contract" title="Direct link to Three runners, one contract" translate="no">​</a></h2>
 <p>The monorepo does not agree on a test runner, and that is deliberate: tap for the framework
-packages, Playwright with Allure for the browser suites, vitest for <code>blong-browser</code>. What they agree
-on is the <strong>contract</strong> — a per-package slice in <code>.ci-report/</code> — which each adapter writes:</p>
-<table><thead><tr><th>Runner</th><th>Adapter</th><th>Who writes it</th></tr></thead><tbody><tr><td>tap</td><td><code>report/tapReport.ts</code></td><td><code>blong-dev test</code></td></tr><tr><td>Playwright + Allure</td><td><code>report/allurePublish.ts</code></td><td><code>blong-dev playwright</code></td></tr><tr><td>vitest</td><td><code>report/vitestReport.ts</code> (<code>report vitest</code>)</td><td>the package itself</td></tr></tbody></table>
+packages, Playwright with Allure for the browser suites, vitest for <code>blong-browser</code>, jest for the
+Storybook leg beside tap in <code>tools/blong-log</code>. What they agree on is the <strong>contract</strong> — a
+per-package slice in <code>.ci-report/</code> — which each adapter writes:</p>
+<table><thead><tr><th>Runner</th><th>Adapter</th><th>Who writes it</th></tr></thead><tbody><tr><td>tap</td><td><code>report/tapReport.ts</code></td><td><code>blong-dev test</code></td></tr><tr><td>Playwright + Allure</td><td><code>report/allurePublish.ts</code></td><td><code>blong-dev playwright</code></td></tr><tr><td>vitest</td><td><code>report/vitestReport.ts</code> (<code>report vitest</code>)</td><td>the package itself</td></tr><tr><td>jest + Storybook</td><td><code>report/vitestReport.ts</code> (<code>report jest</code>)</td><td><code>tools/blong-log</code></td></tr></tbody></table>
 <p>Aggregation is then a sum over slices, not a runner-specific reader, which is the property that
 keeps a new package cheap: choose a runner, wire its adapter, and the report learns nothing new. The
 coverage half of this story — how the three runners&#x27; line data is merged — belongs to
 <a class="" href="/docs/concepts/code-coverage">code coverage</a>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="one-page-plus-one-shared-bundle">One page plus one shared bundle<a href="#one-page-plus-one-shared-bundle" class="hash-link" aria-label="Direct link to One page plus one shared bundle" title="Direct link to One page plus one shared bundle" translate="no">​</a></h2>
+<p>Allure renders a &quot;single-file&quot; report by inlining its whole application into the page: about 3.5 MB
+of a 4.8 MB document. That bundle is byte-for-byte identical in every report built by one Allure
+version — only the report data changes per run — so <code>blong-dev</code> patches the page after Allure writes
+it. The bundle becomes a content-addressed file (<code>allure-main-&lt;hash&gt;.js</code>), and the pages reference
+one copy of it: the CI workflow sets <code>BLONG_ALLURE_MAIN_URL=../../../_assets/allure</code> and
+<code>BLONG_ALLURE_MAIN_DIR=_assets/allure</code>, so every package writes the bundle into that one directory
+and every page, from any tool and any run, loads the same URL three levels up at the site root. The
+reports repository therefore stores one file instead of a multi-megabyte copy per package, and a
+browser downloads and caches it once for all reports. A run without those variables keeps the file
+beside the page, which is what makes a locally opened report self-contained. Upstream declined the
+change that would have done this inside Allure itself
+(<a href="https://github.com/allure-framework/allure3/pull/353" target="_blank" rel="noopener noreferrer" class="">allure3#353</a>).</p>
+<p>Allure&#x27;s template also embeds a Google Analytics tag for its own property, and its plugin offers no
+option to change or drop it. The same patch step rewrites that tag: <code>BLONG_ALLURE_GA_ID</code> points the
+report at another measurement ID, and <code>BLONG_ALLURE_GA_ID=off</code> removes the analytics scripts, so an
+internal report is not counted anywhere it was not meant to be. Unset — the default — the page keeps
+the tag Allure wrote.</p>
 <h2 class="anchor anchorTargetStickyNavbar_l5nE" id="history-provenance-and-the-question-is-this-new">History, provenance, and the question &quot;is this new?&quot;<a href="#history-provenance-and-the-question-is-this-new" class="hash-link" aria-label="Direct link to History, provenance, and the question &quot;is this new?&quot;" title="Direct link to History, provenance, and the question &quot;is this new?&quot;" translate="no">​</a></h2>
 <p>A failure is only useful if the reader can tell whether it predates the branch, so each failing test
 is characterised against the base branch&#x27;s history:</p>
@@ -91,6 +114,6 @@ implemented</strong> — that page is a design, and this one is a description of
 CI (<code>npm run report:local</code> in <code>test/blong-ci-report</code>, which is the invocation to use when changing
 the contract). The workflow that <strong>posts</strong> the document as a pull-request comment lives in the
 shared reusable workflow this repository calls, so the posting itself is out of sight from here: the
-contract it consumes is <code>ci-report.md</code>, and that is the part this repository owns.</p></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/rationale/acl"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Why records are narrowed next to RBAC</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/rationale/config-hot-reload"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Configuration Hot Reload</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_sOzr thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#one-row-per-package-and-the-delta-in-the-same-cell" class="table-of-contents__link toc-highlight">One row per package, and the delta in the same cell</a></li><li><a href="#three-runners-one-contract" class="table-of-contents__link toc-highlight">Three runners, one contract</a></li><li><a href="#history-provenance-and-the-question-is-this-new" class="table-of-contents__link toc-highlight">History, provenance, and the question &quot;is this new?&quot;</a></li><li><a href="#what-this-repository-can-and-cannot-prove" class="table-of-contents__link toc-highlight">What this repository can and cannot prove</a></li></ul></div></div></div></div></main></div></div></div></div>
+contract it consumes is <code>ci-report.md</code>, and that is the part this repository owns.</p></div></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/rationale/acl"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Why records are narrowed next to RBAC</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/rationale/config-hot-reload"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Configuration Hot Reload</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_sOzr thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#one-row-per-package-and-the-delta-in-the-same-cell" class="table-of-contents__link toc-highlight">One row per package, and the delta in the same cell</a></li><li><a href="#three-runners-one-contract" class="table-of-contents__link toc-highlight">Three runners, one contract</a></li><li><a href="#one-page-plus-one-shared-bundle" class="table-of-contents__link toc-highlight">One page plus one shared bundle</a></li><li><a href="#history-provenance-and-the-question-is-this-new" class="table-of-contents__link toc-highlight">History, provenance, and the question &quot;is this new?&quot;</a></li><li><a href="#what-this-repository-can-and-cannot-prove" class="table-of-contents__link toc-highlight">What this repository can and cannot prove</a></li></ul></div></div></div></div></main></div></div></div></div>
 </body>
 </html>

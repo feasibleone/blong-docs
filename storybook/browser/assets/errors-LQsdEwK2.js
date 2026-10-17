@@ -1,1 +1,0 @@
-import{n as e}from"./rolldown-runtime-BcKkbAw3.js";import{V as t,z as n}from"./iframe-DkPamZSy.js";var r;function i(){return(i=e((()=>{n(),r=t(({lib:{error:e}})=>{e({openapiNamespaceNotDefined:`Namespace {namespace} is not defined`})})})))()}i();export{r as default};
