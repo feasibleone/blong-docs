@@ -1,0 +1,3 @@
+import { ITestRunViewProps } from '../../types/testRun.js';
+export declare function TestRun({ run, now: fixedNow, selectedKey: controlledSelected, hoveredKey: controlledHovered, detailsOpen: controlledDetails, defaultSelectedKey, defaultDetailsOpen, defaultCollapsed, defaultOrder, defaultFilter, onSelect, onHover, onToggleDetails, controls, sourceLink, className, }: ITestRunViewProps): import("react/jsx-runtime").JSX.Element;
+//# sourceMappingURL=TestRun.d.ts.map

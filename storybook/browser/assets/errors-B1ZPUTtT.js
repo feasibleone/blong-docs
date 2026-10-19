@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BcKkbAw3.js";import{L as t,z as n}from"./iframe-DgrHWYYy.js";var r;function i(){return(i=e((()=>{t(),r=n(({lib:{error:e}})=>({errors:e({jsonrpcEmpty:`JSON RPC response without response and error`,jsonrpcHttp:`JSON RPC returned HTTP error {code}`})}))})))()}i();export{r as default};

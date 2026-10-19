@@ -4,10 +4,73 @@
         <title>Blong Blog</title>
         <link>http://blong.feasible.one/blog</link>
         <description>Blong Blog</description>
-        <lastBuildDate>Thu, 15 Oct 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 18 Oct 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[Watch the test run in the browser]]></title>
+            <link>http://blong.feasible.one/blog/watch-the-test-run-in-the-browser</link>
+            <guid>http://blong.feasible.one/blog/watch-the-test-run-in-the-browser</guid>
+            <pubDate>Sun, 18 Oct 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[A failing test gives you a stack trace and a line number. It does not give you the twelve steps that]]></description>
+            <content:encoded><![CDATA[<p>A failing test gives you a stack trace and a line number. It does not give you the twelve steps that
+ran before it, the value two of them passed along, or the branch that was taken three calls earlier.
+So the first debugging session is usually a re-run with print statements — the same information,
+paid for twice.</p>
+<p>Blong's Test runs console starts the run from inside the portal and shows it while it happens. The
+steps are a timeline, the dependencies are a graph, and every assertion sits beside the value the
+step returned. The console is a page in the application, not a separate report.</p>
+<p>The <code>Replay</code> story below is a recorded session flow playing at 1x. Pause it, speed it up, or restart
+it; the same model drives the page and the replay.</p>
+<figure class="story_WYKZ" data-storybook-site="browser" data-storybook-id="components-testrun--replay"><button type="button" class="poster_W7s3" style="height:560px" aria-label="Load the live story: Components/TestRun — Replay"><img class="image_dgJt" src="http://blong.feasible.one/assets/images/test-run-replay-1bb07b22289e05d3aec4af42346c02dc.png" alt="Components/TestRun — Replay" loading="lazy"><span class="load_yZ8j">Load the live story</span></button><figcaption class="caption_YlWw"><span>Components/TestRun — Replay</span><a class="open_cdoh" href="http://blong.feasible.one/storybook/browser/?path=/story/components-testrun--replay" target="_blank" rel="noreferrer">Open in Storybook</a></figcaption></figure>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-report-is-a-post-mortem-the-run-is-the-evidence">The report is a post-mortem; the run is the evidence<a href="http://blong.feasible.one/blog/watch-the-test-run-in-the-browser#the-report-is-a-post-mortem-the-run-is-the-evidence" class="hash-link" aria-label="Direct link to The report is a post-mortem; the run is the evidence" title="Direct link to The report is a post-mortem; the run is the evidence" translate="no">​</a></h2>
+<p>The console is built on a <strong>JSON-safe run model</strong>: steps, dependency edges, assertion counts,
+progress points and branches. It has no <code>Map</code>, no <code>Set</code>, no <code>Error</code> instance and no <code>Date</code> — every
+time is epoch milliseconds. That is what lets the browser source, the server source, the recorded
+fixture and the Storybook replay all use one reducer.</p>
+<p>The layout is the same model read in three ways:</p>
+<ul>
+<li class="">the <strong>tree-table</strong> keeps the group order and draws each step as a bar on one shared time scale;</li>
+<li class="">the <strong>graph</strong> draws the dependency edges — the step that produced a value and the step that read
+it;</li>
+<li class="">the <strong>details</strong> panel opens the step's result, its progress points, its source pointer and the
+assertion messages in execution order.</li>
+</ul>
+<p>A failure is not a red row at the end. It is a step whose bar stopped early, with the assertion log
+that explains why and the dependency edge that says what it was waiting for.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="a-catalog-is-the-guard">A catalog is the guard<a href="http://blong.feasible.one/blog/watch-the-test-run-in-the-browser#a-catalog-is-the-guard" class="hash-link" aria-label="Direct link to A catalog is the guard" title="Direct link to A catalog is the guard" translate="no">​</a></h2>
+<p>The page does not accept an arbitrary method name. A realm declares a catalog of scenarios, and the
+page can only load those. Each entry names where its steps run:</p>
+<table><thead><tr><th>Host</th><th>Where the steps execute</th></tr></thead><tbody><tr><td><code>browser</code></td><td>in the page's own window, against the live application</td></tr><tr><td><code>server</code></td><td>in the process that owns the server handlers, polled by the page</td></tr></tbody></table>
+<p>The server side has its own allowlist (<code>testRealm.testRun.serverGroups</code>), so the catalog is the
+visible set and the allowlist is the executable set. Both are small and reviewable; neither turns
+the page into a remote code runner.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="one-console-two-hosts">One console, two hosts<a href="http://blong.feasible.one/blog/watch-the-test-run-in-the-browser#one-console-two-hosts" class="hash-link" aria-label="Direct link to One console, two hosts" title="Direct link to One console, two hosts" translate="no">​</a></h2>
+<p>Some test groups call handlers that only exist on the server: login, session storage, an audit
+trail. Running those steps in the browser would test a different system. For a server entry the page
+calls the <code>test.run.*</code> methods through the backend adapter, reads the event page from a cursor and
+reduces it with the same reducer.</p>
+<!-- -->
+<p>A browser entry is shorter — the executor runs in the page and emits the same events — which is why
+the console does not need a second UI for the two cases. The server transport is four methods:
+<code>start</code>, <code>eventFind</code>, <code>snapshotGet</code> and <code>cancel</code>. Leaving the page cancels the run; nothing keeps
+working after the reader is gone.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-the-reader-gets">What the reader gets<a href="http://blong.feasible.one/blog/watch-the-test-run-in-the-browser#what-the-reader-gets" class="hash-link" aria-label="Direct link to What the reader gets" title="Direct link to What the reader gets" translate="no">​</a></h2>
+<p>The first version of the console was a Storybook fixture. It made the shape reviewable before a
+gateway existed: the tree, the bars, the graph and the details could be judged against a real
+recording rather than an invented one. The <code>Replay</code> story is still the cheapest way to see the
+component, and it is the frame above.</p>
+<p>The second version ran the same groups from the portal. What changed is not the picture but the
+question it answers. Instead of “what does a run look like”, the page answers “what is this run
+doing right now” — and it answers it with the same model the report and the fixture use.</p>
+<p><a class="" href="http://blong.feasible.one/docs/concepts/test-run">The concept</a> describes the page; <a class="" href="http://blong.feasible.one/docs/patterns/test-run">the pattern</a>
+has the catalog, transport and server configuration; <a class="" href="http://blong.feasible.one/docs/rationale/test-run">the rationale</a>
+explains why the console is part of the application rather than a report.</p>]]></content:encoded>
+            <category>Blong</category>
+            <category>Testing</category>
+            <category>UI</category>
+        </item>
         <item>
             <title><![CDATA[The Storybook in the page]]></title>
             <link>http://blong.feasible.one/blog/the-storybook-in-the-page</link>
@@ -287,98 +350,6 @@ more useful than one that pretends it did.</p>
             <category>Design</category>
         </item>
         <item>
-            <title><![CDATA[The Storybook toolbar reaches a real backend]]></title>
-            <link>http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend</link>
-            <guid>http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend</guid>
-            <pubDate>Wed, 30 Sep 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[A Storybook story is the cheapest place to look at a screen and the most expensive place to trust]]></description>
-            <content:encoded><![CDATA[<p>A Storybook story is the cheapest place to look at a screen and the most expensive place to trust
-one. The model page renders perfectly in the story, and in the application it fails — because the
-story's rows came from a fixture file and the gateway method the page calls does not exist. The
-toolbar that used to solve this in the previous, webpack-based setup has been rebuilt for Blong's
-Vite Storybook, and a realm now gets it in one line:</p>
-<div class="language-tsx codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-tsx codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">default</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">defineBlongStorybookPreview</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token plain">browser</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">backend</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token boolean">true</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><br></div></code></pre></div></div>
-<p>That line brings five toolbar items — Backend, Role, Theme, Language, Direction — and the machinery
-behind them. This post is about the two interesting ones.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="a-story-needs-to-be-allowed-to-be-wrong">A story needs to be allowed to be wrong<a href="http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend#a-story-needs-to-be-allowed-to-be-wrong" class="hash-link" aria-label="Direct link to A story needs to be allowed to be wrong" title="Direct link to A story needs to be allowed to be wrong" translate="no">​</a></h2>
-<p>The mock in Blong is a good mock: it replaces each model's handler group with an in-memory
-implementation over <code>meta/fixture</code> rows, so <code>page('coral.coral.browse')</code> renders a real table with
-real paging, sorting and filtering, and no server anywhere. That is what makes a story a five-second
-review of a UI change.</p>
-<p>It is also what makes a story a claim nobody checked. The mock answers for a method the gateway may
-never have been told about, with rows no database holds, under permissions the page never had to
-enforce. The gap opens in the <em>wiring</em>, which is exactly the part a mocked story removes.</p>
-<p>So the toolbar's Backend item has three values, and two of them take the mock out of the path
-without changing anything above it:</p>
-<!-- -->
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-switch-belongs-in-the-adapter">The switch belongs in the adapter<a href="http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend#the-switch-belongs-in-the-adapter" class="hash-link" aria-label="Direct link to The switch belongs in the adapter" title="Direct link to The switch belongs in the adapter" translate="no">​</a></h2>
-<p>Nothing in the page knows which mode it is in. The mock is a backend-adapter behaviour, so switching
-means activating a different adapter block — <code>storybookJsonrpc</code> or <code>storybookMle</code> instead of
-<code>storybook</code> — and everything above the adapter (the model system, the generated pages, the
-permission-driven hiding of buttons) is the code the application runs. That is the whole point: the
-story is not a simulation of the app, it <em>is</em> the app pointed somewhere else.</p>
-<p>The two live values trade fidelity for simplicity:</p>
-<table><thead><tr><th>Value</th><th>On the wire</th></tr></thead><tbody><tr><td>Live (JSON-RPC)</td><td>The page speaks plain JSON-RPC; the plugin adds the token and decrypts.</td></tr><tr><td>Live (MLE)</td><td>The page keeps its own key pair and encrypts end to end; the plugin tokens.</td></tr></tbody></table>
-<p>The plugin is a Storybook dev-server middleware (<code>src/storybookBackend.ts</code>, mounted by
-<code>defineBlongStorybookMain</code>), which is also where authentication lives — because a story has no
-business holding credentials.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="logging-in-without-a-login-screen">Logging in without a login screen<a href="http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend#logging-in-without-a-login-screen" class="hash-link" aria-label="Direct link to Logging in without a login screen" title="Direct link to Logging in without a login screen" translate="no">​</a></h2>
-<p>The JSON-RPC mode was easy to authenticate: the plugin holds a session and injects the bearer token,
-so nothing in the page ever sees one.</p>
-<p>The MLE mode was not, and finding that out was the most useful hour of this work. The plan was for
-the plugin to mint a token the page could use — one whose signing and encryption keys travel in each
-request's JWE header rather than being baked into the JWT. The gateway supports that shape, and the
-plugin sent just such a login: plain JSON, no caller keys, so there was nothing to bind the token
-to.</p>
-<p>It does not work, and the reason is worth writing down: a login response is encrypted no matter
-what, so the plugin could never read its own token back out. A token the page cannot be given is not
-a token at all.</p>
-<p>So the MLE mode logs in from the page, through the platform's own codec — a real session whose key
-pair is the one the browser generated, renewing itself exactly as it would in the application. The
-dev server's part is to hand the story's own origin the role's credentials, on loopback, and to get
-out of the way of the encryption. The reviewer still never sees a login screen: the login belongs to
-the decorator, and the story waits for it before it renders — rendered first, it would fetch without
-a session, take a 401 and stay empty even after the session arrived.</p>
-<p>Which users the roles mean comes from the <code>.blong_devrc</code> the developer's other tooling already
-reads, with the seeded test users as the default:</p>
-<div class="language-yaml codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-yaml codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token key atrule">storybook</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token key atrule">target</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"> http</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain">//localhost</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token number" style="color:rgb(9, 134, 88)">8080</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token key atrule">roles</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">        </span><span class="token key atrule">Admin</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"> testAdmin</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">        </span><span class="token key atrule">Manager</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"> testManager</span><br></div></code></pre></div></div>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-presentation-items-write-state-not-props">The presentation items write state, not props<a href="http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend#the-presentation-items-write-state-not-props" class="hash-link" aria-label="Direct link to The presentation items write state, not props" title="Direct link to The presentation items write state, not props" translate="no">​</a></h2>
-<p>Theme, Language and Direction exist for a reason that is easy to miss: no story renders the portal
-menubar, so the switchers the application ships — the ones that live in that menubar — are invisible
-in a story, and a review of a right-to-left layout or a glass skin had nowhere to happen. Those
-items have no prop to write to, because the platform built the container the story is rendered
-inside; they write the app store instead, which is the same place the portal's own switcher writes.</p>
-<p>One consequence is worth stating, because it was a bug before it was a rule: a store write is
-global, so the toolbar's <em>defaults</em> must never be written. A story that sets its own <code>lang</code> arg —
-the editor's validation story renders in Bulgarian that way — keeps it until a reviewer actually
-reaches for the toolbar.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-a-realm-gets">What a realm gets<a href="http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend#what-a-realm-gets" class="hash-link" aria-label="Direct link to What a realm gets" title="Direct link to What a realm gets" translate="no">​</a></h2>
-<p>A realm that adds <code>{backend: true}</code> to its preview needs two things to make the Role item
-meaningful, and the template now ships both: a fixture whose record ids mirror the test seed's (so
-the Open story loads from either source) and a test-seed grant for each role — full access for
-Admin, read and edit for Manager, read-only for Guest.</p>
-<p>All three grants have to include <code>subject.object.schema</code>, which sounds like a detail and is not: a
-model page loads its own schema before it loads rows, so the first version of the read-only role got
-a 403 for the schema and rendered a blank screen instead of a smaller one. A Guest who can browse
-and is then refused a save is the story worth showing; an empty page shows nothing at all.</p>
-<p>A state is a URL, which makes the whole thing scriptable — this is how the documentation's own
-screenshots and any Playwright run over Storybook reach a state without clicking:</p>
-<div class="language-text codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-text codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">http://localhost:6007/?path=/story/coral-coral--browse&amp;globals=backend:jsonrpc;role=Guest</span><br></div></code></pre></div></div>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="try-it">Try it<a href="http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend#try-it" class="hash-link" aria-label="Direct link to Try it" title="Direct link to Try it" translate="no">​</a></h2>
-<div class="language-bash codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-bash codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain"># a gateway to point at (a static port must be given: a server-only entry</span><br></div><div class="token-line" style="color:#000000"><span class="token plain"># otherwise picks a free one, and it is not logged)</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">cd core/blong-kopi &amp;&amp; node --run blong -- microservice integration dev playwright \</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    --gateway.port=8080 --resolution.portGateway=8080</span><br></div><div class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"># the realm's stories</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">cd core/blong-kopi &amp;&amp; npm run storybook</span><br></div></code></pre></div></div>
-<p>Then switch Backend to Live (JSON-RPC), leave Role on Admin, and watch the browse page fill with
-rows from the database instead of the fixture — the ids and the <code>(fixture)</code> marker in the name say
-which one you are looking at. Switching to Live (MLE) shows the same rows through the page's own
-encryption, and switching Role to Guest leaves the list readable until you try to save.</p>
-<p>The full picture is in the <a class="" href="http://blong.feasible.one/docs/patterns/blong-browser#the-story-toolbar">story toolbar pattern</a>,
-the reasoning in <a class="" href="http://blong.feasible.one/docs/rationale/storybook-toolbar">the story toolbar rationale</a>, and the previous
-generation of the idea — where the backend choice was the name of a configuration file — lives on in
-<code>ut-storybook</code>.</p>]]></content:encoded>
-            <category>Blong</category>
-            <category>UI</category>
-            <category>Testing</category>
-        </item>
-        <item>
             <title><![CDATA[The repo answers by meaning]]></title>
             <link>http://blong.feasible.one/blog/the-repo-answers-by-meaning</link>
             <guid>http://blong.feasible.one/blog/the-repo-answers-by-meaning</guid>
@@ -469,6 +440,98 @@ disposable.</p>
 depends on instead of restating it.</p>]]></content:encoded>
             <category>Blong</category>
             <category>Tooling</category>
+        </item>
+        <item>
+            <title><![CDATA[The Storybook toolbar reaches a real backend]]></title>
+            <link>http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend</link>
+            <guid>http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend</guid>
+            <pubDate>Wed, 30 Sep 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[A Storybook story is the cheapest place to look at a screen and the most expensive place to trust]]></description>
+            <content:encoded><![CDATA[<p>A Storybook story is the cheapest place to look at a screen and the most expensive place to trust
+one. The model page renders perfectly in the story, and in the application it fails — because the
+story's rows came from a fixture file and the gateway method the page calls does not exist. The
+toolbar that used to solve this in the previous, webpack-based setup has been rebuilt for Blong's
+Vite Storybook, and a realm now gets it in one line:</p>
+<div class="language-tsx codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-tsx codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">default</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">defineBlongStorybookPreview</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token plain">browser</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">backend</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token boolean">true</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><br></div></code></pre></div></div>
+<p>That line brings five toolbar items — Backend, Role, Theme, Language, Direction — and the machinery
+behind them. This post is about the two interesting ones.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="a-story-needs-to-be-allowed-to-be-wrong">A story needs to be allowed to be wrong<a href="http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend#a-story-needs-to-be-allowed-to-be-wrong" class="hash-link" aria-label="Direct link to A story needs to be allowed to be wrong" title="Direct link to A story needs to be allowed to be wrong" translate="no">​</a></h2>
+<p>The mock in Blong is a good mock: it replaces each model's handler group with an in-memory
+implementation over <code>meta/fixture</code> rows, so <code>page('coral.coral.browse')</code> renders a real table with
+real paging, sorting and filtering, and no server anywhere. That is what makes a story a five-second
+review of a UI change.</p>
+<p>It is also what makes a story a claim nobody checked. The mock answers for a method the gateway may
+never have been told about, with rows no database holds, under permissions the page never had to
+enforce. The gap opens in the <em>wiring</em>, which is exactly the part a mocked story removes.</p>
+<p>So the toolbar's Backend item has three values, and two of them take the mock out of the path
+without changing anything above it:</p>
+<!-- -->
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-switch-belongs-in-the-adapter">The switch belongs in the adapter<a href="http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend#the-switch-belongs-in-the-adapter" class="hash-link" aria-label="Direct link to The switch belongs in the adapter" title="Direct link to The switch belongs in the adapter" translate="no">​</a></h2>
+<p>Nothing in the page knows which mode it is in. The mock is a backend-adapter behaviour, so switching
+means activating a different adapter block — <code>storybookJsonrpc</code> or <code>storybookMle</code> instead of
+<code>storybook</code> — and everything above the adapter (the model system, the generated pages, the
+permission-driven hiding of buttons) is the code the application runs. That is the whole point: the
+story is not a simulation of the app, it <em>is</em> the app pointed somewhere else.</p>
+<p>The two live values trade fidelity for simplicity:</p>
+<table><thead><tr><th>Value</th><th>On the wire</th></tr></thead><tbody><tr><td>Live (JSON-RPC)</td><td>The page speaks plain JSON-RPC; the plugin adds the token and decrypts.</td></tr><tr><td>Live (MLE)</td><td>The page keeps its own key pair and encrypts end to end; the plugin tokens.</td></tr></tbody></table>
+<p>The plugin is a Storybook dev-server middleware (<code>src/storybookBackend.ts</code>, mounted by
+<code>defineBlongStorybookMain</code>), which is also where authentication lives — because a story has no
+business holding credentials.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="logging-in-without-a-login-screen">Logging in without a login screen<a href="http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend#logging-in-without-a-login-screen" class="hash-link" aria-label="Direct link to Logging in without a login screen" title="Direct link to Logging in without a login screen" translate="no">​</a></h2>
+<p>The JSON-RPC mode was easy to authenticate: the plugin holds a session and injects the bearer token,
+so nothing in the page ever sees one.</p>
+<p>The MLE mode was not, and finding that out was the most useful hour of this work. The plan was for
+the plugin to mint a token the page could use — one whose signing and encryption keys travel in each
+request's JWE header rather than being baked into the JWT. The gateway supports that shape, and the
+plugin sent just such a login: plain JSON, no caller keys, so there was nothing to bind the token
+to.</p>
+<p>It does not work, and the reason is worth writing down: a login response is encrypted no matter
+what, so the plugin could never read its own token back out. A token the page cannot be given is not
+a token at all.</p>
+<p>So the MLE mode logs in from the page, through the platform's own codec — a real session whose key
+pair is the one the browser generated, renewing itself exactly as it would in the application. The
+dev server's part is to hand the story's own origin the role's credentials, on loopback, and to get
+out of the way of the encryption. The reviewer still never sees a login screen: the login belongs to
+the decorator, and the story waits for it before it renders — rendered first, it would fetch without
+a session, take a 401 and stay empty even after the session arrived.</p>
+<p>Which users the roles mean comes from the <code>.blong_devrc</code> the developer's other tooling already
+reads, with the seeded test users as the default:</p>
+<div class="language-yaml codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-yaml codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token key atrule">storybook</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token key atrule">target</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"> http</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain">//localhost</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token number" style="color:rgb(9, 134, 88)">8080</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token key atrule">roles</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">        </span><span class="token key atrule">Admin</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"> testAdmin</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">        </span><span class="token key atrule">Manager</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"> testManager</span><br></div></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-presentation-items-write-state-not-props">The presentation items write state, not props<a href="http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend#the-presentation-items-write-state-not-props" class="hash-link" aria-label="Direct link to The presentation items write state, not props" title="Direct link to The presentation items write state, not props" translate="no">​</a></h2>
+<p>Theme, Language and Direction exist for a reason that is easy to miss: no story renders the portal
+menubar, so the switchers the application ships — the ones that live in that menubar — are invisible
+in a story, and a review of a right-to-left layout or a glass skin had nowhere to happen. Those
+items have no prop to write to, because the platform built the container the story is rendered
+inside; they write the app store instead, which is the same place the portal's own switcher writes.</p>
+<p>One consequence is worth stating, because it was a bug before it was a rule: a store write is
+global, so the toolbar's <em>defaults</em> must never be written. A story that sets its own <code>lang</code> arg —
+the editor's validation story renders in Bulgarian that way — keeps it until a reviewer actually
+reaches for the toolbar.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-a-realm-gets">What a realm gets<a href="http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend#what-a-realm-gets" class="hash-link" aria-label="Direct link to What a realm gets" title="Direct link to What a realm gets" translate="no">​</a></h2>
+<p>A realm that adds <code>{backend: true}</code> to its preview needs two things to make the Role item
+meaningful, and the template now ships both: a fixture whose record ids mirror the test seed's (so
+the Open story loads from either source) and a test-seed grant for each role — full access for
+Admin, read and edit for Manager, read-only for Guest.</p>
+<p>All three grants have to include <code>subject.object.schema</code>, which sounds like a detail and is not: a
+model page loads its own schema before it loads rows, so the first version of the read-only role got
+a 403 for the schema and rendered a blank screen instead of a smaller one. A Guest who can browse
+and is then refused a save is the story worth showing; an empty page shows nothing at all.</p>
+<p>A state is a URL, which makes the whole thing scriptable — this is how the documentation's own
+screenshots and any Playwright run over Storybook reach a state without clicking:</p>
+<div class="language-text codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-text codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">http://localhost:6007/?path=/story/coral-coral--browse&amp;globals=backend:jsonrpc;role=Guest</span><br></div></code></pre></div></div>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="try-it">Try it<a href="http://blong.feasible.one/blog/the-storybook-toolbar-reaches-a-real-backend#try-it" class="hash-link" aria-label="Direct link to Try it" title="Direct link to Try it" translate="no">​</a></h2>
+<div class="language-bash codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-bash codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain"># a gateway to point at (a static port must be given: a server-only entry</span><br></div><div class="token-line" style="color:#000000"><span class="token plain"># otherwise picks a free one, and it is not logged)</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">cd core/blong-kopi &amp;&amp; node --run blong -- microservice integration dev playwright \</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    --gateway.port=8080 --resolution.portGateway=8080</span><br></div><div class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"># the realm's stories</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">cd core/blong-kopi &amp;&amp; npm run storybook</span><br></div></code></pre></div></div>
+<p>Then switch Backend to Live (JSON-RPC), leave Role on Admin, and watch the browse page fill with
+rows from the database instead of the fixture — the ids and the <code>(fixture)</code> marker in the name say
+which one you are looking at. Switching to Live (MLE) shows the same rows through the page's own
+encryption, and switching Role to Guest leaves the list readable until you try to save.</p>
+<p>The full picture is in the <a class="" href="http://blong.feasible.one/docs/patterns/blong-browser#the-story-toolbar">story toolbar pattern</a>,
+the reasoning in <a class="" href="http://blong.feasible.one/docs/rationale/storybook-toolbar">the story toolbar rationale</a>, and the previous
+generation of the idea — where the backend choice was the name of a configuration file — lives on in
+<code>ut-storybook</code>.</p>]]></content:encoded>
+            <category>Blong</category>
+            <category>UI</category>
+            <category>Testing</category>
         </item>
         <item>
             <title><![CDATA[The test tells you how far it got]]></title>
@@ -764,6 +827,82 @@ reflected in a login's expansion — the paths do not maintain themselves.</p>
             <category>Data</category>
         </item>
         <item>
+            <title><![CDATA[One sticky comment for the whole monorepo]]></title>
+            <link>http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo</link>
+            <guid>http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo</guid>
+            <pubDate>Tue, 15 Sep 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[A monorepo of forty packages that each report their own results produces a specific kind of unusable]]></description>
+            <content:encoded><![CDATA[<p>A monorepo of forty packages that each report their own results produces a specific kind of unusable
+CI. The check is green and nobody believes it. The logs are thorough and nobody reads them. And the
+one question a reviewer actually has — "did this branch break that test, or was it already broken?"
+— has no answer anywhere in the run, because answering it needs a comparison nobody made.</p>
+<p>Blong's answer is one document. Per package it carries the counts, the duration, the coverage and
+the change against the base branch; for the run it carries the tests that did not run, the slowest
+test, and every failure with its provenance. That same document is the artefact and the pull-request
+comment, so there is nothing to reconcile.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-delta-lives-in-the-same-cell">The delta lives in the same cell<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#the-delta-lives-in-the-same-cell" class="hash-link" aria-label="Direct link to The delta lives in the same cell" title="Direct link to The delta lives in the same cell" translate="no">​</a></h2>
+<p>The rule that shapes the whole table is small and worth copying: <strong>the change is printed beside the
+value it changed</strong>, not in a column of its own.</p>
+<table><thead><tr><th>Package</th><th>Result</th><th>Passed</th><th>Failed</th><th>Flaky</th><th>Not run</th><th>Total</th><th>Duration</th><th>Coverage</th><th>Report</th></tr></thead><tbody><tr><td>fake-fail</td><td>❌</td><td>8</td><td>2</td><td>0</td><td>—</td><td>10 (+2)</td><td>1m 05s (+5.0s) ⏱️ logs in as the… 11s</td><td>🔴 25% (-5.0pp)</td><td><code>[report]</code></td></tr></tbody></table>
+<p>That row is real — the local fixture's output — and it shows the four decisions the table makes. A
+count is <code>10 (+2)</code>. A duration carries its change and the name of the slowest test, which is what
+makes "the build got slower" actionable rather than true. Coverage is against the committed baseline
+with a red mark past a one-point regression. And <code>Report</code> is a link predicted from the reporting
+base before anything is published, so the document is complete when it is written rather than
+patched afterwards.</p>
+<p>Two columns exist only when they have something to say, which is the same principle applied to
+absence: <strong>Not run</strong> (<code>skipped + todo</code>) appears only when a package has one, and <strong>Flaky</strong> is
+separate from <strong>Passed</strong> always. A suite that skipped half its tests is a green that must not look
+like the others, and a suite that survives by retrying is not healthy — it is a suite whose health
+nobody has measured. Flaky tests are counted in their own column, marked <code>⚠️</code> in the package's
+result icon, listed as <code>🟡 flaky</code> in the failures table, and separated inside the failure bundle.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="three-runners-one-contract">Three runners, one contract<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#three-runners-one-contract" class="hash-link" aria-label="Direct link to Three runners, one contract" title="Direct link to Three runners, one contract" translate="no">​</a></h2>
+<p>The packages do not agree on a test runner, and nobody should pretend otherwise: tap for the
+framework packages, Playwright with Allure for the browser suites, vitest for <code>blong-browser</code>. What
+they agree on is that each writes a <strong>slice</strong> into <code>.ci-report/</code>, and aggregation is a sum over
+slices rather than a reader per runner:</p>
+<table><thead><tr><th>Runner</th><th>Adapter</th><th>Who writes it</th></tr></thead><tbody><tr><td>tap</td><td><code>report/tapReport.ts</code></td><td><code>blong-dev test</code></td></tr><tr><td>Playwright + Allure</td><td><code>report/allurePublish.ts</code></td><td><code>blong-dev playwright</code></td></tr><tr><td>vitest</td><td><code>report/vitestReport.ts</code> (<code>report vitest</code>)</td><td>the package itself</td></tr></tbody></table>
+<p>The coverage half of that story — how the three runners' line data becomes one number — has its own
+page, because merging lcov from three tools is a different problem from counting tests.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="is-this-failure-new">"Is this failure new?"<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#is-this-failure-new" class="hash-link" aria-label="Direct link to &quot;Is this failure new?&quot;" title="Direct link to &quot;Is this failure new?&quot;" translate="no">​</a></h2>
+<p>This is the question the report was built to answer, and it needs a history as well as a run. Each
+failing test is characterised against the base branch:</p>
+<table><thead><tr><th>Provenance</th><th>Meaning</th></tr></thead><tbody><tr><td><code>new</code></td><td>green on the base branch, red here — this branch broke it</td></tr><tr><td><code>recurring</code></td><td>already failing there — not this branch's doing</td></tr><tr><td><code>intermittent</code></td><td>has passed and failed before — flaky, and now it counts</td></tr></tbody></table>
+<p>The history is <code>.github/history.jsonl</code>, <strong>rebuilt</strong> per run from the per-package slices rather than
+appended to, so a rebase cannot leave two histories interleaved and a deleted test cannot haunt the
+percentages. The baseline the deltas are computed against is <code>.github/metrics.json</code> — the whole
+run's totals, duration and coverage — which is what makes <code>(+2)</code> a statement about last night rather
+than about nothing.</p>
+<p>When a run is red, a <strong>failure bundle</strong> is published beside the report: an HTML index, the failing
+tests as JSON and markdown, and the traces. It is built only for a red run, and the previous bundle
+is removed first — so a green build cannot leave a stale bundle behind for somebody to debug months
+later, which is a failure mode worth designing away because it wastes exactly the hours the bundle
+exists to save.</p>
+<!-- -->
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-this-repository-owns-and-what-it-does-not">What this repository owns, and what it does not<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#what-this-repository-owns-and-what-it-does-not" class="hash-link" aria-label="Direct link to What this repository owns, and what it does not" title="Direct link to What this repository owns, and what it does not" translate="no">​</a></h2>
+<p>The aggregation, the rendering, the metrics snapshot, the history and the failure bundle are here,
+with unit tests over each and a <strong>local fixture</strong> that builds a complete report without CI
+(<code>npm run report:local</code> in <code>test/blong-ci-report</code>) — which is the invocation to use when changing
+the contract, because it shows the real table rather than a description of it. The tests over the
+report models and writers pass 104 assertions.</p>
+<p>The step that <strong>posts</strong> the document as a pull-request comment does not live here: this repository
+calls a shared reusable workflow, and the posting is inside it. So the honest split is that the
+contract is owned here and the delivery is not — which is worth saying out loud, because a report
+nobody posts is a report nobody reads, and the part you cannot see from this repository is the half
+that decides whether reviewers ever meet the document.</p>
+<p>One defect is worth recording rather than hiding. <code>blong-dev ci-report</code> <strong>crashes</strong> on a tree that
+contains a single-run <code>.ci-report/report.json</code> written by an older schema —
+<code>TypeError: report.runs is not iterable</code> — because the collector assumes every slice is the current
+multi-runner shape. The fixture path works and the CI path works; the ad-hoc local path is the one
+that fails, which is precisely the path somebody takes when they are debugging the report. A schema
+guard is the missing piece, and it is on the list.</p>
+<p>The contract itself — the columns, the provenance rules, the bundle and the baseline — is described
+in <a class="" href="http://blong.feasible.one/docs/rationale/ci-report">the CI report rationale</a>; coverage aggregation across the three
+runners is in <a class="" href="http://blong.feasible.one/docs/concepts/code-coverage">the coverage concept</a>.</p>]]></content:encoded>
+            <category>Blong</category>
+            <category>CI</category>
+        </item>
+        <item>
             <title><![CDATA[The repo remembers what cost effort]]></title>
             <link>http://blong.feasible.one/blog/the-repo-remembers-what-cost-effort</link>
             <guid>http://blong.feasible.one/blog/the-repo-remembers-what-cost-effort</guid>
@@ -842,82 +981,6 @@ rather than a database or a tracker. The next post in the series adds a way to r
 by meaning instead of by phrase: <a class="" href="http://blong.feasible.one/blog/the-repo-answers-by-meaning">the repo answers by meaning</a>.</p>]]></content:encoded>
             <category>Blong</category>
             <category>Tooling</category>
-        </item>
-        <item>
-            <title><![CDATA[One sticky comment for the whole monorepo]]></title>
-            <link>http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo</link>
-            <guid>http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo</guid>
-            <pubDate>Tue, 15 Sep 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[A monorepo of forty packages that each report their own results produces a specific kind of unusable]]></description>
-            <content:encoded><![CDATA[<p>A monorepo of forty packages that each report their own results produces a specific kind of unusable
-CI. The check is green and nobody believes it. The logs are thorough and nobody reads them. And the
-one question a reviewer actually has — "did this branch break that test, or was it already broken?"
-— has no answer anywhere in the run, because answering it needs a comparison nobody made.</p>
-<p>Blong's answer is one document. Per package it carries the counts, the duration, the coverage and
-the change against the base branch; for the run it carries the tests that did not run, the slowest
-test, and every failure with its provenance. That same document is the artefact and the pull-request
-comment, so there is nothing to reconcile.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-delta-lives-in-the-same-cell">The delta lives in the same cell<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#the-delta-lives-in-the-same-cell" class="hash-link" aria-label="Direct link to The delta lives in the same cell" title="Direct link to The delta lives in the same cell" translate="no">​</a></h2>
-<p>The rule that shapes the whole table is small and worth copying: <strong>the change is printed beside the
-value it changed</strong>, not in a column of its own.</p>
-<table><thead><tr><th>Package</th><th>Result</th><th>Passed</th><th>Failed</th><th>Flaky</th><th>Not run</th><th>Total</th><th>Duration</th><th>Coverage</th><th>Report</th></tr></thead><tbody><tr><td>fake-fail</td><td>❌</td><td>8</td><td>2</td><td>0</td><td>—</td><td>10 (+2)</td><td>1m 05s (+5.0s) ⏱️ logs in as the… 11s</td><td>🔴 25% (-5.0pp)</td><td><code>[report]</code></td></tr></tbody></table>
-<p>That row is real — the local fixture's output — and it shows the four decisions the table makes. A
-count is <code>10 (+2)</code>. A duration carries its change and the name of the slowest test, which is what
-makes "the build got slower" actionable rather than true. Coverage is against the committed baseline
-with a red mark past a one-point regression. And <code>Report</code> is a link predicted from the reporting
-base before anything is published, so the document is complete when it is written rather than
-patched afterwards.</p>
-<p>Two columns exist only when they have something to say, which is the same principle applied to
-absence: <strong>Not run</strong> (<code>skipped + todo</code>) appears only when a package has one, and <strong>Flaky</strong> is
-separate from <strong>Passed</strong> always. A suite that skipped half its tests is a green that must not look
-like the others, and a suite that survives by retrying is not healthy — it is a suite whose health
-nobody has measured. Flaky tests are counted in their own column, marked <code>⚠️</code> in the package's
-result icon, listed as <code>🟡 flaky</code> in the failures table, and separated inside the failure bundle.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="three-runners-one-contract">Three runners, one contract<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#three-runners-one-contract" class="hash-link" aria-label="Direct link to Three runners, one contract" title="Direct link to Three runners, one contract" translate="no">​</a></h2>
-<p>The packages do not agree on a test runner, and nobody should pretend otherwise: tap for the
-framework packages, Playwright with Allure for the browser suites, vitest for <code>blong-browser</code>. What
-they agree on is that each writes a <strong>slice</strong> into <code>.ci-report/</code>, and aggregation is a sum over
-slices rather than a reader per runner:</p>
-<table><thead><tr><th>Runner</th><th>Adapter</th><th>Who writes it</th></tr></thead><tbody><tr><td>tap</td><td><code>report/tapReport.ts</code></td><td><code>blong-dev test</code></td></tr><tr><td>Playwright + Allure</td><td><code>report/allurePublish.ts</code></td><td><code>blong-dev playwright</code></td></tr><tr><td>vitest</td><td><code>report/vitestReport.ts</code> (<code>report vitest</code>)</td><td>the package itself</td></tr></tbody></table>
-<p>The coverage half of that story — how the three runners' line data becomes one number — has its own
-page, because merging lcov from three tools is a different problem from counting tests.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="is-this-failure-new">"Is this failure new?"<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#is-this-failure-new" class="hash-link" aria-label="Direct link to &quot;Is this failure new?&quot;" title="Direct link to &quot;Is this failure new?&quot;" translate="no">​</a></h2>
-<p>This is the question the report was built to answer, and it needs a history as well as a run. Each
-failing test is characterised against the base branch:</p>
-<table><thead><tr><th>Provenance</th><th>Meaning</th></tr></thead><tbody><tr><td><code>new</code></td><td>green on the base branch, red here — this branch broke it</td></tr><tr><td><code>recurring</code></td><td>already failing there — not this branch's doing</td></tr><tr><td><code>intermittent</code></td><td>has passed and failed before — flaky, and now it counts</td></tr></tbody></table>
-<p>The history is <code>.github/history.jsonl</code>, <strong>rebuilt</strong> per run from the per-package slices rather than
-appended to, so a rebase cannot leave two histories interleaved and a deleted test cannot haunt the
-percentages. The baseline the deltas are computed against is <code>.github/metrics.json</code> — the whole
-run's totals, duration and coverage — which is what makes <code>(+2)</code> a statement about last night rather
-than about nothing.</p>
-<p>When a run is red, a <strong>failure bundle</strong> is published beside the report: an HTML index, the failing
-tests as JSON and markdown, and the traces. It is built only for a red run, and the previous bundle
-is removed first — so a green build cannot leave a stale bundle behind for somebody to debug months
-later, which is a failure mode worth designing away because it wastes exactly the hours the bundle
-exists to save.</p>
-<!-- -->
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-this-repository-owns-and-what-it-does-not">What this repository owns, and what it does not<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#what-this-repository-owns-and-what-it-does-not" class="hash-link" aria-label="Direct link to What this repository owns, and what it does not" title="Direct link to What this repository owns, and what it does not" translate="no">​</a></h2>
-<p>The aggregation, the rendering, the metrics snapshot, the history and the failure bundle are here,
-with unit tests over each and a <strong>local fixture</strong> that builds a complete report without CI
-(<code>npm run report:local</code> in <code>test/blong-ci-report</code>) — which is the invocation to use when changing
-the contract, because it shows the real table rather than a description of it. The tests over the
-report models and writers pass 104 assertions.</p>
-<p>The step that <strong>posts</strong> the document as a pull-request comment does not live here: this repository
-calls a shared reusable workflow, and the posting is inside it. So the honest split is that the
-contract is owned here and the delivery is not — which is worth saying out loud, because a report
-nobody posts is a report nobody reads, and the part you cannot see from this repository is the half
-that decides whether reviewers ever meet the document.</p>
-<p>One defect is worth recording rather than hiding. <code>blong-dev ci-report</code> <strong>crashes</strong> on a tree that
-contains a single-run <code>.ci-report/report.json</code> written by an older schema —
-<code>TypeError: report.runs is not iterable</code> — because the collector assumes every slice is the current
-multi-runner shape. The fixture path works and the CI path works; the ad-hoc local path is the one
-that fails, which is precisely the path somebody takes when they are debugging the report. A schema
-guard is the missing piece, and it is on the list.</p>
-<p>The contract itself — the columns, the provenance rules, the bundle and the baseline — is described
-in <a class="" href="http://blong.feasible.one/docs/rationale/ci-report">the CI report rationale</a>; coverage aggregation across the three
-runners is in <a class="" href="http://blong.feasible.one/docs/concepts/code-coverage">the coverage concept</a>.</p>]]></content:encoded>
-            <category>Blong</category>
-            <category>CI</category>
         </item>
         <item>
             <title><![CDATA[The log line that knows its own structure]]></title>
@@ -1620,92 +1683,6 @@ deciding, rather than a script replaying a numbered file nobody has read since i
 <a class="" href="http://blong.feasible.one/docs/rationale/schema-sync">the rationale</a> for why this approach beat the migration alternatives.</p>]]></content:encoded>
             <category>Blong</category>
             <category>Data</category>
-        </item>
-        <item>
-            <title><![CDATA[Full-stack tests that log in for you]]></title>
-            <link>http://blong.feasible.one/blog/full-stack-tests-that-log-in-for-you</link>
-            <guid>http://blong.feasible.one/blog/full-stack-tests-that-log-in-for-you</guid>
-            <pubDate>Fri, 29 May 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Read a hundred browser tests from a system that has been running for a few years and most of them]]></description>
-            <content:encoded><![CDATA[<p>Read a hundred browser tests from a system that has been running for a few years and most of them
-are not about the product. They are about the plumbing: a helper that signs in, a helper that
-navigates to the right page, a helper that waits for the table to fill, and — the one that hurts — a
-copy of the field names, so that the day a form is redesigned, forty tests fail for a reason
-unrelated to the feature each one was protecting.</p>
-<p>Blong's Playwright layer takes that plumbing away and puts a floor under it, so a test file is close
-to a statement of intent. The fixtures log in; the CRUD helpers find the page, its widgets and its
-fields from the model the server already declares; and the primary assertion is a picture rather
-than a selector.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="a-fixture-not-a-helper">A fixture, not a helper<a href="http://blong.feasible.one/blog/full-stack-tests-that-log-in-for-you#a-fixture-not-a-helper" class="hash-link" aria-label="Direct link to A fixture, not a helper" title="Direct link to A fixture, not a helper" translate="no">​</a></h2>
-<div class="language-typescript codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-typescript codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token keyword" style="color:rgb(0, 0, 255)">import</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">test</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> expect</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">from</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'@feasibleone/blong-browser/playwright'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token keyword" style="color:rgb(0, 0, 255)">import</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">browseModel</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">from</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'@feasibleone/blong-browser/playwright/model'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">test</span><span class="token punctuation" style="color:rgb(4, 81, 165)">.</span><span class="token function" style="color:rgb(0, 0, 255)">use</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">blongPermissions</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token boolean">true</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">test</span><span class="token punctuation" style="color:rgb(4, 81, 165)">.</span><span class="token function" style="color:rgb(0, 0, 255)">describe</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token string" style="color:rgb(163, 21, 21)">'Marine habitat'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token plain"> </span><span class="token operator" style="color:rgb(0, 0, 0)">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token function" style="color:rgb(0, 0, 255)">browseModel</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token plain">test</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> expect</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">subject</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'marine'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> object</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'habitat'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><br></div></code></pre></div></div>
-<p>The <code>portal</code> fixture is the whole setup: it opens the app, logs in for you and hands the test a
-<code>Portal</code> object — <code>menuClick</code>, <code>fill</code>, <code>save</code>, <code>tableRowClickByText</code>, <code>waitForTableData</code>,
-<code>waitForFormLoad</code>. Credentials come from the fixture options (<code>blongUsername</code>, <code>blongPassword</code>,
-which a suite sets once in its config and a test overrides with <code>test.use</code>) rather than from each
-file, and the login itself is the real thing: the fixture fills <code>input[name="username"]</code> and
-<code>input[name="password"]</code>, clicks <code>login-submit</code> and waits for the portal to mount under
-<code>html[data-portal-config="merged"]</code>. The submit button calls the application's own <code>authLogin</code>
-handler, so the test walks the same path a person does — there is no test-only way into the app.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="permissions-start-at-none">Permissions start at none<a href="http://blong.feasible.one/blog/full-stack-tests-that-log-in-for-you#permissions-start-at-none" class="hash-link" aria-label="Direct link to Permissions start at none" title="Direct link to Permissions start at none" translate="no">​</a></h2>
-<p>The interesting option is <code>blongPermissions</code>, and its default is <code>false</code>. A test that wants to
-create a record says so:</p>
-<div class="language-typescript codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-typescript codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">test</span><span class="token punctuation" style="color:rgb(4, 81, 165)">.</span><span class="token function" style="color:rgb(0, 0, 255)">use</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">blongPermissions</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token boolean">true</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><br></div></code></pre></div></div>
-<p>That inverts the usual accident. Rather than every test silently inheriting a fully-privileged
-session and discovering, some Friday, that a permission check was never exercised, each test states
-the capability its scenario needs, and a capability nobody states stays off. Thirty-seven spec files
-opt in; the ones that test the gate itself do not. The switch is honest about what it is, too: it
-flips a value in the browser's own store (<code>setPermissions(true)</code>), it is not a server grant, so the
-server-side check is unaffected — a test that widens the UI still cannot do what the token forbids.</p>
-<p><img decoding="async" loading="lazy" alt="The portal shell a test drives: menu, browse page and detail pane" src="http://blong.feasible.one/assets/images/portal-shell-b3bb038bec0a460316e3cb351354687d.png" width="1600" height="700" class="img_T0Il"></p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-helpers-do-not-know-your-entity">The helpers do not know your entity<a href="http://blong.feasible.one/blog/full-stack-tests-that-log-in-for-you#the-helpers-do-not-know-your-entity" class="hash-link" aria-label="Direct link to The helpers do not know your entity" title="Direct link to The helpers do not know your entity" translate="no">​</a></h2>
-<p><code>browseModel</code> and <code>createAndEditModel</code> take a subject, an object and a field map:</p>
-<div class="language-typescript codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-typescript codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token function" style="color:rgb(0, 0, 255)">createAndEditModel</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token plain">test</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> expect</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    subject</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'marine'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    object</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'coral'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    fields</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token string-property property">'coral.coralName'</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'Test Coral'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> </span><span class="token string-property property">'coral.familyId'</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'Acroporidae'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    editFields</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token string-property property">'coral.coralName'</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'Edited Coral'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><br></div></code></pre></div></div>
-<p>They are generic because they read nothing and assume nothing. The route is the model's own
-convention — <code>menuClick('marine.coral.browse')</code>. The create button is the id the framework mints for
-the page's action, <code>action-component-marine-coral-new</code>. Each field's widget type is detected from
-its <code>blong-*</code> class: a dropdown, a checkbox, a date, a textarea, a number. The field map is keyed by
-the <code>name</code> attribute, which uses dots (<code>coral.coralName</code>) while ids use hyphens (<code>coral-coralName</code>),
-and <code>fillFields</code> does the conversion, so a test author never has to remember which convention
-applies where.</p>
-<p>What makes this possible is that the page does not exist until the model declares it. A model
-specification registers its components as <code>${subject}.${object}.browse</code> and pushes the matching
-entry into the portal menu, and the app asks the server for that menu at startup. So the helper
-clicks a route that came from the declaration, fills widgets that came from the declaration, and the
-test itself never names a selector that a redesign could invalidate.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-assertion-is-a-picture">The assertion is a picture<a href="http://blong.feasible.one/blog/full-stack-tests-that-log-in-for-you#the-assertion-is-a-picture" class="hash-link" aria-label="Direct link to The assertion is a picture" title="Direct link to The assertion is a picture" translate="no">​</a></h2>
-<div class="language-typescript codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-typescript codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token keyword" style="color:rgb(0, 0, 255)">await</span><span class="token plain"> </span><span class="token function" style="color:rgb(0, 0, 255)">expect</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token plain">portal</span><span class="token punctuation" style="color:rgb(4, 81, 165)">.</span><span class="token plain">page</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">.</span><span class="token function" style="color:rgb(0, 0, 255)">toHaveScreenshot</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token string" style="color:rgb(163, 21, 21)">'marine-coral-browse.png'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><br></div></code></pre></div></div>
-<p>Screenshots are the primary assertion, not a debugging aid. The reasoning is the one that made this
-layer worth writing: a test that asserts a locator's text passes while the layout is broken, and it
-fails the day a label is reworded — which is the wrong way round for a suite whose claim is that the
-product still works. A picture fails when the page a person sees changes, and it says <em>what</em> changed
-without anyone reconstructing it from a stack trace. The tolerance is one percent of pixels
-(<code>maxDiffPixelRatio: 0.01</code>), and baselines are committed beside the spec as
-<code>&lt;spec&gt;.play.ts-snapshots/&lt;name&gt;-&lt;project&gt;-&lt;platform&gt;.png</code>, so a redesign arrives as a reviewable
-image diff rather than as a wall of red.</p>
-<p>The cost is real and worth naming: a picture is only as good as the state it was taken in. That is
-why the helpers pin the rows they photograph — a search term narrows the table, ids are minted
-deterministically, clocks are masked — and why a screenshot test that depends on yesterday's data is
-a test that fails on Tuesdays.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="it-runs-against-the-real-server">It runs against the real server<a href="http://blong.feasible.one/blog/full-stack-tests-that-log-in-for-you#it-runs-against-the-real-server" class="hash-link" aria-label="Direct link to It runs against the real server" title="Direct link to It runs against the real server" translate="no">​</a></h2>
-<p><code>defineBlongConfig()</code> starts both halves: the backend under <code>blong-watch</code> (the same watch server
-used for development, with the <code>microservice integration dev playwright</code> intents) and the suite's
-Vite dev server, with <code>baseURL</code> pointing at the frontend's <code>/s/</code> base path. The browser loads the
-unbundled development application — the code you are editing, hot-reloaded — rather than a build
-artifact that could be an hour older than your change.</p>
-<p>The ports are worth knowing because they are the thing that surprises people. Locally the pair is
-8080 and 5173, and an already-running server is reused, which is why a test run is instant when your
-dev loop is already up. In CI the pair is derived from the package's position in <code>rush.json</code> — the
-backend on <code>9000 + index</code>, the frontend a hundred above it — so a monorepo can run many suites in
-parallel without inventing ports, and <code>PLAYWRIGHT_BACKEND_PORT</code> / <code>PLAYWRIGHT_FRONTEND_PORT</code>
-override either.</p>
-<p>The practical effect is a suite you can run the way you run the app: start the dev loop, run
-<code>node --run playwright</code>, and watch a browser log in, browse, create, edit and delete while the
-pictures it takes are compared against the ones in the repository.</p>
-<p>See <a class="" href="http://blong.feasible.one/docs/concepts/playwright">the concept page</a> for the fixtures and the identifier conventions
-and <a class="" href="http://blong.feasible.one/docs/patterns/playwright">the pattern guide</a> for the helper catalogue, the coverage story and
-how a suite is wired.</p>]]></content:encoded>
-            <category>Blong</category>
-            <category>Testing</category>
         </item>
     </channel>
 </rss>
