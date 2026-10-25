@@ -19,6 +19,36 @@ export interface IFieldValue {
     value: string | number | boolean;
 }
 export type FieldMap = Record<string, string | number | boolean | IFieldValue>;
+export type ScreenshotFormat = 'png' | 'webp';
+/**
+ * Which captures a helper takes. Every state defaults to `true`; a spec that only
+ * creates a record as a prerequisite for another page turns the captures off and
+ * keeps the test, so the row is still proved to save without a duplicate picture.
+ */
+export interface ICaptureOptions {
+    browse?: boolean;
+    /** The create page before anything is filled — shows the empty form. */
+    empty?: boolean;
+    /** The create page with the spec's values in it. */
+    filled?: boolean;
+    /** After the first save. */
+    saved?: boolean;
+    /** The saved record reopened — the edit form as loaded. */
+    open?: boolean;
+    /** After the edit values are typed into the reopened record. */
+    editDirty?: boolean;
+    /** After the edit save. */
+    editSaved?: boolean;
+    cleanupConfirm?: boolean;
+}
+export interface IScreenshotOptions {
+    /**
+     * Baseline image format. Playwright stores WebP losslessly, so a spec may pick
+     * it by name; PNG stays the default.
+     */
+    format?: ScreenshotFormat;
+    capture?: ICaptureOptions;
+}
 export interface IBrowseModelOptions {
     subject: string;
     object: string;
@@ -30,6 +60,8 @@ export interface IBrowseModelOptions {
      * and its header in the picture, where masking the cell would hide all three.
      */
     redact?: IRedactPattern[];
+    /** Image format and which states to capture. */
+    screenshot?: IScreenshotOptions;
 }
 export interface ICreateAndEditModelOptions {
     subject: string;
@@ -160,6 +192,8 @@ export interface ICreateAndEditModelOptions {
      * detail tab), so the two do not compete for the same screenshot files.
      */
     baselinePrefix?: string;
+    /** Image format and which states to capture. */
+    screenshot?: IScreenshotOptions;
 }
 /** Fill form fields, auto-detecting widget types from the DOM. */
 export declare function fillFields(page: Page, fields: FieldMap): Promise<void>;
@@ -186,7 +220,7 @@ export declare function selectNavigatorNode(page: Page, label: string): Promise<
  * and the DOM it walks are elsewhere, so a unit test with a fake `expect` and a fake `page`
  * can pin that the two are called in that order, and that neither is called for nothing.
  */
-export declare function captureWith(expect: Expect, redact?: readonly IRedactPattern[]): (page: Page, name: string) => Promise<void>;
+export declare function captureWith(expect: Expect, redact?: readonly IRedactPattern[], screenshot?: IScreenshotOptions): (page: Page, name: string, state?: keyof ICaptureOptions) => Promise<void>;
 /**
  * Generate a browse-page test for a model.
  * Opens the browse page via the menu and takes a screenshot.
@@ -211,6 +245,8 @@ export interface ICleanupModelOptions {
     removeMethod: string;
     /** Volatile substrings to redact (`###`) in the confirmation capture, as in `browseModel`. */
     redact?: IRedactPattern[];
+    /** Image format; the confirmation capture is the only one this helper takes. */
+    screenshot?: IScreenshotOptions;
 }
 /**
  * Generate a cleanup test that deletes test-created rows left over from

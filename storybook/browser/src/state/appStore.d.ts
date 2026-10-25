@@ -1,4 +1,5 @@
 import { ReactNode } from '../../../../common/temp/node_modules/.pnpm/react@19.2.4/node_modules/react';
+import { IFormatConfig } from '../lib/format.js';
 import { ActionRegistry, IBlongError } from '../types/action.js';
 import { IAuthState, IUserProfile, PermissionMap } from '../types/permission.js';
 import { IPortalConfig, IPortalState, ITab } from '../types/portal.js';
@@ -56,6 +57,15 @@ export interface IAppState {
      */
     translationsByLanguage: Record<string, TranslationDict>;
     language: string;
+    /**
+     * Formatting configuration, resolved user → system → the language default by
+     * `useFormatValue` (see `lib/format.ts`). The user layer is the person's own
+     * preference and arrives with the profile; the system layer is the app's.
+     */
+    format: {
+        user?: IFormatConfig;
+        system?: IFormatConfig;
+    };
     actions: ActionRegistry;
     error: IBlongError | null;
     hint: IHint | null;
@@ -88,6 +98,8 @@ export interface IAppActions {
     setTranslations: (dict: TranslationDict) => void;
     setTranslationsByLanguage: (dicts: Record<string, TranslationDict>) => void;
     setLanguage: (language: string) => void;
+    /** Set one layer of the formatting configuration; `undefined` clears it. */
+    setFormat: (scope: 'user' | 'system', config: IFormatConfig | undefined) => void;
     registerActions: (actions: ActionRegistry) => void;
     showError: (error: IBlongError) => void;
     clearError: () => void;

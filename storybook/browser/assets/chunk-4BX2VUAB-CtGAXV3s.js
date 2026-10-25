@@ -1,1 +1,0 @@
-import{n as e}from"./rolldown-runtime-BcKkbAw3.js";import{T as t,w as n}from"./src-05n2arE5.js";function r(e,t){e.accDescr&&t.setAccDescription?.(e.accDescr),e.accTitle&&t.setAccTitle?.(e.accTitle),e.title&&t.setDiagramTitle?.(e.title)}function i(){return(i=e((()=>{t(),n(r,`populateCommonDb`)})))()}export{r as n,i as t};

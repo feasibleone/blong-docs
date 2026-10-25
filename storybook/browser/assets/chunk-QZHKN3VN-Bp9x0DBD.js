@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BcKkbAw3.js";import{T as t,w as n}from"./src-OuAdEEDf.js";var r;function i(){return(i=e((()=>{t(),r=class{constructor(e){this.init=e,this.records=this.init()}static{n(this,`ImperativeState`)}reset(){this.records=this.init()}}})))()}export{i as n,r as t};

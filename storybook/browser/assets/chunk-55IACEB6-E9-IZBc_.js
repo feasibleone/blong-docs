@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BcKkbAw3.js";import{S as t,T as n,t as r,w as i}from"./src-OuAdEEDf.js";var a;function o(){return(o=e((()=>{n(),r(),a=i((e,n)=>{let r;return n===`sandbox`&&(r=t(`#i`+e)),t(n===`sandbox`?r.nodes()[0].contentDocument.body:`body`).select(`[id="${e}"]`)},`getDiagramElement`)})))()}export{o as n,a as t};

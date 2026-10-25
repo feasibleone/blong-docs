@@ -128,6 +128,8 @@ export declare function Calendar({ showOnFocus, selectionMode, iconPos, hourForm
 export declare function Card(props: CardProps): import("react/jsx-runtime").JSX.Element;
 export declare function Checkbox({ trueValue, falseValue, icon, ...props }: CheckboxProps): import("react/jsx-runtime").JSX.Element;
 export declare function Chips({ removable, allowDuplicate, ...props }: ChipsProps): import("react/jsx-runtime").JSX.Element;
+export { RadioButton } from 'primereact/radiobutton';
+export type { RadioButtonProps } from 'primereact/radiobutton';
 export declare function Column({ showFilterMenu, showFilterMatchModes, showFilterOperator, showAddButton, showApplyButton, showClearButton, showFilterMenuOptions, dataType, filterType, maxConstraints, rowReorderIcon, alignFrozen, cellEditValidatorEvent, exportable, reorderable, resizeable, ...props }: ColumnProps): import("react/jsx-runtime").JSX.Element;
 export declare function ConfirmDialog(props: ConfirmDialogProps): import("react/jsx-runtime").JSX.Element;
 export declare function ConfirmPopup({ dismissable, ...props }: ConfirmPopupProps): import("react/jsx-runtime").JSX.Element;

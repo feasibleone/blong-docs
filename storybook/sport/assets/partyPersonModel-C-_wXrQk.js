@@ -1,0 +1,297 @@
+import { n as __esmMin } from "./rolldown-runtime-V4kyJ4NV.js";
+import { J as init_types, Z as model } from "./iframe-DxBhgsxq.js";
+//#region ../blong-party/meta/model/partyPersonModel.ts
+var partyPersonModel_default;
+function init_partyPersonModel() {
+	return (init_partyPersonModel = __esmMin((() => {
+		init_types();
+		partyPersonModel_default = model(() => async function partyPersonModel() {
+			return {
+				subject: "party",
+				object: "person",
+				objectTitle: "Person",
+				public: true,
+				nameField: "person.personName",
+				schema: { properties: {
+					person: {
+						properties: {
+							personName: {
+								title: "Full Name",
+								required: true,
+								filter: true
+							},
+							firstName: { title: "First Name" },
+							middleName: { title: "Middle Name" },
+							lastName: { title: "Last Name" },
+							internationalName: { title: "International Spelling" },
+							birthDate: { title: "Date of Birth" },
+							citizenship: { title: "Citizenship" },
+							photoUrl: { title: "Photograph URL" },
+							gender: {
+								title: "Gender",
+								widget: { options: [
+									{
+										value: "male",
+										label: "Male"
+									},
+									{
+										value: "female",
+										label: "Female"
+									},
+									{
+										value: "other",
+										label: "Other"
+									}
+								] }
+							},
+							maritalStatus: {
+								title: "Marital Status",
+								widget: { options: [
+									{
+										value: "single",
+										label: "Single"
+									},
+									{
+										value: "married",
+										label: "Married"
+									},
+									{
+										value: "divorced",
+										label: "Divorced"
+									},
+									{
+										value: "widowed",
+										label: "Widowed"
+									}
+								] }
+							},
+							nationality: {
+								title: "Nationality",
+								filter: true
+							},
+							occupation: { title: "Occupation" },
+							notes: { title: "Notes" }
+						},
+						widget: { columns: [
+							"personName",
+							"nationality",
+							"occupation"
+						] }
+					},
+					/** Contact details card — email, phone, mobile. */
+					contact: {
+						properties: {
+							contactType: {
+								title: "Contact Type",
+								widget: { options: [
+									{
+										value: "email",
+										label: "Email"
+									},
+									{
+										value: "phone",
+										label: "Phone"
+									},
+									{
+										value: "mobile",
+										label: "Mobile"
+									},
+									{
+										value: "fax",
+										label: "Fax"
+									}
+								] }
+							},
+							contactValue: { title: "Contact Value" },
+							isPrimary: { title: "Primary" }
+						},
+						widget: { columns: [
+							"contactType",
+							"contactValue",
+							"isPrimary"
+						] }
+					},
+					/** Address card — physical addresses. */
+					address: {
+						properties: {
+							addressType: {
+								title: "Address Type",
+								widget: { options: [
+									{
+										value: "home",
+										label: "Home"
+									},
+									{
+										value: "work",
+										label: "Work"
+									},
+									{
+										value: "billing",
+										label: "Billing"
+									},
+									{
+										value: "shipping",
+										label: "Shipping"
+									}
+								] }
+							},
+							streetAddress: { title: "Street Address" },
+							city: { title: "City" },
+							stateProvince: { title: "State / Province" },
+							postalCode: { title: "Postal Code" },
+							isPrimary: { title: "Primary" }
+						},
+						widget: { columns: [
+							"addressType",
+							"streetAddress",
+							"city",
+							"isPrimary"
+						] }
+					},
+					/** Identifier card — official IDs. */
+					identifier: {
+						properties: {
+							identifierType: {
+								title: "Identifier Type",
+								widget: { options: [
+									{
+										value: "passport",
+										label: "Passport"
+									},
+									{
+										value: "nationalId",
+										label: "National ID"
+									},
+									{
+										value: "driversLicense",
+										label: "Driver's License"
+									},
+									{
+										value: "ssn",
+										label: "Social Security No"
+									},
+									{
+										value: "taxId",
+										label: "Tax ID"
+									}
+								] }
+							},
+							identifierValue: { title: "Identifier Value" },
+							issuingAuthority: { title: "Issuing Authority" },
+							issuedDate: { title: "Issue Date" },
+							expiryDate: { title: "Expiry Date" }
+						},
+						widget: { columns: [
+							"identifierType",
+							"identifierValue",
+							"issuingAuthority",
+							"expiryDate"
+						] }
+					}
+				} },
+				cards: {
+					browse: {
+						label: "Persons",
+						widgets: ["person"]
+					},
+					personal: {
+						label: "Personal Info",
+						widgets: [
+							"person.personName",
+							"person.firstName",
+							"person.middleName",
+							"person.lastName",
+							"person.internationalName",
+							"person.birthDate",
+							"person.citizenship",
+							"person.photoUrl",
+							"person.gender",
+							"person.maritalStatus",
+							"person.nationality",
+							"person.occupation",
+							"person.notes"
+						]
+					},
+					contactCard: {
+						label: "Contact Details",
+						widgets: ["contact"]
+					},
+					addressCard: {
+						label: "Addresses",
+						widgets: ["address"]
+					},
+					identifierCard: {
+						label: "Identifiers",
+						widgets: ["identifier"]
+					}
+				},
+				layouts: {
+					edit: [["personal"]],
+					editThumbIndex: {
+						orientation: "left",
+						items: [
+							{
+								id: "personal",
+								label: "Personal Info",
+								icon: "pi pi-user",
+								widgets: ["personal"]
+							},
+							{
+								id: "contact",
+								label: "Contact",
+								icon: "pi pi-envelope",
+								widgets: ["contactCard"]
+							},
+							{
+								id: "address",
+								label: "Addresses",
+								icon: "pi pi-map-marker",
+								widgets: ["addressCard"]
+							},
+							{
+								id: "identifiers",
+								label: "Identifiers",
+								icon: "pi pi-id-card",
+								widgets: ["identifierCard"]
+							}
+						]
+					}
+				},
+				browser: {
+					icon: "pi pi-users",
+					toolbar: [
+						{
+							label: "Create",
+							icon: "pi pi-plus",
+							action: "component/party.person.new",
+							permission: "party.person.add"
+						},
+						{
+							label: "Edit",
+							icon: "pi pi-pencil",
+							enabled: "current",
+							method: "component/party.person.open",
+							params: "${current}"
+						},
+						{
+							label: "Report",
+							icon: "pi pi-chart-bar",
+							action: "component/party.person.report"
+						},
+						{
+							label: "Delete",
+							icon: "pi pi-trash",
+							enabled: "selected",
+							confirm: "Delete selected person record?",
+							method: "party.person.remove",
+							params: { personId: "${personId}" }
+						}
+					]
+				}
+			};
+		});
+	})))();
+}
+//#endregion
+init_partyPersonModel();
+export { partyPersonModel_default as default };

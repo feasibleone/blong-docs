@@ -1,0 +1,154 @@
+/* Portal shell — full-height column layout */
+.blong-portal {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.blong-portal-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+/* Per-tab error display */
+.blong-tab-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 2rem;
+    color: var(--red-400, #f87171);
+    gap: 1rem;
+}
+
+.blong-tab-error__icon {
+    font-size: 2.5rem;
+}
+
+.blong-tab-error__message {
+    font-size: 1rem;
+    max-width: 480px;
+    text-align: center;
+}
+
+/* TabView fills its container and lets panels grow (but never beyond it) */
+.p-tabview {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+/* The tab strip is a flex item of that column, and a page taller than the area
+   would make it shrink: the strip's box then measures less than the tab it holds
+   (18px against 46px, seen with a navigator listing a few dozen keys), the header
+   is clipped and the panels — laid out after the strip's shortened box — are drawn
+   over it. A strip is never the thing to give up: it keeps its natural height, and
+   the panels below scroll or clip instead, which is what `min-height: 0` on them
+   is for. */
+.p-tabview .p-tabview-nav-container {
+    flex-shrink: 0;
+}
+
+.p-tabview .p-tabview-panels {
+    padding: 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.p-tabview .p-tabview-panel {
+    flex-grow: 1;
+    min-height: 0;
+}
+
+/* MenuBar resets */
+.p-menubar {
+    border: 0;
+}
+
+/* Keep the end region a single row. PrimeReact leaves `.p-menubar-end` as a
+   block box, so more than one widget (theme switcher, language switcher,
+   account menu) stacks vertically and stretches the menubar. */
+.p-menubar-end {
+    display: flex;
+    align-items: center;
+}
+
+.p-menubar.blong-menubar--grow {
+    flex-grow: 1;
+}
+
+/* Right-side menubar: submenu opens to the left */
+.p-menubar.blong-menubar--right ul.p-submenu-list {
+    right: 0;
+}
+
+.p-menubar.blong-menubar--right.p-menubar-mobile-active ul.p-menubar-root-list {
+    right: 0;
+    left: initial;
+    min-width: 200px;
+}
+
+/* The menubar is a strip, like the tab strip above: it keeps its natural height and the body
+   below it takes the free space. PrimeReact's mobile mode (≤960px) hides the root list behind
+   the button, and this rule used to ask for `flex-grow: 1` there — which, in the portal's
+   *column* layout, grows the bar's height rather than its width. Measured: 341px below 960px
+   against the 42px it is meant to be, so a narrow frame showed a mostly empty bar. Growth is a
+   regression, not a design (@@D-142 @@F-538): the height is restored here rather than in a
+   baseline. */
+.p-menubar {
+    flex-shrink: 0;
+}@keyframes blong-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.blong-loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    z-index: 9998;
+}
+
+.blong-loader-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--surface-50);
+    opacity: 0.7;
+}
+
+.blong-loader-spinner {
+    height: 35px;
+    width: 35px;
+    border-radius: 100%;
+    border: 3px solid #4096fd;
+    border-bottom-color: transparent;
+    animation: blong-rotate 0.8s linear infinite;
+}
+
+.blong-loader-message {
+    margin-top: 20px;
+    font-size: 16px;
+    font-family: Roboto, Arial;
+    z-index: 1;
+}

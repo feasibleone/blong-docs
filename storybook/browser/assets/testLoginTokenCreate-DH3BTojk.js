@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BcKkbAw3.js";import{N as t,P as n}from"./iframe-89H3rE-3.js";var r;function i(){return(i=e((()=>{n(),r=t(({handler:{loginTokenCreate:e}})=>({testLoginTokenCreate:(t,n)=>[function(t,{$meta:n}){return e({username:`test`,password:`test`},n)}]}))})))()}i();export{r as default};
