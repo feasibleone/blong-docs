@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "7df11d7d-3d22-442d-b097-39c9b0179bd5",
+  "status": "current",
+  "command": "deliver",
+  "type": "sequence",
+  "input": "/home/kalin/work/blong/blong/docs/blong/draw/archify/blong-rpc-call.json",
+  "output": "/home/kalin/work/blong/blong/docs/blong/static/diagrams/blong-rpc-call.html",
+  "specification": {
+    "sha256": "f714eec189c6826c5be8bb7e8f74107311c263da75165a272d490d52c3e4e195",
+    "bytes": 7284
+  },
+  "artifact": {
+    "sha256": "c45fd4b1b9f9e9e20352556bd844dc6952b2b1d3dd276eb2618f8f45eb7f834c",
+    "bytes": 845558
+  }
+}

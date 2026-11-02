@@ -2,6 +2,7 @@ import { IHandlerProxy, ILogger, IMeta } from '@feasibleone/blong';
 import { QueryClient } from '@tanstack/react-query';
 import { ReactNode } from '../../../../common/temp/node_modules/.pnpm/react@19.2.4/node_modules/react';
 import { TranslationDict } from '../state/appStore.js';
+import { IPortalFeedbackConfig } from '../types/portal.js';
 import { ISchemaRegistry } from '../types/schema.js';
 /** Portal-specific UI configuration accessed from IHandlerProxy.config.portal */
 export interface IBlongPortalConfig {
@@ -26,6 +27,8 @@ export interface IBlongPortalConfig {
      * an expired session (401 / unauthenticated).
      */
     loginRoute?: string;
+    /** Feedback mode wiring — the same block the merged portal config carries (`@@D-662`). */
+    feedback?: IPortalFeedbackConfig;
     /** Login screen configuration (self-registration / social login). */
     login?: {
         /**
@@ -74,6 +77,14 @@ export interface IBlongPortalConfig {
         value: string;
         label: string;
     }>;
+    /** Database-backed dictionary readers and the collector switch; see `IPortalConfig`. */
+    translation?: {
+        load?: {
+            label?: string;
+            resource?: string;
+        };
+        collect?: boolean;
+    };
 }
 type AnyHandlerProxy = IHandlerProxy<Record<string, unknown>>;
 /** Context value shape */

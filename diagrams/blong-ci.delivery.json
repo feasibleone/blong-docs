@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "45336fd1-6905-4a67-9c01-a8c0e7b64f0d",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/home/kalin/work/blong/blong/docs/blong/draw/archify/blong-ci.json",
+  "output": "/home/kalin/work/blong/blong/docs/blong/static/diagrams/blong-ci.html",
+  "specification": {
+    "sha256": "b5987ad223638405c587d5f37bd01438e9bee351a55d0989c82b3d48f3ee3aef",
+    "bytes": 8015
+  },
+  "artifact": {
+    "sha256": "90e99e575f3a9510dc347a6dde0232536977411a700fa598f18ed790d071e824",
+    "bytes": 853154
+  }
+}

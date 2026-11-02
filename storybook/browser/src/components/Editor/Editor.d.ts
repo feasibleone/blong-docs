@@ -1,4 +1,5 @@
 import { ICardConfig, IEnrichedSchema } from '@feasibleone/blong';
+import { IFeedbackModelContext } from '../../feedback/ids.js';
 import { LayoutConfig } from '../../hooks/useLayout.js';
 import { IToolbarButton } from '../../index.js';
 export interface IEditorProps {
@@ -105,6 +106,14 @@ export interface IEditorProps {
      * - The form is always editable (params input).
      */
     queryAction?: string;
+    /**
+     * What this page is, for the feedback mode (`@@T-463`).
+     *
+     * The generated model pages pass `{subject, object, page}`; a hand-written
+     * page may pass the same, and a page that passes none still gets an identifier
+     * — `blong.<route>.page.page` — which is coarse but never absent.
+     */
+    feedbackContext?: IFeedbackModelContext;
 }
 /** Editor interaction mode. */
 export type EditorMode = 'new' | 'view' | 'edit';
@@ -122,5 +131,5 @@ export type EditorMode = 'new' | 'view' | 'edit';
  *   ('view', 'viewDefault')     → 'View'  ('default' suffix filtered out)
  */
 export declare function resolveTabTitle(mode: EditorMode, resolvedLayout: string): string;
-export declare function Editor({ schema, cards, layout, layouts, value: staticValue, loadAction, loadParams, saveAction, createAction, onSave, dropdowns, toolbar, toolbarRight, mode: initialModeProp, editMode: initialEditMode, editable, designable, initialDesignMode, checkPermission, methods, onFieldChange, editors, className, title: titleProp, tabId, refreshNamespace, queryAction, }: IEditorProps): import("react/jsx-runtime").JSX.Element;
+export declare function Editor({ schema, cards, layout, layouts, value: staticValue, loadAction, loadParams, saveAction, createAction, onSave, dropdowns, toolbar, toolbarRight, mode: initialModeProp, editMode: initialEditMode, editable, designable, initialDesignMode, checkPermission, methods, onFieldChange, editors, className, title: titleProp, tabId, refreshNamespace, queryAction, feedbackContext, }: IEditorProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=Editor.d.ts.map

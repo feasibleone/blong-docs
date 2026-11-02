@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-Bjp52BOI.js";import{dt as t,ft as n,pt as r,ut as i}from"./chunk-ICPOFSXX-D3hRS79i.js";var a;function o(){return(o=e((()=>{r(),t(),a=(e,t)=>n.lang.round(i.parse(e)[t])})))()}export{o as n,a as t};

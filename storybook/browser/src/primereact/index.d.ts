@@ -1,6 +1,7 @@
 import { ButtonProps } from 'primereact/button';
 import { DataTable as PrimeDataTable } from 'primereact/datatable';
 import { FileUpload as PrimeFileUpload, FileUploadProps } from 'primereact/fileupload';
+import { InputTextProps } from 'primereact/inputtext';
 import { Menu as PrimeMenu, MenuProps } from 'primereact/menu';
 import { OverlayPanel as PrimeOverlayPanel, OverlayPanelProps } from 'primereact/overlaypanel';
 import { Toast as PrimeToast, ToastProps } from 'primereact/toast';
@@ -21,7 +22,6 @@ import { DropdownProps } from 'primereact/dropdown';
 import { ImageProps } from 'primereact/image';
 import { InputMaskProps } from 'primereact/inputmask';
 import { InputNumberProps } from 'primereact/inputnumber';
-import { InputTextProps } from 'primereact/inputtext';
 import { InputTextareaProps } from 'primereact/inputtextarea';
 import { MenubarProps } from 'primereact/menubar';
 import { MessageProps } from 'primereact/message';
@@ -79,9 +79,9 @@ export type { InputMaskProps } from 'primereact/inputmask';
 export type { InputNumberProps } from 'primereact/inputnumber';
 export type { InputTextProps } from 'primereact/inputtext';
 export type { InputTextareaProps } from 'primereact/inputtextarea';
+export type { MenuProps } from 'primereact/menu';
 export type { MenubarProps } from 'primereact/menubar';
 export type { MenuItem } from 'primereact/menuitem';
-export type { MenuProps } from 'primereact/menu';
 export type { MessageProps } from 'primereact/message';
 export type { MultiSelectProps } from 'primereact/multiselect';
 export type { OverlayPanelProps } from 'primereact/overlaypanel';
@@ -122,8 +122,14 @@ export declare function BreadCrumb(props: BreadCrumbProps): import("react/jsx-ru
 /**
  * Button — wraps PrimeReact Button with automatic label translation via the
  * `Text` component and a default `iconPos='left'`.
+ *
+ * It is also the place buttons become feedback targets (`@@T-488`): the name is
+ * the action when the caller has one (stable across translations and rewording)
+ * and the slug of the English label otherwise.
  */
-export declare function Button({ 'aria-label': ariaLabel, label, iconPos, ...props }: ButtonProps): import("react/jsx-runtime").JSX.Element;
+export declare function Button({ 'aria-label': ariaLabel, label, iconPos, feedbackName, ...props }: ButtonProps & {
+    feedbackName?: string;
+}): import("react/jsx-runtime").JSX.Element;
 export declare function Calendar({ showOnFocus, selectionMode, iconPos, hourFormat, icon, numberOfMonths, stepHour, stepMinute, stepSecond, stepMillisec, shortYearCutoff, view, clearButtonClassName, todayButtonClassName, ...props }: CalendarProps): import("react/jsx-runtime").JSX.Element;
 export declare function Card(props: CardProps): import("react/jsx-runtime").JSX.Element;
 export declare function Checkbox({ trueValue, falseValue, icon, ...props }: CheckboxProps): import("react/jsx-runtime").JSX.Element;
@@ -140,7 +146,7 @@ export declare function DataTable({ ref, first, size, editMode, sortMode, column
 }): import("react/jsx-runtime").JSX.Element;
 export declare function DataView({ layout, first, paginatorPosition, pageLinkSize, loadingIcon, paginatorTemplate, currentPageReportTemplate, ...props }: DataViewProps): import("react/jsx-runtime").JSX.Element;
 export declare function Dialog({ modal, position, draggable, resizable, closable, closeOnEscape, focusOnShow, showHeader, keepInViewport, minX, minY, baseZIndex, ...props }: DialogProps): import("react/jsx-runtime").JSX.Element;
-export declare function Dropdown({ dropdownIcon, scrollHeight, filterMatchMode, ...props }: DropdownProps): import("react/jsx-runtime").JSX.Element;
+export declare function Dropdown({ dropdownIcon, scrollHeight, filterMatchMode, placeholder, ...props }: DropdownProps): import("react/jsx-runtime").JSX.Element;
 export type FileUpload = PrimeFileUpload;
 export declare function FileUpload({ ref, mode, previewWidth, ...props }: FileUploadProps & {
     ref?: React.Ref<PrimeFileUpload>;
@@ -148,7 +154,7 @@ export declare function FileUpload({ ref, mode, previewWidth, ...props }: FileUp
 export declare function Image(props: ImageProps): import("react/jsx-runtime").JSX.Element;
 export declare function InputMask({ type, slotChar, autoClear, ...props }: InputMaskProps): import("react/jsx-runtime").JSX.Element;
 export declare function InputNumber({ mode, buttonLayout, step, type, incrementButtonIcon, decrementButtonIcon, useGrouping, ...props }: InputNumberProps): import("react/jsx-runtime").JSX.Element;
-export declare function InputText(props: InputTextProps): import("react/jsx-runtime").JSX.Element;
+export declare function InputText({ placeholder, ...props }: InputTextProps): import("react/jsx-runtime").JSX.Element;
 export declare function InputTextarea(props: InputTextareaProps): import("react/jsx-runtime").JSX.Element;
 export declare function Menubar(props: MenubarProps): import("react/jsx-runtime").JSX.Element;
 export type Menu = PrimeMenu;
@@ -156,7 +162,7 @@ export declare function Menu({ ref, popup, popupAlignment, tabIndex, autoZIndex,
     ref?: React.Ref<PrimeMenu>;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function Message({ severity, ...props }: MessageProps): import("react/jsx-runtime").JSX.Element;
-export declare function MultiSelect({ display, dropdownIcon, scrollHeight, filterMatchMode, removeIcon, selectedItemsLabel, tabIndex, ...props }: MultiSelectProps): import("react/jsx-runtime").JSX.Element;
+export declare function MultiSelect({ display, dropdownIcon, scrollHeight, filterMatchMode, removeIcon, selectedItemsLabel, tabIndex, placeholder, ...props }: MultiSelectProps): import("react/jsx-runtime").JSX.Element;
 export type OverlayPanel = PrimeOverlayPanel;
 export declare function OverlayPanel({ ref, dismissable, ...props }: OverlayPanelProps & {
     ref?: React.Ref<PrimeOverlayPanel>;
@@ -180,6 +186,6 @@ export declare function Toast({ ref, position, baseZIndex, appendTo, ...props }:
 }): import("react/jsx-runtime").JSX.Element;
 export declare function Toolbar(props: ToolbarProps): import("react/jsx-runtime").JSX.Element;
 export declare function Tree({ filterBy, filterMode, loadingIcon, propagateSelectionUp, propagateSelectionDown, showHeader, ...props }: TreeProps): import("react/jsx-runtime").JSX.Element;
-export declare function TreeSelect({ display, dropdownIcon, scrollHeight, filterBy, filterMode, selectionMode, ...props }: TreeSelectProps): import("react/jsx-runtime").JSX.Element;
+export declare function TreeSelect({ display, dropdownIcon, scrollHeight, filterBy, filterMode, selectionMode, placeholder, ...props }: TreeSelectProps): import("react/jsx-runtime").JSX.Element;
 export declare function TreeTable({ sortMode, columnResizeMode, defaultSortOrder, filterDelay, filterMode, pageLinkSize, loadingIcon, paginatorPosition, paginatorTemplate, currentPageReportTemplate, propagateSelectionUp, propagateSelectionDown, tabIndex, ...props }: TreeTableProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=index.d.ts.map

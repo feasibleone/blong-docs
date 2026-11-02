@@ -61,6 +61,28 @@ export interface IBlongTestOptions {
      * would hide the same line in the spec that does *not* expect it.
      */
     blongExpectedBrowserErrors?: readonly string[];
+    /**
+     * UI language the run activates after login.
+     *
+     * The switch goes through `languageActivate`, so the database dictionary for
+     * that language is read before the first assertion — a spec then sees a
+     * translated page, not one that was still English when it captured.
+     */
+    blongLanguage?: string;
+    /**
+     * Opt in to translation harvesting: the seed files a run may add its missing
+     * keys to. Unset means collection is off and nothing is written.
+     *
+     * A test never writes a seed; it writes one pending report, and the run's
+     * `globalTeardown` merges them under a lock (`D-632`).
+     */
+    blongTranslationSeed?: {
+        language?: string;
+        /** Label seed, e.g. `meta/db/bg-coreLabelSeed.yaml`. */
+        label?: string;
+        /** Resource seed, e.g. `meta/db/bg-coreTranslationSeed.yaml`. */
+        translation?: string;
+    };
 }
 /** How a spec declares the browser messages it provokes on purpose. */
 export interface IPortalOptions {

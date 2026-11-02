@@ -1,0 +1,1735 @@
+/* ==========================================================================
+   GLASS THEME — layered on top of the default PrimeReact palette theme.
+
+   Activated by rendering <Theme theme={{variant: 'glass', ...}}>. Theme adds
+   the `blong-app-glass` class to its `.blong-app` wrapper, and every rule
+   below is scoped under that class — so the base theme stays untouched for
+   every other consumer.
+
+   High-contrast GRAYSCALE glassmorphism: crisp white specular glare lines on
+   charcoal / black glass surfaces over a matte slate canvas. No ambient
+   colours, glows or tints — reflections only.
+
+   Material language:
+     §1/§5  3D camera tilt + mouse parallax (opt-in wrapper elements)
+     §2     glossy charcoal card panels — sharp skewed Z-glare + 3D bevels
+     §3     dark glass input plates layered over the cards
+     §4     glossy rectangular buttons + header utility bar
+     §6     grayscale glass-block checkboxes
+     §7     grayscale glass table rows
+
+   Scoping (`.blong-app-glass ...` descendant selectors + higher specificity
+   than the base single-class rules) is what guarantees glass wins regardless
+   of stylesheet load order. Overrides intentionally use `!important` to beat
+   the PrimeReact theme CSS.
+   ========================================================================== */
+
+/* ── Canvas ─────────────────────────────────────────────────────────────────
+   Solid, matte, dark slate-charcoal so the reflective charcoal panels pop. */
+.blong-app-glass {
+    background: #121315;
+}
+
+/* ==========================================================================
+   §2 TWO-TONE POLISHED CARD PANELS — METALLIC SHEEN → OBSIDIAN CHARCOAL
+   Applies to every blong Card (PrimeReact `.p-card`). A single razor-sharp
+   diagonal (angle `--glare-angle`, default 103deg) splits a rich metallic
+   silver sheen (bright highlight at the top-left edge melting into a solid
+   steel gray) from a polished glossy dark charcoal obsidian body that never
+   drops to pure black — so the darker glass input plates stay distinct on the
+   dark side. The boundary position `--glare-shift` is computed by
+   `glassReflection.ts` from that shared angle and each panel's geometry, so
+   the light reads as one continuous line down any layout. Edges are rounded
+   6px rims with inset rim-light shadows.
+   ========================================================================== */
+.blong-app-glass .p-card {
+    position: relative;
+    /* Dynamic two-tone polished base. The razor boundary sits at
+       `--glare-shift` — injected by `glassReflection.ts` from the shared
+       `--glare-angle` and each panel's geometry, so the light reads as one
+       continuous line down the layout. The rim is a plain rounded border +
+       inset rim-light shadows (no border-image, 6px radius preserved). */
+    background: linear-gradient(var(--glare-angle, 103deg),
+            #4c4e53 0%,
+            #4c4e53 calc(var(--glare-shift, 35%) - 2pt),
+            #17181c var(--glare-shift, 35%),
+            #17181c 100%) !important;
+    border: 1px solid rgba(0, 0, 0, 0.9) !important;
+    border-radius: 6px !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.75),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 1px 0 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Keep the PrimeReact card body transparent so only the glossy panel paints. */
+.blong-app-glass .p-card .p-card-body,
+.blong-app-glass .p-card .p-card-content {
+    background: transparent !important;
+}
+
+/* Card section headers ("Coral", "Taxonomy", "Biology", "Links"…) — crisp
+   off-white section titles, slightly larger with a stronger weight. */
+.blong-app-glass .p-card .p-card-title {
+    color: #f0f0f2 !important;
+    font-weight: 700 !important;
+    font-size: 22px !important;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* ==========================================================================
+   §3 DARK GLASS INPUT PLATES
+   Inputs / dropdowns / textareas are thin dark glass plates stacked ON TOP of
+   the card surfaces — the same sharp top-left glare edge as the panels but a
+   much darker tint, with an elevation shadow lifting them off the card.
+   ========================================================================== */
+.blong-app-glass .p-inputtext,
+.blong-app-glass .p-inputtextarea {
+    /* Dark obsidian glass tile — deeper than the card so it reads as a raised
+       smoky block, framed by crisp white/light-gray reflection lines. */
+    background: rgba(0, 0, 20, 0.5) !important;
+    border: 1px solid rgba(0, 0, 0, 0.85) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.45) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 4px !important;
+    color: #e2e2e5 !important;
+    padding: 6px 12px;
+    box-shadow:
+        3px 3px 1px 1px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.blong-app-glass .p-inputtext:enabled:focus,
+.blong-app-glass .p-inputtextarea:enabled:focus {
+    border-top-color: rgba(92, 255, 138, 0.45) !important;
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Glossy dropdown shell (option list is a body-level overlay — base theme). */
+.blong-app-glass .p-dropdown {
+    /* Dark obsidian glass tile (see inputs). */
+    background: rgba(0, 0, 20, 0.5) !important;
+    border: 1px solid rgba(0, 0, 0, 0.85) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 4px !important;
+    color: #e2e2e5 !important;
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.blong-app-glass .p-dropdown:not(.p-disabled):hover {
+    border-top-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.blong-app-glass .p-dropdown.p-focus,
+.blong-app-glass .p-dropdown:focus-within {
+    border-top-color: rgba(255, 255, 255, 0.45) !important;
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+}
+
+/* The dropdown's inner label is itself a `.p-inputtext` — strip its plate so
+   only the dropdown shell reads as the glass node. */
+.blong-app-glass .p-dropdown .p-dropdown-label {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Dropdown right-side "glass switch": a vertical divider separates the text
+   area from the arrow plate; the plate has a darker tint and a sharp chevron.
+   The hidden native select is for accessibility only — never styled. */
+.blong-app-glass .p-dropdown .p-dropdown-trigger {
+    background: rgba(0, 0, 0, 0.28) !important;
+    border: 0 !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 0 !important;
+    width: 2rem !important;
+    transition: background 0.2s ease;
+}
+
+.blong-app-glass .p-dropdown:not(.p-disabled):hover .p-dropdown-trigger,
+.blong-app-glass .p-dropdown.p-focus .p-dropdown-trigger,
+.blong-app-glass .p-dropdown:focus-within .p-dropdown-trigger {
+    background: rgba(0, 0, 0, 0.42) !important;
+}
+
+.blong-app-glass .p-dropdown .p-dropdown-trigger .p-dropdown-trigger-icon {
+    color: #ececee !important;
+    font-size: 0.8rem !important;
+    font-weight: 700;
+}
+
+.blong-app-glass .p-dropdown select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* ── Dropdown overlay (portal at body) ──────────────────────────────────────
+   The option list mounts OUTSIDE `.blong-app-glass` (PrimeReact portal), so
+   it is scoped on the `blong-theme-glass` root class Theme adds when the
+   glass variant is active. Obsidian glass panel with a soft silver item
+   hover — never a flat blue rectangle. */
+.blong-theme-glass .p-dropdown-panel {
+    background: rgba(20, 21, 24, 0.96) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 6px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+    padding: 4px !important;
+}
+
+.blong-theme-glass .p-dropdown-panel .p-dropdown-items-wrapper,
+.blong-theme-glass .p-dropdown-panel .p-dropdown-items {
+    background: transparent !important;
+}
+
+.blong-theme-glass .p-dropdown-panel .p-dropdown-item {
+    color: #d8d8da !important;
+    border-radius: 4px !important;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.blong-theme-glass .p-dropdown-panel .p-dropdown-item:hover,
+.blong-theme-glass .p-dropdown-panel .p-dropdown-item.p-focus,
+.blong-theme-glass .p-dropdown-panel .p-dropdown-item.p-highlight {
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+}
+
+/* ── Typography contrast ────────────────────────────────────────────────────
+   Field labels ("Name", "Description", "Type"…) are a crisp medium-light
+   silver-grey — legible against the card, quieter than the bright section
+   headers above. The required asterisk gets a muted red accent. */
+.blong-app-glass .p-card label {
+    font-weight: 500 !important;
+    color: #f0f0f2 !important;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.blong-app-glass .blong-required::after {
+    color: #cf6a5b !important;
+}
+
+/* ==========================================================================
+   §4 GLOSSY RECTANGULAR CONTROLS + HEADER UTILITY BAR
+   The header/toolbar bar receives the same glossy glass treatment as the main
+   panels. Buttons are sharp, polished, RECTANGULAR glass keys — bright top
+   glare edge, dark body, elevation — never flat colour blocks or pills.
+   ========================================================================== */
+.blong-app-glass .p-toolbar {
+    background: linear-gradient(var(--glare-angle, 103deg),
+            #4c4e53 0%,
+            #4c4e53 calc(var(--glare-shift, 35%) - 2pt),
+            #111113 var(--glare-shift, 35%),
+            #111113 100%) !important;
+    border: 1px solid rgba(0, 0, 0, 0.9) !important;
+    border-radius: 6px !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.75),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 1px 0 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+.blong-app-glass .p-card .p-toolbar {
+    background: none !important;
+}
+
+.blong-app-glass .p-toolbar .p-toolbar-group-left,
+.blong-app-glass .p-toolbar .p-toolbar-group-right {
+    background: transparent !important;
+}
+
+/* In-card sub-toolbars (e.g. the Links table bar with "+ Add" / "Delete")
+   are flat charcoal anchor plates for their content, NOT glossy glare
+   panels. Their buttons keep the individual raised glass plate styles. */
+.blong-app-glass .p-card .p-toolbar {
+    border: 0 !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.6) !important;
+    border-radius: 0 !important;
+    padding: 8px 14px !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    box-shadow: none !important;
+}
+
+/* Every solid button ("+ Add", "Delete", Save/Reset, pickers…) is a dark
+   obsidian glass tile — deeper than the surface, framed by crisp top/left
+   reflection lines so it stays visible on both card halves. */
+.blong-app-glass .p-button:not(.p-button-text):not(.p-button-link) {
+    background: rgba(0, 0, 20, 0.5) !important;
+    border: 1px solid rgba(0, 0, 0, 0.85) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 4px !important;
+    color: #e2e2e5 !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1rem !important;
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    transition: all 0.18s ease-out;
+}
+
+/* Icon-only controls (Save/Reset/Design, pickers) — square glossy glass. */
+.blong-app-glass .p-button-icon-only {
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    padding: 0 !important;
+    border-radius: 4px !important;
+}
+
+/* Header/toolbar labelled actions — compact rectangular glass keys. */
+.blong-app-glass .blong-toolbar-left .p-button,
+.blong-app-glass .blong-toolbar-right .p-button,
+.blong-app-glass .blong-design-toolbar .p-button {
+    font-size: 0.74rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.blong-app-glass .p-button:enabled:hover:not(.p-button-text):not(.p-button-link) {
+    color: #ffffff !important;
+    border-top-color: rgba(255, 255, 255, 0.55) !important;
+    border-left-color: rgba(255, 255, 255, 0.3) !important;
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+}
+
+/* Active/selected state — brighter translucent lens (e.g. design toggle). */
+.blong-app-glass .blong-design-toolbar .p-button.p-button-success,
+.blong-app-glass .p-button.p-button-success {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-top-color: rgba(255, 255, 255, 0.45) !important;
+    color: #ffffff !important;
+}
+
+/* ==========================================================================
+   §5 FORM INSPECTOR — OPAQUE GRAYSCALE GLASS
+   The debug Form Inspector rail receives the same opaque charcoal panel with
+   the sharp glare line and bevelled borders as the main cards, and its text
+   (labels, badges area, JSON) drops the blue theme for neutral greys.
+   ========================================================================== */
+.blong-app-glass .blong-property-editor.blong-inspector {
+    background: linear-gradient(var(--glare-angle, 103deg),
+            #4c4e53 0%,
+            #4c4e53 calc(var(--glare-shift, 35%) - 2pt),
+            #17181c var(--glare-shift, 35%),
+            #17181c 100%) !important;
+    border: 1px solid rgba(0, 0, 0, 0.9) !important;
+    border-radius: 6px !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.75),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 1px 0 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+.blong-app-glass .blong-inspector .blong-property-editor__title,
+.blong-app-glass .blong-inspector__toggle {
+    color: #f0f0f0 !important;
+}
+
+.blong-app-glass .blong-inspector__field-name,
+.blong-app-glass .blong-inspector__empty {
+    color: #a0a0a0 !important;
+}
+
+.blong-app-glass .blong-inspector .blong-json {
+    color: #d0d0d0 !important;
+    background: transparent !important;
+}
+
+.blong-app-glass .blong-inspector .blong-inspector__body,
+.blong-app-glass .blong-inspector .blong-property-editor__field,
+.blong-app-glass .blong-property-editor.blong-inspector .blong-property-editor__title {
+    background: transparent !important;
+}
+
+/* ── Dynamic glare positioning (runtime) ────────────────────────────────────
+   There are NO hardcoded per-card shift classes here. A small runtime script
+   (`updateGlassReflections` in glassReflection.ts) measures each panel's
+   position inside `.blong-app-glass`, projects it along the shared light
+   angle `--glare-angle`, and injects `--glare-shift` as an inline style, so
+   the light reads as one continuous sweep across any layout. The gradient
+   above uses a center fallback until the script runs. */
+
+/* ==========================================================================
+   §6 GRAYSCALE GLASS-BLOCK CHECKBOXES
+   Checkbox blocks (Habitat inline panel, table row selection…) mirror the
+   small dark glass plates — bevel top edge, shaded bottom — with a crisp
+   white tick when selected. No colour.
+   ========================================================================== */
+.blong-app-glass .p-checkbox .p-checkbox-box {
+    background: linear-gradient(180deg,
+            rgba(28, 28, 28, 0.96) 0%,
+            rgba(8, 8, 8, 0.98) 100%) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.6) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.75) !important;
+    border-radius: 3px !important;
+    /* width: 15px !important; */
+    /* height: 15px !important; */
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        0 1px 2px rgba(0, 0, 0, 0.35) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.blong-app-glass .p-multiselect {
+    background: none;
+    border: none;
+}
+
+.blong-app-glass .p-checkbox:not(.p-checkbox-disabled):hover .p-checkbox-box {
+    border-top-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.blong-app-glass .p-checkbox .p-checkbox-box.p-highlight {
+    background: linear-gradient(180deg,
+            rgba(110, 110, 110, 0.95) 0%,
+            rgba(45, 45, 45, 0.98) 100%) !important;
+    border-top-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.blong-app-glass .p-checkbox .p-checkbox-box .p-checkbox-icon {
+    font-size: 0.6rem !important;
+    color: #ffffff !important;
+    font-weight: 900 !important;
+    transform: scale(0.9);
+}
+
+/* Option labels (Habitat etc.) — neutral grey, brightening when picked. */
+.blong-app-glass .p-multiselect-item {
+    /* font-size: 0.75rem !important; */
+    /* letter-spacing: 0.3px; */
+    color: #a0a0a0 !important;
+    background: transparent !important;
+    transition: color 0.2s linear;
+}
+
+.blong-app-glass .p-multiselect-item.p-highlight {
+    color: #ffffff !important;
+}
+
+/* Inline multi-select (Habitat) — rigid 4-up CSS grid, uniform columns. */
+.blong-app-glass .p-multiselect-panel.p-multiselect-inline .p-multiselect-items {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 16px 12px !important;
+    padding: 8px 4px !important;
+    align-items: center;
+}
+
+.blong-app-glass .p-multiselect-panel.p-multiselect-inline .p-multiselect-items .p-multiselect-item {
+    display: flex !important;
+    align-items: center !important;
+    /* gap: 8px !important; */
+    width: auto !important;
+    flex: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.blong-app-glass .p-multiselect-panel.p-multiselect-inline .p-multiselect-items .p-multiselect-item>span {
+    /* font-size: 11px !important; */
+    white-space: nowrap;
+}
+
+.blong-app-glass .p-multiselect-panel.p-multiselect-inline .p-multiselect-items .p-multiselect-item:not(.p-highlight)>span {
+    color: #b0b2b8 !important;
+}
+
+.blong-app-glass .p-multiselect-panel.p-multiselect-inline .p-multiselect-items .p-multiselect-item .p-multiselect-checkbox {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    flex: none !important;
+}
+
+/* ==========================================================================
+   §7 GRAYSCALE GLASS TABLE ROWS (Links grid)
+   Translucent charcoal rows with glossy headers; hover and selection brighten
+   in neutral greys — no colour.
+   ========================================================================== */
+.blong-app-glass .p-datatable {
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 4px;
+    overflow: hidden;
+    background: transparent !important;
+}
+
+.blong-app-glass .p-datatable .p-datatable-thead>tr>th {
+    /* Solid deep charcoal header — a clean hard stop above the data rows. */
+    background: #17181c !important;
+    color: #f0f0f2 !important;
+    /* font-size: 0.72rem !important; */
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.9) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.8) !important;
+    padding: 0.55rem 0.75rem !important;
+}
+
+.blong-app-glass .p-datatable .p-datatable-tbody>tr {
+    background: rgba(12, 12, 12, 0.4) !important;
+    color: #d0d0d0 !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Subtle zebra tint keeps rows clean without heavy lines. */
+.blong-app-glass .p-datatable .p-datatable-tbody>tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Links DataTable — fixed layout with explicit column shares keeps the header
+   row and the row inputs perfectly aligned and identically scaled
+   (checkbox 40px / title flex-1 / url flex-2 / actions ~96px). */
+.blong-app-glass #card-links .p-datatable table {
+    table-layout: fixed !important;
+    width: 100% !important;
+}
+
+.blong-app-glass #card-links .p-datatable thead th:nth-child(1),
+.blong-app-glass #card-links .p-datatable tbody td:nth-child(1) {
+    width: 7% !important;
+    text-align: center;
+}
+
+.blong-app-glass #card-links .p-datatable thead th:nth-child(2),
+.blong-app-glass #card-links .p-datatable tbody td:nth-child(2) {
+    width: 26% !important;
+}
+
+.blong-app-glass #card-links .p-datatable thead th:nth-child(3),
+.blong-app-glass #card-links .p-datatable tbody td:nth-child(3) {
+    width: 52% !important;
+}
+
+.blong-app-glass #card-links .p-datatable thead th:nth-child(4),
+.blong-app-glass #card-links .p-datatable tbody td:nth-child(4) {
+    width: 15% !important;
+}
+
+.blong-app-glass .p-datatable .p-datatable-tbody>tr>td {
+    padding: 0.45rem 0.75rem !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    /* font-size: 0.82rem !important; */
+}
+
+/* Table text inputs (filter / row boxes) — solid flat charcoal with a soft
+   inner shadow, so they never pick up the card's sheen gradient or plate. */
+.blong-app-glass .p-datatable .p-inputtext {
+    background: #111215 !important;
+    background-image: none !important;
+    border: 1px solid rgba(0, 0, 0, 0.7) !important;
+    border-top-color: rgba(0, 0, 0, 0.7) !important;
+    border-left-color: rgba(0, 0, 0, 0.7) !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    color: #e2e2e5 !important;
+}
+
+.blong-app-glass .p-datatable .p-datatable-tbody>tr:not(.p-highlight):hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    cursor: pointer;
+}
+
+.blong-app-glass .p-datatable .p-datatable-tbody>tr.p-highlight {
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.14) 0%,
+            rgba(90, 90, 90, 0.5) 60%,
+            rgba(30, 30, 30, 0.6) 100%) !important;
+    color: #ffffff !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Table checkbox blocks — slightly smaller grayscale glass. */
+.blong-app-glass .p-datatable .p-checkbox .p-checkbox-box {
+    width: 13px !important;
+    height: 13px !important;
+}
+
+/* ==========================================================================
+   §1 + §5 3D CAMERA SLANT MATRIX + MOUSE PARALLAX (opt-in)
+   Only active when a story/app wraps its content in
+   `.blong-glass-viewport > .blong-glass-grid`. A tiny React component sets
+   `--mouse-x` / `--mouse-y` (normalised -1..1) on the grid element; the CSS
+   below turns that into a subtle perspective tilt for extra 3D depth.
+   ========================================================================== */
+.blong-app-glass .blong-glass-viewport {
+    perspective: 1200px;
+    perspective-origin: 50% 30%;
+    height: 100%;
+    padding: 1.5rem 2.5rem;
+}
+
+.blong-app-glass .blong-glass-viewport .blong-glass-grid {
+    --mouse-x: 0;
+    --mouse-y: 0;
+    height: 100%;
+    transform:
+        rotateX(calc(4deg + (var(--mouse-y, 0) * 2deg))) rotateY(calc(-1.5deg + (var(--mouse-x, 0) * 2deg))) translateZ(0);
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease-out;
+}
+
+/* Reduce motion — tilt becomes inert for users who ask for it. */
+@media (prefers-reduced-motion: reduce) {
+    .blong-app-glass .blong-glass-viewport .blong-glass-grid {
+        transform: none;
+        transition: none;
+    }
+}/* spell-checker: disable */
+/* ==========================================================================
+   WOOD THEME — GENERATED TEXTURES (do not edit by hand)
+   Regenerate with:  npm run theme:wood-assets
+
+   Image textures synthesised from the `plans/theme/wood-card.png` design.
+   The two large ones are files under `./assets/` and are referenced with a
+   relative `url()`, which Vite rewrites for both Storybook dev and the
+   `base: '/s/'` suite build; the tiny ramps and the two SVGs stay inline as
+   data URIs. See the generator header for each asset's tileability / stretch
+   guarantees and the CSS-side geometry coupling.
+   ========================================================================== */
+.blong-app-wood,
+.blong-theme-wood {
+    /* Seamless walnut grain (grayscale, overlay-blended over the CSS base). */
+    --wood-grain: url("./wood-grain-CQ5NWcEa.png");
+    /* 9-slice polished bevel frame (32px slices, 12px arc, transparent centre).
+       WebP lossless: see the generator header for why this one and not the grain. */
+    --wood-edge: url("data:image/webp;base64,UklGRioHAABXRUJQVlA4TB4HAAAvX8AXEE0oaCNJyfHD+Df8KCGi/xNgsiKI+JzLSl0pnPSKf/zTCwUENnNZEYEFkbZN/fve2bmYhtA/p8uEUJC2AYv21/8J4HigdU0YXOC2OBS0bcMk/HHvD0BETAAYUjShP4Eh5OjY2rZIbv7qFkup2U5xQdqC1+SFMUQMw0xdfyCWPudPNJG1gNnBTFTRZ/yzCn0ceRm/otc0R5j1Oowh2x35lBlnAd4ARYrqiKUAYiNJiqTIY/Tfx7eAvyC3keRIYiRW3P3Of1NlwbFtW22jh19ftsPMUKVKm1kwDJFhOMzMHLH0JsBXJEm2bdu2NV78ET/nrGW+JwD7KozszxnFnyGqqAaeiJiAAPBCedPzITF1oA6YIREowAAeyA2vR7OAClff4xHd1qN7G+2FE2IC/vgRKX//+SepIdmXIKEIO1mnkJsHSNpv7kolxcL/vp/4frzf+/EVH7vxWXO/YqQX2X14DN7OzA5Nbzqsu+u0YQXyoTuoHriAkHhMBh4ZGoAhA1RiUXn57316O9/N4EZA9qOD20m4NcO9mtpe3ZspuhV3XBKofMV5TJEK4JCyUNBGQCEcjw6KQyJHqCdfTrS4pNxNbavhXYQxbh8dwrLcDH5WOsv/Zn1s3j1tOuyt6/+3U0WHgD0nSMo/CqAEEYczKFSXxCATKUfJwr9Wb/UsMfDpbNPp+MVD7q29lPGz6NMU4y4bJx7JZ0/Xc9wP5fs+/0XAsDIE7r5/y/Wnv/bthxse1+ek4rFD2TMp5tEYDwQOY6KH8/dc/YwpH6Z8fH/Z/Qf3D3VJTFXbUQBtB7r99u2fSDZCOe7y5/f/83D9xUTfQcxcQXo9vSU0Nu/j7fo+7oZ+JG3bx8xcAnr481UOtXxLQRldbH6p7PmVBCYCdxTwtvKbd35y/uba62P/9z0y1gVbdztE1UyL5g8LCqSHLBqPraxXHLihQDe5cKbVQ+1virfnWhWg4wXYYkjbsDEPfdVrvCCaUr0oDlwSo58NKwvEs/wsHHAMl/DLbbbD2+NVgcbSXpNF0VzDuQY9SeDsundrb84VDiULk8ZKwvBGgAvoi9qOOkJtB+jgAtormRucA5ZKClzR52zbEGWxjBj4u6oaDG3k/6+V4bL4x3MbG9mzs+IgWZJJ59bOnTt37ugazgoOYIqjc3sePbcmCz1kSko8Cog6phg0VVIp3d0SaPQWKpTnmFKAh9AATJIlO4UEV0VgS8kpNQjacGwNNOg8hUnGfAZ4UlDKphxqFE7EiZuiFHhS5CHmNu/utARzmRJAqRCIOLLkMwgeQMAtkX+yQ6qUTUG4Av05yreMLNm4OyoC7PKEpcenAkM4vkmmcGsfW6AJyBSIz6a2CXJTQlpo34iUsDRF+vA1TT6QJRApwO31bDm7KUPvLBHIwJQAA2jfIxaOpcOIIJAgXJaABoRhqSS3RBfkiUnv4ZIl1wlwB2RyCbcEIiGEl69IkimypQSEKcLYWkCESe6yRMLtXZpLTZjaycTmzqM3PFvCUBuCRoStggY2CziQjHkWJqjGIEOQ9h1nCFMF1hmY5HvCLRmKBRCaYeu93XcjTIPItiQMBORxnk15j8EBGpaAWzJ5lN4zCJAlvwTcLK4Bl8sUAV9RECsTbskN+7oIDVtGlhBKpCSAwi3ZEQbJUjwSpgq+06Q4M7kxyQjhiHw/sGVYqEwpQNmUgODCRBguUx6PIYIBQpbcANFwF3TILSEepe5FxNgu5DP6NLktHEtAkQhPpihdMKTaFGQJsP66DQKN/7fxaFB1X+bZLXkMBFcZclOOEAIQehFbBxD95Tolz5MsMYwO8ASek+TYKndAOICTkLslkrLLSSnvsVfHVDlyIdce4gOxLEvcHZT0gSuwFZh3Kk91q6YEApUZx75YbSPWLquLZf1GS1Ngy81q/QUvdwE5CFQcFCbXx1RpR7lDShQaMvNIHEXw3LmzVf1PrkpMNV84aqXj+TgNy8SjdIxQ3xQEASxKgVkqz1YeoOZciUSkT15P8j7HGxq8ouGsK1OkKSEkJcizwJM0Qg77V6rjX33lZ5yaQZ/AbmABqoaG44PGs3+cTSUHMBVZKfIZj6kIhQgYLtVth5oz1IPMb8A5NVkVDe0giwCOtzOtouuEtQ9DFwjQKbwfJ8+qOliqWRd1DpTAtZIl16paqXEnYSHGhfACJ83ByQ5CIJBEgkwAXeTcwzLrLGEosMGegf3AYpM+uMwqQn41jm5CWtzRRl+PTeSjOhTWHUXSBWQ44+spD35j74GDgqW0qpa6lcAlCFACD61TKAMtDpBodyzQEsHnFQM+5zf2/V7BitypEARX2V1BCjLpJIrPSI7PANk4IMBRLdzfYH+v8WojwFVeQXfM8gJCNBifhRAIkNCvCpIckNe/vcgBXgMC6y5viEISUyBUoEIjoJJ78coi4z4S/lvd77NP");
+    /* Woven micro-mesh for carved input channels (SVG → crisp at any DPR). */
+    --wood-mesh: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIHZpZXdCb3g9IjAgMCA4IDgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMTIxMDExIi8+CjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiMyZDI5MjkiLz4KPHJlY3QgeD0iNCIgeT0iNCIgd2lkdGg9IjQiIGhlaWdodD0iNCIgZmlsbD0iIzI2MjIyMyIvPgo8L3N2Zz4=");
+    /* Micarta dot lattice for the inner panel of the brass toolbar buttons. */
+    --wood-btn-dots: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiIHZpZXdCb3g9IjAgMCA4IDgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMjIiLz4KPGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEuNSIgZmlsbD0iI2ZmZmZmZiIgZmlsbC1vcGFjaXR5PSIwLjA5Ii8+CjxjaXJjbGUgY3g9IjYiIGN5PSI2IiByPSIxLjUiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wOSIvPgo8L3N2Zz4=");
+    /* Carved-channel ramps (uniform in X → stretch to any width). */
+    --wood-recess-top: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAIBAMAAADKNIhyAAAAGFBMVEUDAgIFBAMHBgUJBwYLCQgNCwoODAsPDQysjEetAAAACHRSTlP38uDHnms4D2LkWHcAAAAYSURBVAjXY2BgEGBQYDBgcGAIYEhgKAAACNABwU86rloAAAAASUVORK5CYII=");
+    --wood-recess-bottom: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAIBAMAAADKNIhyAAAAGFBMVEWMhHqCenCMhHqMhHqOhnyMhHqIgHaEfHKT4M4fAAAACHRSTlMAAA0kMCkaCqh3XrAAAAAYSURBVAjXY2BgUGAwYHBgCGBIYChgEAAAC3ABwYGxQBgAAAAASUVORK5CYII=");
+}
+/* spell-checker: disable */
+/* ==========================================================================
+   WOOD THEME — LUXURY WALNUT + MILLED STEEL CONSOLE
+   Layered on the default PrimeReact palette theme (like the glass theme).
+
+   Activated by rendering <Theme theme={{variant: 'wood', ...}}>. Theme adds
+   the `blong-app-wood` class to its `.blong-app` wrapper and every rule below
+   is scoped under that class (or the `blong-theme-wood` root marker for body
+   portals), so the base theme stays untouched for every other consumer.
+
+   Material language (blueprint: `plans/theme/wood.md`):
+     §W1 matte steel device chassis canvas with a subtle tooling grid
+     §W2 oiled-walnut card plates: seamless grain tile + alpha-channel 9-slice
+         bevel frame (design-matched to `plans/theme/wood-card.png`)
+     §W3 carved-in charcoal input / dropdown channels: seamless woven mesh tile
+         + alpha-channel recess occlusion ramps; focus brightens the channel to
+         the same brass bezel the §W5 sockets use (design shows the focused
+         `Type` dropdown this way)
+     §W4 superseded — in-card toolbar keys now share §W8's brass style
+     §W5 brass-framed walnut checkboxes, transparent group (Habitat)
+     §W6 transparent ink-on-wood data grid (Links table)
+     §W7 oiled-walnut inspector plate + recessed dark panel (Form Inspector)
+     §W8 milled brass toolbar keys (header toolbars + in-card Links toolbar)
+
+   The image textures are synthesised from the design by
+   `scripts/woodAssets.mjs` into the generated `wood-assets.css` (exposed as
+   `--wood-grain`, `--wood-edge`, `--wood-mesh`, `--wood-recess-*`); regenerate
+   them with `npm run theme:wood-assets`. The two large textures are emitted as
+   committed files under `assets/` and referenced with a plain relative
+   `url()`, which Vite rewrites for both Storybook dev and the `base: '/s/'`
+   suite build; the small ramps and SVGs stay inline as data URIs. Each texture
+   is either seamlessly tileable in both axes or a 1-D profile that is uniform
+   along the other axis, so a single asset stretches / repeats to any card or
+   input size without distortion. The design (`wood-card.png`) is a 2× capture,
+   so every texture is authored at 2× device resolution and drawn at half size
+   — 1:1 on a DPR-2 display.
+
+   Adding another variant? Follow `.github/skills/blong-theme/` — the variant
+   contract, the PrimeReact v10 cascade rules, the design-measurement recipes
+   and the texture/asset laws are all recorded there.
+   ========================================================================== */
+
+/* Body-portal overlays (dropdown panels, action hints) mount outside
+   `.blong-app-wood`, so expose the type token on the root marker as well. */
+.blong-theme-wood {
+    --wood-font: 'Poppins', 'Montserrat', 'Jost', 'Century Gothic', 'Segoe UI', Roboto, system-ui, sans-serif;
+}
+
+/* PrimeReact's focus indicator is a 1px light-blue ring — `#93cbf9` — applied as
+   `box-shadow` on `.p-button:focus` and on the checkbox box, and as
+   `border-color: #64b5f6` on checkboxes. Two consequences for this theme:
+     1. `--focus-ring` looks like the knob to turn, and PrimeReact's newer themes
+        do consume it, but the vendored `vela-blue` hard-codes the colours in every
+        rule, so setting the token alone changes nothing. Declared anyway so a
+        future base theme that does consume it inherits the right brass.
+     2. §W8's keys and §W5's sockets set their own `!important` `box-shadow`, which
+        *silently overrides the ring* — those controls had no visible focus at all.
+        Rather than join the `!important` shadow war, the ring is repainted with
+        `outline`, which nothing else in this file touches, and `:focus-visible`
+        keeps it off mouse clicks. */
+html.blong-theme-wood {
+    --focus-ring: 0 0 0 1px rgba(196, 155, 108, 0.75);
+}
+
+.blong-app-wood :is(.blong-toolbar-left, .blong-toolbar-right, .blong-design-toolbar, .p-card .p-toolbar) .p-button:focus-visible,
+.blong-app-wood .p-checkbox:not(.p-disabled):has(.p-checkbox-input:focus-visible) .p-checkbox-box {
+    outline: 1px solid rgba(201, 168, 120, 0.85) !important;
+    outline-offset: 1px !important;
+}
+
+/* ── §W1 MATTE STEEL CHASSIS CANVAS ────────────────────────────────────────
+   The dashboard backdrop is a non-reflective cool charcoal-steel plate ruled
+   with a faint engineering grid, so the warm walnut modules read as mounted
+   hardware on a cold instrument chassis (matches the design backdrop). */
+.blong-app-wood {
+    /* The design's typeface is a geometric sans (perfectly circular bowls, a
+       spurless `a`, short `r` arm). None is bundled with the package, so this is
+       a preference list — the sizes/weights below are what actually carry the
+       match, and a consumer that loads one of these gets an exact result. */
+    --wood-font: 'Poppins', 'Montserrat', 'Jost', 'Century Gothic', 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-family: var(--wood-font);
+    background-color: #16171c;
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.28) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.28) 1px, transparent 1px),
+        radial-gradient(140% 120% at 50% 0%, rgba(255, 255, 255, 0.035) 0%, rgba(0, 0, 0, 0) 60%);
+    background-size: 25px 25px, 25px 25px, 100% 100%;
+}
+
+/* ==========================================================================
+   §W2 OILED-WALNUT CARD PLATES — LAYERED GRAIN + POLISHED BEVEL
+   A three-layer construction that holds up at any card size:
+     1. a CSS walnut body gradient carrying the large-scale tone and the soft
+        top light / bottom shade;
+     2. a seamlessly tiling walnut grain texture synthesised at 2× device
+        resolution from `plans/theme/wood-card.png` (drawn at 256px, so it is
+        1:1 on a DPR-2 display), `overlay`-blended so the CSS tone colours it
+        and the grain only modulates the luminance;
+     3. `::after` — the alpha-channel 9-slice bevel frame drawn with
+        `border-image` into a 16 CSS-px border: a countersunk dark rim plus a
+        warm light-catching top facet. The art is 2× (32px slices ⇒ 1 art px =
+        0.5 CSS px) and its 12-unit arc lands on the 6px `border-radius`.
+   ========================================================================== */
+.blong-app-wood .p-card {
+    position: relative !important;
+    background-color: #4e3124 !important;
+    background-image:
+        /* Macro lighting: warm light from above, shaded toward the bottom. */
+        linear-gradient(168deg,
+            rgba(255, 214, 160, 0.13) 0%,
+            rgba(255, 206, 150, 0.04) 22%,
+            rgba(0, 0, 0, 0) 55%,
+            rgba(0, 0, 0, 0.26) 100%),
+        var(--wood-grain, none) !important;
+    background-size: 100% 100%, 256px 256px !important;
+    background-repeat: no-repeat, repeat !important;
+    background-blend-mode: normal, overlay !important;
+    border: 1px solid #1d1310 !important;
+    border-radius: 6px !important;
+    overflow: visible !important;
+    box-shadow:
+        0 16px 30px rgba(0, 0, 0, 0.6),
+        0 3px 8px rgba(0, 0, 0, 0.5),
+        inset 0 0 34px rgba(0, 0, 0, 0.2) !important;
+    z-index: 1;
+}
+
+/* The alpha-channel bevel. A 9-slice frame (32px art slices, drawn into a 16px
+   border so the art sits at 2× device resolution) stretched over the plate via
+   `border-image`: the centre and the outer 12-unit arc are transparent, so the
+   card's own `border-radius` supplies the rounding while the art paints only
+   the countersunk rim and the warm bevel facet (~1 CSS px rim, highlight
+   peaking ~1.5 CSS px in and fading by ~5 CSS px — the design's actual edge). */
+.blong-app-wood .p-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    border: 16px solid transparent;
+    border-image-source: var(--wood-edge, none);
+    border-image-slice: 32;
+    border-image-width: 16px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+}
+
+
+/* Keep the PrimeReact card body transparent so only the walnut plate paints. */
+.blong-app-wood .p-card .p-card-body,
+.blong-app-wood .p-card .p-card-content {
+    background: transparent !important;
+}
+
+/* Luxury walnut domain titles. The design's title sits at a ~14.5 CSS-px cap
+   height (29 device px at 2×) — much larger than the base palette's — with a
+   warm cream fill and a soft cast shadow. */
+.blong-app-wood .p-card .p-card-title {
+    color: #efd3b4 !important;
+    font-family: var(--wood-font) !important;
+    font-size: 1.7rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.2px;
+    padding-bottom: 0.35rem;
+    /* border-bottom: 1px solid rgba(255, 237, 213, 0.12); */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+/* Field labels sit above the grain in a warm parchment tone; the design's label
+   cap height is ~9 CSS px (18 device px), i.e. smaller than the base label. */
+.blong-app-wood .p-card label {
+    color: #e9ceb5 !important;
+    font-family: var(--wood-font) !important;
+    font-size: 1.14rem !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.1px;
+}
+
+.blong-app-wood .blong-required::after {
+    color: #d97706 !important;
+}
+
+/* ==========================================================================
+   §W3 CARVED-IN CHARCOAL CHANNELS — WOVEN MESH + RECESS OCCLUSION
+   Inputs / dropdowns read as slots routed into the wood. Three background
+   layers build them, all size-independent:
+     1/2. two alpha-channel ramps (top inner-shadow + bottom glare) — 1px-wide
+          profiles, uniform along X, so they stretch to any width while pinning
+          a tight top occlusion and the design's soft bottom glare (fading to
+          nothing at the floor, so there is no shadow line);
+     3.   a seamlessly tiling woven micro-mesh, emitted as SVG so it stays
+          crisp at any device-pixel ratio.
+   Because background layers are clipped by `border-radius`, the recess rounds
+   correctly at any size. Focus glows copper.
+   ========================================================================== */
+.blong-app-wood .p-inputtext,
+.blong-app-wood .p-inputtextarea,
+.blong-app-wood .p-dropdown {
+    background-color: #100e0f !important;
+    background-image:
+        var(--wood-recess-top, none),
+        var(--wood-recess-bottom, none),
+        var(--wood-mesh, none) !important;
+    /* background-position: top left, bottom left, top left !important; */
+    background-size: 100% 4px, 100% 4px, 4px 4px !important;
+    background-repeat: no-repeat, no-repeat, repeat !important;
+    border: 1px solid #0b0906 !important;
+    border-top-color: #050403 !important;
+    border-radius: 4px !important;
+    /* Design input text: ~10 CSS-px cap height (20 device px), warm cream. */
+    color: #f2ddc4 !important;
+    font-family: var(--wood-font) !important;
+    font-size: 1.14rem !important;
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.45),
+        0 1px 0 rgba(255, 226, 190, 0.12) !important;
+}
+
+/* Focus. The design shows exactly this state — the `Type` dropdown in
+   `wood.png` is focused — and it is **not** a glow: the channel's thin dark edge
+   widens into a ~3 CSS-px brass bezel, brightest along the top and left and
+   falling away to the right and floor. Sampled: top rgb(222,188,143), left
+   rgb(194,160,112), right rgb(148,112,62), bottom rgb(166,132,84), against a
+   dark outer line rgb(38,12,0) and a dark inner lip.
+
+   The 1px `border` gets the brass colours (so the bezel's outer pixel is right)
+   and four directional `inset` shadows add the second pixel without changing the
+   box size — widening the border instead would jitter the whole form on focus.
+   The previous treatment (an orange `#b45309` border with a `0 0 10px` amber
+   halo) was inherited from the pre-redesign palette and is unrelated to anything
+   else in the theme. */
+.blong-app-wood .p-inputtext:enabled:focus,
+.blong-app-wood .p-inputtextarea:enabled:focus,
+.blong-app-wood .p-dropdown.p-focus,
+.blong-app-wood .p-dropdown:focus-within {
+    border-color: #8a6a3e !important;
+    border-top-color: #c9a878 !important;
+    border-left-color: #b08a56 !important;
+    border-right-color: #7a5a33 !important;
+    border-bottom-color: #8a6a3e !important;
+    box-shadow:
+        /* the dark line the bezel sits in */
+        0 0 0 1px rgba(38, 12, 0, 0.9),
+        /* second pixel of the bezel, lit from the top-left */
+        inset 0 1px 0 rgba(226, 193, 148, 0.75),
+        inset 1px 0 0 rgba(200, 168, 120, 0.6),
+        inset -1px 0 0 rgba(148, 112, 62, 0.5),
+        inset 0 -1px 0 rgba(166, 132, 84, 0.5),
+        /* dark lip inside the bezel, then the channel keeps its depth */
+        inset 0 0 0 3px rgba(14, 8, 3, 0.4),
+        inset 0 2px 4px rgba(0, 0, 0, 0.55) !important;
+}
+
+/* Dropdown label + gold trigger. */
+.blong-app-wood .p-dropdown .p-dropdown-label {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+/* The design's dropdown is one continuous channel — no separate trigger panel
+   and no divider — with a warm cream chevron (sampled rgb(220,200,175)) and the
+   same cream for the clear `×` (rgb(226,205,180)). Both were still on the old
+   palette's `#fcd34d` amber, which read as a different material. */
+.blong-app-wood .p-dropdown .p-dropdown-trigger {
+    background: transparent !important;
+    border-left: 0 !important;
+}
+
+.blong-app-wood .p-dropdown .p-dropdown-trigger .p-dropdown-trigger-icon,
+.blong-app-wood .p-dropdown .p-dropdown-clear-icon {
+    color: #dfcbb2 !important;
+}
+
+/* Wood dropdown overlay (body portal) — a **carved charcoal recess** in the same
+   language as §W3's input channels: the woven mesh behind a 2px brass bezel
+   (top edge re-lit, floor re-lit, exactly like the §W5 checkbox socket). The
+   popup mounts outside `.blong-app-wood`, so it is scoped on the
+   `blong-theme-wood` root marker and cannot inherit the §W3 rules. */
+.blong-theme-wood .p-dropdown-panel {
+    background-color: #14100f !important;
+    background-image:
+        var(--wood-recess-top, none),
+        var(--wood-recess-bottom, none),
+        var(--wood-mesh, none) !important;
+    background-size: 100% 4px, 100% 4px, 4px 4px !important;
+    background-repeat: no-repeat, no-repeat, repeat !important;
+    border: 2px solid #77604a !important;
+    border-top-color: #ab9170 !important;
+    border-bottom-color: #8d7958 !important;
+    border-radius: 5px !important;
+    padding: 4px !important;
+    box-shadow:
+        0 0 0 1px #150c05,
+        0 12px 26px rgba(0, 0, 0, 0.7),
+        inset 0 2px 4px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* List rows: parchment type on the recess, warming to full brass on hover. */
+.blong-theme-wood .p-dropdown-panel .p-dropdown-item {
+    color: #dcc8b6 !important;
+    font-family: var(--wood-font) !important;
+    font-size: 1.14rem !important;
+    border-radius: 3px !important;
+    padding: 0.4rem 0.7rem !important;
+    margin: 0 !important;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.blong-theme-wood .p-dropdown-panel .p-dropdown-item:not(.p-highlight):hover,
+.blong-theme-wood .p-dropdown-panel .p-dropdown-item.p-focus {
+    background: rgba(255, 220, 170, 0.07) !important;
+    color: #fff3dc !important;
+}
+
+/* Selected: the plant's amber teak, not a flat copper wash. */
+.blong-theme-wood .p-dropdown-panel .p-dropdown-item.p-highlight {
+    background: linear-gradient(180deg,
+            rgba(174, 136, 76, 0.32) 0%,
+            rgba(140, 105, 55, 0.2) 100%) !important;
+    color: #f6e6d2 !important;
+    box-shadow: inset 0 0 0 1px rgba(198, 166, 127, 0.45) !important;
+}
+
+/* Any filter field rendered inside the popup gets the §W3 channel treatment
+   by hand, because the portal sits outside `.blong-app-wood`. */
+.blong-theme-wood .p-dropdown-panel .p-dropdown-header .p-inputtext {
+    background-color: #100e0f !important;
+    background-image:
+        var(--wood-recess-top, none),
+        var(--wood-recess-bottom, none),
+        var(--wood-mesh, none) !important;
+    background-size: 100% 4px, 100% 4px, 4px 4px !important;
+    background-repeat: no-repeat, no-repeat, repeat !important;
+    border: 1px solid #0b0906 !important;
+    border-top-color: #050403 !important;
+    border-radius: 4px !important;
+    color: #f2ddc4 !important;
+    font-family: var(--wood-font) !important;
+    font-size: 1.14rem !important;
+}
+
+.blong-theme-wood .p-dropdown-panel .p-dropdown-items-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(196, 155, 108, 0.35) transparent;
+}
+
+/* ActionHint (PrimeReact OverlayPanel) — the design's error tooltip
+   (`wood-buttons-2.png`, bottom): the same brass frame and rust panel as an
+   errored button, with the caret pointing back at it. Mounts at the body
+   portal, so it is scoped on the `blong-theme-wood` root marker. */
+.blong-theme-wood .p-overlaypanel {
+    border: 3px solid transparent !important;
+    border-radius: 5px !important;
+    background-color: transparent !important;
+    background-image:
+        var(--wood-btn-dots, none),
+        linear-gradient(#a04f32, #a04f32),
+        linear-gradient(180deg,
+            #c6a67f 0%,
+            #9a7f5a 10%,
+            #8a7150 50%,
+            #9a7f5a 90%,
+            #c6a67f 100%) !important;
+    background-size: 6px 6px, 100% 100%, 100% 100% !important;
+    background-repeat: repeat, no-repeat, no-repeat !important;
+    background-origin: padding-box, padding-box, border-box !important;
+    background-clip: padding-box, padding-box, border-box !important;
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.5),
+        0 6px 16px rgba(0, 0, 0, 0.6),
+        inset 0 0 0 1px #3a1608,
+        inset 0 2px 3px rgba(0, 0, 0, 0.5) !important;
+}
+
+.blong-theme-wood .p-overlaypanel .p-overlaypanel-content {
+    background: transparent !important;
+    padding: 0.5rem 0.95rem !important;
+}
+
+.blong-theme-wood .p-overlaypanel .p-overlaypanel-content span,
+.blong-theme-wood .p-overlaypanel .p-overlaypanel-content .text-red-500,
+.blong-theme-wood .p-overlaypanel .p-overlaypanel-content .text-green-500 {
+    color: #e0b085 !important;
+    font-family: var(--wood-font) !important;
+    font-size: 1.14rem !important;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+/* Caret — **solid brass**, one cast piece with the hint's frame.
+
+   Two earlier attempts built the caret as a brass *rim* around a rust interior,
+   copying the reference's silhouette, and both stayed patchy: the interior had to
+   reproduce the panel's mesh, its top occlusion and the `inset 0 0 0 1px #3a1608`
+   seam at a different origin, so the join never disappeared. Per an explicit
+   product decision, the caret is now filled with the frame's own brass instead.
+   That removes the whole problem class — there is no interior to blend, so the
+   frame line simply runs underneath and the caret merges with it.
+
+   Construction (from `wood.png`, 2×): the reference's notch spans device x677..715
+   and y85..105 ⇒ **20 × 10 CSS px**, a triangle with a nudge of rounding at the
+   apex. Its base is placed 2px above the panel's **padding-box** top, i.e. 1px
+   *inside* the 3px frame, so the two overlap and no hairline can appear between
+   them; the gradient is the frame's own top-of-border tone, so the eye reads one
+   solid brass shape rather than a tab stuck on.
+
+   Geometry still has to be restated with `!important`: PrimeReact v10 keeps the
+   structural CSS in `@layer primereact` while `theme.css` is injected separately,
+   so the theme's `.p-overlaypanel:before { border: solid transparent; … }`
+   shorthand lands later in the same layer and resets the caret. `::after` — the
+   inner silhouette the rim version needed — is switched off here. */
+.blong-theme-wood .p-overlaypanel::before {
+    content: '' !important;
+    position: absolute !important;
+    left: calc(var(--overlayArrowLeft, 0px) + 1.25rem) !important;
+    bottom: calc(100% + 2px) !important;
+    width: 20px !important;
+    height: 10px !important;
+    margin-left: -10px !important;
+    border: 0 !important;
+    pointer-events: none !important;
+    background: linear-gradient(180deg,
+            #d3b183 0%,
+            #c0a075 45%,
+            #a98d66 100%) !important;
+    clip-path: path('M0,10 L8.6,1.4 Q10,0.2 11.4,1.4 L20,10 Z') !important;
+}
+
+/* The inner silhouette is no longer used — the caret is solid. */
+.blong-theme-wood .p-overlaypanel::after {
+    content: none !important;
+}
+
+/* Flipped (panel above the trigger): mirror the caret. */
+.blong-theme-wood .p-overlaypanel.p-overlaypanel-flipped::before {
+    bottom: auto !important;
+    top: calc(100% + 2px) !important;
+    background: linear-gradient(0deg,
+            #d3b183 0%,
+            #c0a075 45%,
+            #a98d66 100%) !important;
+    clip-path: path('M0,0 L8.6,8.6 Q10,9.8 11.4,8.6 L20,0 Z') !important;
+}
+
+/* ==========================================================================
+   CONFIRM POPUP — the Reset key's "discard changes?" question.
+   PrimeReact's `ConfirmPopup` renders a `.p-confirm-popup` at the body portal,
+   so like the hint it is scoped on the `blong-theme-wood` root marker and shares
+   the hint's frame + caret (they are the same kind of object: a transient plate
+   pinned to the button that raised it). Only the panel differs — charcoal
+   instead of the hint's rust, because this is a neutral question rather than a
+   failure. It also inherits the **same collapsed-caret bug** as the hint: the
+   structural `.p-confirm-popup:before/after { border-width: 10px/8px }` lives in
+   `@layer primereact` while the theme's `border: solid transparent` shorthand is
+   unlayered, so the caret has to be restated here with `!important` and built as
+   a solid brass triangle, exactly as the hint's is.
+   ========================================================================== */
+.blong-theme-wood .p-confirm-popup {
+    border: 3px solid transparent !important;
+    border-radius: 5px !important;
+    background-color: transparent !important;
+    background-image:
+        var(--wood-btn-dots, none),
+        linear-gradient(#1f1f20, #1f1f20),
+        linear-gradient(180deg,
+            #c6a67f 0%,
+            #9a7f5a 10%,
+            #8a7150 50%,
+            #9a7f5a 90%,
+            #c6a67f 100%) !important;
+    background-size: 6px 6px, 100% 100%, 100% 100% !important;
+    background-repeat: repeat, no-repeat, no-repeat !important;
+    background-origin: padding-box, padding-box, border-box !important;
+    background-clip: padding-box, padding-box, border-box !important;
+    color: #dcc8b6 !important;
+    font-family: var(--wood-font) !important;
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.5),
+        0 8px 20px rgba(0, 0, 0, 0.65),
+        inset 0 0 0 1px #150c05,
+        inset 0 2px 3px rgba(0, 0, 0, 0.55) !important;
+}
+
+.blong-theme-wood .p-confirm-popup .p-confirm-popup-content {
+    background: transparent !important;
+    padding: 0.7rem 0.95rem 0.55rem !important;
+}
+
+.blong-theme-wood .p-confirm-popup .p-confirm-popup-icon {
+    color: #e0b085 !important;
+    font-size: 1.4rem !important;
+}
+
+.blong-theme-wood .p-confirm-popup .p-confirm-popup-message {
+    color: #dcc8b6 !important;
+    font-family: var(--wood-font) !important;
+    font-size: 1.14rem !important;
+    line-height: 1.4;
+    margin-left: 0.7rem !important;
+}
+
+.blong-theme-wood .p-confirm-popup .p-confirm-popup-footer {
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 0.5rem !important;
+    background: transparent !important;
+    padding: 0 0.95rem 0.8rem !important;
+}
+
+/* Both answers are the theme's key, in the compact size a popup wants. */
+.blong-theme-wood .p-confirm-popup .p-confirm-popup-footer .p-button {
+    box-sizing: border-box !important;
+    height: 30px !important;
+    border: 2px solid transparent !important;
+    border-radius: 4px !important;
+    background-color: transparent !important;
+    background-image:
+        linear-gradient(#26221f, #26221f),
+        linear-gradient(180deg,
+            #a58c6e 0%,
+            #7a6448 50%,
+            #a58c6e 100%) !important;
+    background-origin: padding-box, border-box !important;
+    background-clip: padding-box, border-box !important;
+    color: #dcc8b6 !important;
+    font-family: var(--wood-font) !important;
+    font-size: 1.14rem !important;
+    font-weight: 500 !important;
+    padding: 0 0.9rem !important;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.5),
+        inset 0 0 0 1px #150c05 !important;
+}
+
+.blong-theme-wood .p-confirm-popup .p-confirm-popup-footer .p-button:not(.p-disabled):hover {
+    filter: brightness(1.16) saturate(1.05);
+    color: #fff3dc !important;
+}
+
+/* Affirmative answer: the brighter brass, as the selected row / engaged toggle. */
+.blong-theme-wood .p-confirm-popup .p-confirm-popup-footer .p-confirm-popup-accept {
+    background-image:
+        linear-gradient(#2b2622, #2b2622),
+        linear-gradient(180deg,
+            #d3b183 0%,
+            #9a7f5a 50%,
+            #d3b183 100%) !important;
+    color: #f0d8ac !important;
+}
+
+/* Solid brass caret, matching the hint's. */
+.blong-theme-wood .p-confirm-popup::before {
+    content: '' !important;
+    position: absolute !important;
+    left: calc(var(--overlayArrowLeft, 0px) + 1.25rem) !important;
+    bottom: calc(100% + 2px) !important;
+    width: 20px !important;
+    height: 10px !important;
+    margin-left: -10px !important;
+    border: 0 !important;
+    pointer-events: none !important;
+    background: linear-gradient(180deg,
+            #d3b183 0%,
+            #c0a075 45%,
+            #a98d66 100%) !important;
+    clip-path: path('M0,10 L8.6,1.4 Q10,0.2 11.4,1.4 L20,10 Z') !important;
+}
+
+.blong-theme-wood .p-confirm-popup::after {
+    content: none !important;
+}
+
+/* Flipped (no room below the key): mirror the caret. */
+.blong-theme-wood .p-confirm-popup.p-confirm-popup-flipped::before {
+    bottom: auto !important;
+    top: calc(100% + 2px) !important;
+    background: linear-gradient(0deg,
+            #d3b183 0%,
+            #c0a075 45%,
+            #a98d66 100%) !important;
+    clip-path: path('M0,0 L8.6,8.6 Q10,9.8 11.4,8.6 L20,0 Z') !important;
+}
+
+/* ==========================================================================
+   §W8 MILLED BRASS TOOLBAR BUTTONS
+   The same key drives the header toolbars AND the in-card Links toolbar
+   (`+ Add` / `Delete`) — `wood.png` shows them as one component.
+   The header actions (Browse / Open / Error / Delay plus the two icon keys)
+   become the design's brass-framed keys (`plans/theme/wood-buttons.png`, cut
+   from `wood.png`): a 3px polished brass frame around a recessed micarta panel.
+   Measured on `wood-buttons-2.png` at 2× — frame 6 device px (3 CSS px), corner
+   radius ≈9 (5 CSS px); `wood.png` puts every key (save / replay / Browse / Open /
+   Error) at 74–75 device px tall ⇒ **37 CSS px**, with the two icon keys square.
+   Frame profile (device px, outer→inner): **107, 162, 116, 133, 125, 73** on the
+   top and **57, 117, 116, 122, 159, 126** on the bottom — i.e. the brass peaks
+   near the *outer* edge on top and near the *inner* edge on the bottom, which is
+   a rounded (bullnose) ring lit from above. Peaks ≈rgb(162,138,110) for the
+   normal state and ≈rgb(196,164,126) for the error/active state.
+   The metal is a `border-box` gradient behind `padding-box` inner layers with a
+   3px transparent border, so a single full-height gradient brightens the
+   top/bottom borders while the sides take the mid tone — no image needed.
+   Outset/inset: an outer dark ring + drop shadow lift the frame, and inset
+   shadows recess the panel inside it.
+   ========================================================================== */
+.blong-app-wood :is(.blong-toolbar-left, .blong-toolbar-right, .blong-design-toolbar, .p-card .p-toolbar) .p-button {
+    position: relative !important;
+    /* Every key is the same height (the design measures 74–75 device px on
+       `wood.png` ⇒ 37 CSS px). A fixed height keeps the row uniform whether the
+       key carries a label or only an icon. */
+    box-sizing: border-box !important;
+    height: 37px !important;
+    border: 3px solid transparent !important;
+    border-radius: 5px !important;
+    background-color: transparent !important;
+    background-image:
+        var(--wood-btn-dots, none),
+        linear-gradient(#1f1f20, #1f1f20),
+        linear-gradient(180deg,
+            #a58c6e 0%,
+            #7a6448 10%,
+            #6d5940 50%,
+            #7a6448 90%,
+            #a58c6e 100%) !important;
+    /* 6px draw → a 3 CSS-px dot pitch (the reference's ~6 device px at 2×). */
+    background-size: 6px 6px, 100% 100%, 100% 100% !important;
+    background-repeat: repeat, no-repeat, no-repeat !important;
+    background-origin: padding-box, padding-box, border-box !important;
+    background-clip: padding-box, padding-box, border-box !important;
+    color: #dcb98a !important;
+    font-family: var(--wood-font) !important;
+    /* Design cap height 22 device px (11 CSS px) ⇒ ~0.70em. */
+    font-size: 1.1rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.2px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+    padding: 0.42rem 1.05rem !important;
+    box-shadow:
+        /* outset: dark outline + cast shadow lift the frame */
+        0 0 0 1px rgba(0, 0, 0, 0.5),
+        0 3px 6px rgba(0, 0, 0, 0.55),
+        0 1px 1px rgba(0, 0, 0, 0.6),
+        /* the seam between frame and body, then the recessed body */
+        inset 0 0 0 1px #150c05,
+        inset 0 2px 3px rgba(0, 0, 0, 0.6),
+        inset 0 0 6px rgba(0, 0, 0, 0.45) !important;
+    transition: filter 0.15s ease, transform 0.1s ease;
+}
+
+/* Active / error state — the rust panel from the design. Applied via the
+   `.blong-action-error` hook that ActionButton sets after a failed call, and
+   also honoured for PrimeReact's `severity="danger"`. */
+.blong-app-wood :is(.blong-toolbar-left, .blong-toolbar-right, .blong-design-toolbar, .p-card .p-toolbar) .p-button:is(.blong-action-error, .p-button-danger) {
+    background-image:
+        var(--wood-btn-dots, none),
+        linear-gradient(#a04f32, #a04f32),
+        linear-gradient(180deg,
+            #c6a67f 0%,
+            #9a7f5a 10%,
+            #8a7150 50%,
+            #9a7f5a 90%,
+            #c6a67f 100%) !important;
+}
+
+.blong-app-wood :is(.blong-toolbar-left, .blong-toolbar-right, .blong-design-toolbar, .p-card .p-toolbar) .p-button.blong-action-error .p-button-icon {
+    color: #dcb98a !important;
+}
+
+/* Engaged toolbar toggles (e.g. the design-mode switch) lift the brass and
+   lighten the panel rather than turning green, which would break the HUD. */
+.blong-app-wood :is(.blong-toolbar-left, .blong-toolbar-right, .blong-design-toolbar, .p-card .p-toolbar) .p-button.p-button-success {
+    background-image:
+        var(--wood-btn-dots, none),
+        linear-gradient(#2b2622, #2b2622),
+        linear-gradient(180deg,
+            #d3b183 0%,
+            #9a7f5a 10%,
+            #8a7150 50%,
+            #9a7f5a 90%,
+            #d3b183 100%) !important;
+    color: #fff3dc !important;
+}
+
+.blong-app-wood :is(.blong-toolbar-left, .blong-toolbar-right, .blong-design-toolbar, .p-card .p-toolbar) .p-button.p-button-success .p-button-icon {
+    color: #f0d8ac !important;
+}
+
+/* Icon-only keys (save / replay) are **square**, as in the design — same 37px
+   edge, centred glyph. */
+.blong-app-wood :is(.blong-toolbar-left, .blong-toolbar-right, .blong-design-toolbar, .p-card .p-toolbar) .p-button-icon-only {
+    width: 37px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Icons carry the same brass as the label. */
+.blong-app-wood :is(.blong-toolbar-left, .blong-toolbar-right, .blong-design-toolbar, .p-card .p-toolbar) .p-button .p-button-icon {
+    color: #dcb98a !important;
+}
+
+.blong-app-wood :is(.blong-toolbar-left, .blong-toolbar-right, .blong-design-toolbar, .p-card .p-toolbar) .p-button:not(.p-disabled):hover {
+    filter: brightness(1.16) saturate(1.05);
+    color: #fff3dc !important;
+}
+
+/* Pressed: the key sinks into its frame. */
+.blong-app-wood :is(.blong-toolbar-left, .blong-toolbar-right, .blong-design-toolbar, .p-card .p-toolbar) .p-button:not(.p-disabled):active {
+    filter: brightness(0.9);
+    transform: translateY(1px);
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.6),
+        inset 0 0 0 1px #150c05,
+        inset 0 3px 6px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Disabled keys keep the brass frame but their content is struck back. */
+.blong-app-wood :is(.blong-toolbar-left, .blong-toolbar-right, .blong-design-toolbar, .p-card .p-toolbar) .p-button.p-disabled {
+    opacity: 1 !important;
+    color: #8d7452 !important;
+    filter: saturate(0.72) brightness(0.8);
+}
+
+.blong-app-wood :is(.blong-toolbar-left, .blong-toolbar-right, .blong-design-toolbar, .p-card .p-toolbar) .p-button.p-disabled .p-button-icon {
+    color: #8d7452 !important;
+}
+
+/* ==========================================================================
+   §W4 (SUPERSEDED) BRACKET HUD CONTROLS
+   The Links `+ Add` / `Delete` controls are now the same brass keys as the
+   header actions — see §W8, whose selector list includes `.p-card .p-toolbar`.
+   The old bracket-frame text treatment has been removed.
+   ========================================================================== */
+
+/* ==========================================================================
+   §W5 BRASS-FRAMED WALNUT CHECKBOXES (Habitat)
+   From `wood.png` (2×): a ~22 CSS-px rounded square — a 2px brass frame that is
+   lighter along the top, a near-black socket inside, and an amber teak check
+   when selected. The indeterminate state shows the design's solid amber dot.
+   The group itself keeps a **transparent** background so the wood shows
+   through; only the boxes and labels are painted.
+   ========================================================================== */
+.blong-app-wood .p-checkbox .p-checkbox-box {
+    width: 22px !important;
+    height: 22px !important;
+    flex: none !important;
+    background-color: #211c19 !important;
+    background-image: none !important;
+    /* 2px brass bezel: bright catching edge on top, mid on the flanks, a
+       slightly softer re-lit edge along the floor (measured on the design). */
+    border: 2px solid #77604a !important;
+    border-top-color: #ab9170 !important;
+    border-bottom-color: #8d7958 !important;
+    border-radius: 3px !important;
+    box-shadow:
+        inset 0 2px 3px rgba(0, 0, 0, 0.75),
+        0 1px 1px rgba(0, 0, 0, 0.55) !important;
+}
+
+.blong-app-wood .p-checkbox:not(.p-checkbox-disabled):hover .p-checkbox-box {
+    border-color: #a68a63 !important;
+    border-top-color: #c3a884 !important;
+    box-shadow:
+        0 0 6px rgba(217, 175, 110, 0.18),
+        inset 0 2px 3px rgba(0, 0, 0, 0.85) !important;
+}
+
+/* Selected: the socket stays dark — only the indicator lights up. */
+.blong-app-wood .p-checkbox .p-checkbox-box.p-highlight {
+    background-color: #211c19 !important;
+    border-color: #77604a !important;
+    border-top-color: #ab9170 !important;
+    border-bottom-color: #8d7958 !important;
+}
+
+.blong-app-wood .p-checkbox .p-checkbox-box .p-checkbox-icon {
+    color: #a68d63 !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+    transform: none !important;
+}
+
+/* Indeterminate — the design's solid amber dot (11 CSS px, rgb(174,136,76)). */
+.blong-app-wood .p-checkbox .p-checkbox-box.p-indeterminate .p-checkbox-icon {
+    width: 11px !important;
+    height: 11px !important;
+    color: transparent !important;
+    background: radial-gradient(circle, #ae884c 0 46%, transparent 50%) !important;
+}
+
+/* Habitat inline matrix — rigid 4-up layout, uniform columns. */
+.blong-app-wood .p-multiselect {
+    background: none;
+    border: none;
+}
+
+.blong-app-wood .p-multiselect-panel.p-multiselect-inline .p-multiselect-items {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    /* Measured row pitch is 23 CSS px for a 22px box — the design stacks the
+       habitat rows almost touching. */
+    gap: 1px 8px !important;
+    padding: 8px 4px !important;
+    align-items: center;
+}
+
+.blong-app-wood .p-multiselect-panel.p-multiselect-inline .p-multiselect-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+    width: auto !important;
+    /* Reserve the full 22px socket so the 1px row gap yields the design's
+       23px pitch rather than letting the box overflow the line box. */
+    min-height: 22px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    white-space: nowrap;
+}
+
+.blong-app-wood .p-multiselect-panel.p-multiselect-inline .p-multiselect-item>span {
+    color: #e5d0bc !important;
+    font-family: var(--wood-font) !important;
+    /* ~12 CSS-px ascender ⇒ ~16px type. */
+    font-size: 1.14rem !important;
+    font-weight: 400 !important;
+    transition: color 0.2s ease;
+}
+
+.blong-app-wood .p-multiselect-panel.p-multiselect-inline .p-multiselect-item.p-highlight>span {
+    color: #f6e6d2 !important;
+}
+
+.blong-app-wood .p-multiselect-panel.p-multiselect-inline .p-multiselect-checkbox {
+    flex: none !important;
+}
+
+/* ==========================================================================
+   §W6 TRANSPARENT INK-ON-WOOD DATA GRID (Links DataTable)
+   From `wood.png`: the grid is **transparent** — the walnut shows straight
+   through — with warm light headers over a single bronze rule, cream row text,
+   no row fills, and the filter inputs reusing §W3's carved mesh channels.
+   ========================================================================== */
+.blong-app-wood .p-datatable {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+}
+
+.blong-app-wood .p-datatable .p-datatable-thead>tr,
+.blong-app-wood .p-datatable .p-datatable-thead>tr>th {
+    background: transparent !important;
+}
+
+.blong-app-wood .p-datatable .p-datatable-thead>tr>th {
+    color: #e8d3b8 !important;
+    font-family: var(--wood-font) !important;
+    /* ~12.5 CSS-px ascender ⇒ ~16px type, and the design keeps title case. */
+    font-size: 1.14rem !important;
+    font-weight: 700 !important;
+    text-transform: none !important;
+    letter-spacing: 0.2px;
+    padding: 0.45rem 0.7rem !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* The header rule is a groove: a near-black 1px cut with a re-lit warm line
+   immediately below it (measured at rgb(17,8,1) over rgb(63,50,44)). */
+.blong-app-wood .p-datatable .p-datatable-thead>tr>th {
+    border-bottom: 1px solid #150c04 !important;
+    box-shadow: 0 1px 0 rgba(212, 190, 165, 0.13) !important;
+}
+
+/* Sort carets + filter funnels stay brass. */
+.blong-app-wood .p-datatable .p-sortable-column-icon,
+.blong-app-wood .p-datatable .p-column-filter-menu-button,
+.blong-app-wood .p-datatable .p-column-filter-clear-button {
+    color: #e0c49c !important;
+}
+
+.blong-app-wood .p-datatable .p-datatable-tbody>tr {
+    background: transparent !important;
+    color: #e3cdb4 !important;
+    transition: background 0.2s linear, color 0.2s linear;
+}
+
+.blong-app-wood .p-datatable .p-datatable-tbody>tr>td {
+    background: transparent !important;
+    font-family: var(--wood-font) !important;
+    font-size: 1.14rem !important;
+    padding: 0.45rem 0.7rem !important;
+    /* Same groove treatment as the header, but far fainter. */
+    border-bottom: 1px solid rgba(18, 10, 4, 0.5) !important;
+    box-shadow: 0 1px 0 rgba(200, 180, 160, 0.05) !important;
+}
+
+.blong-app-wood .p-datatable .p-datatable-tbody>tr:not(.p-highlight):hover {
+    background: rgba(255, 222, 176, 0.05) !important;
+    color: #fff7ea !important;
+    box-shadow: none !important;
+}
+
+.blong-app-wood .p-datatable .p-datatable-tbody>tr.p-highlight {
+    background: rgba(196, 145, 92, 0.16) !important;
+    color: #fff7ea !important;
+    box-shadow: none !important;
+}
+
+.blong-app-wood .p-datatable .p-datatable-tbody>tr.p-highlight>td {
+    border-bottom-color: rgba(196, 145, 92, 0.5) !important;
+    text-shadow: none !important;
+}
+
+/* ==========================================================================
+   §W7 OILED-WALNUT INSPECTOR PLATE + RECESSED DARK PANEL (Form Inspector)
+   From `wood.png`: the inspector is the *same walnut plate language* as the
+   cards — grain, thin dark rim, alpha-channel bevel — carrying a gold
+   `FORM INSPECTOR` caption. The four collapsible sections then form ONE dark
+   recessed socket cut into that plate.
+
+   The title is a *sibling* of the sections, so the socket is assembled by
+   painting every section dark and zeroing the base `margin-bottom` (which would
+   otherwise stripe the panel), then rounding only the first
+   (`.blong-property-editor__title + .blong-inspector__section`) and the last
+   (`:last-child`) sections and giving the first the top occlusion shadow.
+   ========================================================================== */
+.blong-app-wood .blong-property-editor.blong-inspector {
+    position: relative !important;
+    /* Flex column so the last section can grow — in the design the recess runs
+       all the way to the bottom rail, leaving a uniform wood margin. */
+    display: flex !important;
+    flex-direction: column !important;
+    background-color: #4e3124 !important;
+    background-image:
+        linear-gradient(168deg,
+            rgba(255, 214, 160, 0.13) 0%,
+            rgba(255, 206, 150, 0.04) 22%,
+            rgba(0, 0, 0, 0) 55%,
+            rgba(0, 0, 0, 0.26) 100%),
+        var(--wood-grain, none) !important;
+    background-size: 100% 100%, 256px 256px !important;
+    background-repeat: no-repeat, repeat !important;
+    background-blend-mode: normal, overlay !important;
+    border: 1px solid #1d1310 !important;
+    border-radius: 6px !important;
+    padding: 0.7rem 0.8rem 0.8rem;
+    overflow: visible !important;
+    box-shadow:
+        0 16px 30px rgba(0, 0, 0, 0.6),
+        0 3px 8px rgba(0, 0, 0, 0.5),
+        inset 0 0 34px rgba(0, 0, 0, 0.2) !important;
+    z-index: 1;
+}
+
+/* Same 9-slice alpha bevel as §W2 — the inspector is cut from the same board. */
+.blong-app-wood .blong-property-editor.blong-inspector::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    pointer-events: none;
+    z-index: 5;
+    border: 16px solid transparent;
+    border-image-source: var(--wood-edge, none);
+    border-image-slice: 32;
+    border-image-width: 16px;
+    border-image-outset: 0;
+    border-image-repeat: stretch;
+}
+
+/* `FORM INSPECTOR` — engraved gold caption, uppercase and letter-spaced, with
+   the circled-i beside it. The design's cap height is ~10 CSS px. */
+.blong-app-wood .blong-inspector .blong-property-editor__title {
+    color: #f5dab5 !important;
+    font-family: var(--wood-font) !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    margin-bottom: 0.55rem;
+}
+
+.blong-app-wood .blong-inspector .blong-inspector__icon {
+    color: #f5dab5 !important;
+    font-size: 0.9rem !important;
+    margin-right: 0.45rem;
+}
+
+/* The socket: sections become one continuous dark recess. */
+.blong-app-wood .blong-inspector .blong-inspector__section {
+    background: #26221f !important;
+    margin-bottom: 0 !important;
+    padding: 0.4rem 0.8rem;
+}
+
+.blong-app-wood .blong-inspector .blong-property-editor__title+.blong-inspector__section {
+    border-radius: 6px 6px 0 0 !important;
+    /* light falls into the top of the recess */
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.55) !important;
+}
+
+.blong-app-wood .blong-inspector .blong-inspector__section:last-child {
+    /* Fills the remaining plate height so the recess reaches the bottom rail. */
+    flex: 1 1 auto !important;
+    border-radius: 0 0 6px 6px !important;
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.55),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.45) !important;
+    padding-bottom: 0.6rem;
+}
+
+/* Section headers — gold `Fields` / `Refs` … toggles with a brass chevron. */
+.blong-app-wood .blong-inspector .blong-inspector__toggle {
+    color: #f0dcba !important;
+    font-family: var(--wood-font) !important;
+    /* ~9 CSS-px ascender ⇒ ~12.5px type. */
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.2px;
+    text-shadow: none !important;
+}
+
+.blong-app-wood .blong-inspector .blong-inspector__toggle:hover {
+    color: #fff3dc !important;
+}
+
+.blong-app-wood .blong-inspector .blong-inspector__chevron {
+    color: #e0b085 !important;
+    font-size: 0.7rem !important;
+}
+
+/* Empty-state copy: muted italic parchment. */
+.blong-app-wood .blong-inspector .blong-inspector__empty,
+.blong-app-wood .blong-inspector .blong-property-editor__field,
+.blong-app-wood .blong-inspector .blong-inspector__field-name {
+    background: transparent !important;
+    color: #b09b84 !important;
+    font-family: var(--wood-font) !important;
+    font-size: 0.82rem !important;
+    font-style: italic;
+}
+
+/* Raw state dump: ink on the recess, no second frame. */
+.blong-app-wood .blong-inspector .blong-inspector__body {
+    max-height: 420px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(196, 155, 108, 0.35) transparent;
+}
+
+.blong-app-wood .blong-inspector .blong-inspector__body .blong-json {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0;
+    box-shadow: none !important;
+    padding: 0.15rem 0 0.3rem;
+    font-family: ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace !important;
+    /* ~8.5 CSS-px cap and a ~12.5 CSS-px line pitch on the design. */
+    font-size: 0.85rem !important;
+    line-height: 1.28;
+    color: #d6c5ac !important;
+    text-shadow: none !important;
+}
+
+.blong-app-wood .blong-inspector .blong-json * {
+    color: inherit !important;
+}
+
+.blong-app-wood .blong-inspector ::-webkit-scrollbar-thumb {
+    background: rgba(196, 155, 108, 0.22) !important;
+    border: 1px solid rgba(196, 155, 108, 0.1);
+}
+
+.blong-app-wood .blong-inspector ::-webkit-scrollbar-thumb:hover {
+    background: rgba(224, 176, 133, 0.5) !important;
+}
+
+/* ==========================================================================
+   3D CAMERA SLANT (opt-in for a tilt story)
+   Mirrors the glass tilt behaviour under the wood variant.
+   ========================================================================== */
+.blong-app-wood .blong-glass-viewport {
+    perspective: 1200px;
+    perspective-origin: 50% 30%;
+    height: 100%;
+    padding: 1.5rem 2.5rem;
+}
+
+.blong-app-wood .blong-glass-viewport .blong-glass-grid {
+    --mouse-x: 0;
+    --mouse-y: 0;
+    height: 100%;
+    transform:
+        rotateX(calc(4deg + (var(--mouse-y, 0) * 2deg))) rotateY(calc(-1.5deg + (var(--mouse-x, 0) * 2deg))) translateZ(0);
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .blong-app-wood .blong-glass-viewport .blong-glass-grid {
+        transform: none;
+        transition: none;
+    }
+}

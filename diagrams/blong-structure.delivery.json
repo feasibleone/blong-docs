@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "e639ae0c-de19-4dc3-b38d-ad908e60f389",
+  "status": "current",
+  "command": "deliver",
+  "type": "tree",
+  "input": "/home/kalin/work/blong/blong/docs/blong/draw/archify/blong-structure.json",
+  "output": "/home/kalin/work/blong/blong/docs/blong/static/diagrams/blong-structure.html",
+  "specification": {
+    "sha256": "996d9a1104f92a0fc6cf118ee1f0dd616e57d2d41388e1cffee056f6b7aca20d",
+    "bytes": 4253
+  },
+  "artifact": {
+    "sha256": "2ed7e19b2dc4c8094d674c118c034a6689640e70a9c4a75f8892a17e038c7f46",
+    "bytes": 849962
+  }
+}

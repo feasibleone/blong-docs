@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "6aa19108-0840-4155-8bd2-4bc1d23d3037",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/kalin/work/blong/blong/docs/blong/draw/archify/blong-handler-runtime.json",
+  "output": "/home/kalin/work/blong/blong/docs/blong/static/diagrams/blong-handler-runtime.html",
+  "specification": {
+    "sha256": "d0bd0e887f62cbed00e35eaa0af718e69aa4f4c4447588c09e5ba58f19b18dad",
+    "bytes": 5626
+  },
+  "artifact": {
+    "sha256": "704559ad8a0da6b0abc1af6554420af09835199c75f4967b3fc554d1f405f657",
+    "bytes": 843561
+  }
+}
