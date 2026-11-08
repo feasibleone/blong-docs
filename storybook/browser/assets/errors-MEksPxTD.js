@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-Bjp52BOI.js";import{a as t,s as n}from"./types-D6w_5h7V.js";var r;function i(){return(i=e((()=>{t(),r=n(({lib:{error:e}})=>{e({openapiNamespaceNotDefined:`Namespace {namespace} is not defined`})})})))()}i();export{r as default};

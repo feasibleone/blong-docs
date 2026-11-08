@@ -9,13 +9,16 @@
 export { captureScreen, type FeedbackCaptureStatus, type ICaptureOutcome } from './capture.js';
 export { FeedbackCallout, type IFeedbackCalloutProps } from './FeedbackCallout.js';
 export { FeedbackLayer } from './FeedbackLayer.js';
+export { FeedbackMicButton, type IFeedbackMicButtonProps } from './FeedbackMicButton.js';
 export { FeedbackOutline, type IFeedbackOutlineProps } from './FeedbackOutline.js';
 export { FeedbackSubmitBar, type IFeedbackSubmitBarProps } from './FeedbackSubmitBar.js';
 export { FeedbackToggle, matchesShortcut, parseShortcut } from './FeedbackToggle.js';
 export { installFeedbackGuard, type IFeedbackGuardOptions } from './guard.js';
 export { appendSegment, buildFeedbackPath, closestFeedbackTarget, domHintOf, fallbackContext, FEEDBACK_CAPTURE_ATTR, FEEDBACK_ID_ATTR, FEEDBACK_KIND_ATTR, FEEDBACK_LABEL_ATTR, FEEDBACK_UI_ATTR, feedbackAttributes, isFeedbackUi, nameOfLabel, pageIdOf, portalFeedbackId, rectOf, segmentOf, shortTargetId, targetOf, type IFeedbackModelContext, } from './ids.js';
 export { arrowHeadPoints, connectorOf, MIN_CALLOUT, moveBox, overlapArea, placeCallout, placeCallouts, resizeBox, toFraction, type IFeedbackRect, type IFeedbackSide, type IPlacement, } from './placement.js';
+export { appendSpeech, createSherpaEngine, createSpeechEngine, createWebSpeechEngine, installSpeechEnvironment, loadSherpaModule, localRecognitionAvailable, localSpeechAvailable, microphonePermission, punctuateSpeech, remainingSpeech, resample, resetSpeechPreferences, resolveSpeechLanguage, setSpeechPreferences, SPEECH_PREFERENCES_DEFAULT, SPEECH_SILENCE_MS, speechLanguage, speechPreferences, speechRecognitionConstructor, speechSupported, subscribeSpeechPreferences, type ISherpaEnvironment, type ISherpaModule, type ISherpaRecognizer, type ISherpaStream, type ISpeechEngine, type ISpeechEnvironment, type ISpeechPhrase, type ISpeechPreferences, } from './speech.js';
 export { useFeedbackConfig } from './useFeedbackConfig.js';
 export { useFeedbackFreeze } from './useFeedbackFreeze.js';
+export { speechDropInterim, speechListen, speechRestart, speechStop, speechTakeInterim, speechToggle, useFeedbackSpeech, useSpeechPreferences, type IFeedbackSpeech, type ISpeechOptions, type ISpeechSnapshot, type SpeechError, } from './useFeedbackSpeech.js';
 export { FeedbackActiveContext, FeedbackPageContext, FeedbackPath, FeedbackRegion, segmentId, useFeedbackActive, useFeedbackNode, useFeedbackPage, useFeedbackPageTarget, useFeedbackPath, useFeedbackTarget, useFeedbackTargetFactory, type IFeedbackNode, } from './useFeedbackTarget.js';
 //# sourceMappingURL=index.d.ts.map

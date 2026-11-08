@@ -759,78 +759,6 @@ and <a class="" href="http://blong.feasible.one/docs/rationale/semantic-log">the
             <category>Observability</category>
         </item>
         <item>
-            <title><![CDATA[Record-level ACL that can only narrow]]></title>
-            <link>http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow</link>
-            <guid>http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow</guid>
-            <pubDate>Wed, 16 Sep 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[RBAC answers "may this caller call this method". It has one blind spot, and everybody meets it the]]></description>
-            <content:encoded><![CDATA[<p>RBAC answers "may this caller call this method". It has one blind spot, and everybody meets it the
-first time a customer service user opens a list and sees every customer in the company: the method
-is allowed, and the <em>records</em> are all of them.</p>
-<p>An access-control list closes that gap without touching the method check. It is opt-in per table,
-evaluated in SQL as part of the query, and it can only ever take permission away — which is the
-property that makes it safe to add to a running system.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="two-halves-one-verdict">Two halves, one verdict<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#two-halves-one-verdict" class="hash-link" aria-label="Direct link to Two halves, one verdict" title="Direct link to Two halves, one verdict" translate="no">​</a></h2>
-<!-- -->
-<p>The <strong>implicit</strong> half is the hierarchy, and it lives in the same resource graph as everything else:
-a <code>hasScope</code> edge says a caller acts within a scope, and a unit tree says which scopes contain
-which. Because it rides the existing hierarchy, moving a person between units needs no ACL change —
-which is the whole reason it is not a table of grants.</p>
-<p>The <strong>explicit</strong> half is <code>access_acl</code>: one row per rule, with a principal (a user, a role or a
-unit), an action, a target (<code>record</code>, <code>scope</code>, or <code>all</code>), and an effect. The two are combined as
-<code>(grant) AND NOT (deny)</code>, so an explicit refusal beats an inherited grant.</p>
-<p>Two details of that table are worth knowing because they are easy to get wrong from the outside. A
-<strong>capability is not a valid principal</strong>: the filter resolves the caller, their effective roles and
-their units (plus those units' ancestors) — nothing resolves a capability — so a rule naming one
-sits inert. And a <code>deny</code> has exactly one hole, which is the same property that makes the guard safe
-to adopt: the combined filter is <code>(unscoped OR guarded)</code>, and the <code>unscoped</code> term short-circuits for
-a record that participates in no scope. An explicit deny on such a record is therefore not applied.
-A deny on a record <em>inside</em> a scope is honoured, which is the case rules are written for.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="opting-in-changes-nothing--in-the-default-mode">Opting in changes nothing — in the default mode<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#opting-in-changes-nothing--in-the-default-mode" class="hash-link" aria-label="Direct link to Opting in changes nothing — in the default mode" title="Direct link to Opting in changes nothing — in the default mode" translate="no">​</a></h2>
-<p>Declaring the guard on a table is a two-line change in the schema, and it is deliberately a no-op on
-existing data:</p>
-<div class="language-typescript codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-typescript codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">acl</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">mode</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'scoped'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> scopes</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">[</span><span class="token string" style="color:rgb(163, 21, 21)">'belongsTo'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">]</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> addScope</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">predicate</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'belongsTo'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><br></div></code></pre></div></div>
-<p><code>mode: 'scoped'</code> means a record that participates in no scope is not narrowed: it falls back to
-RBAC. So guarding a table with ten thousand rows does not hide any of them until a grant mentions
-them, which is what makes the change reviewable. <code>mode: 'explicit'</code> is the opposite and deserves a
-decision rather than a default: there the unscoped fallback is not built, and every record is
-deny-by-default — per-record grants only.</p>
-<p>The two shapes of scope exist because a hierarchy can point either way. Usually a record points <em>at</em>
-its scope (<code>scopes: ['belongsTo']</code> — a person belongs to a unit). When the record <em>is</em> the scope —
-an organization level whose children are the records — it declares itself (<code>selfScope</code>), which is
-how the top of a hierarchy is enforced without inventing a scope for it.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="enforced-by-the-runtime-not-by-each-handler">Enforced by the runtime, not by each handler<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#enforced-by-the-runtime-not-by-each-handler" class="hash-link" aria-label="Direct link to Enforced by the runtime, not by each handler" title="Direct link to Enforced by the runtime, not by each handler" translate="no">​</a></h2>
-<p>The guard is a property of the generic CRUD, which is the difference between an ACL that is real and
-one that is remembered in some handlers. Concretely, for a guarded table:</p>
-<table><thead><tr><th>Operation</th><th>A denied record is…</th></tr></thead><tbody><tr><td><code>get</code></td><td><strong>not found</strong> (404) — the row is not there as far as the caller is concerned</td></tr><tr><td><code>edit</code>, <code>remove</code></td><td><strong>forbidden</strong> (403)</td></tr><tr><td><code>find</code></td><td>filtered <strong>before</strong> paging, so a page of ten is ten visible rows</td></tr><tr><td>dropdowns</td><td>filtered too — a dropdown is a read, and leaks names otherwise</td></tr><tr><td><code>add</code></td><td>checked against the scope the new record names</td></tr></tbody></table>
-<p>The <code>get</code>-as-404 choice is the deliberate one: telling a caller "this exists but you may not see it"
-is itself a disclosure. And <code>find</code> filtering before paging matters more than it sounds — filtering
-after a <code>LIMIT</code> is how an ACL produces pages of three rows and an afternoon of confusion.</p>
-<p>One asymmetry is worth recording rather than discovering: the scope check on <code>add</code> only fires when
-the payload names a scope. An <code>add</code> that names none is allowed on the generic path, so a table that
-requires every new record to be scoped should say so in its <code>addScope</code> declaration and keep the
-guard's own check as the backstop it is — the stricter refusal is on the check path used by
-<code>access.session.verify</code>.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="deleting-a-guarded-record-releases-its-rules">Deleting a guarded record releases its rules<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#deleting-a-guarded-record-releases-its-rules" class="hash-link" aria-label="Direct link to Deleting a guarded record releases its rules" title="Direct link to Deleting a guarded record releases its rules" translate="no">​</a></h2>
-<p>A guarded record that is deleted takes its rules with it, in the same operation and before the
-entity row goes: rules are removed by principal, target and action, so a delete cannot fail half-way
-and leave a rule pointing at a row that no longer exists. The reverse also holds — a rule for a
-record that was never created cannot accumulate, because the guard answers "not found" for it
-anyway.</p>
-<p>The cost of the design is that the verdict is computed as SQL on every query rather than cached in a
-table, so it is a join away from being free rather than free. That is the trade chosen here: a
-materialized effective table would need invalidating on every hierarchy change, while a filter on
-the query is always current. The one thing that must still be refreshed is the graph itself — the
-verdict reads <code>access.effectiveScope</code> for a record's ancestors and <code>access.effectiveRole</code> for a role
-or unit principal, so a hierarchy change needs <code>CALL access_pathRefresh()</code> before the narrowing
-reflects it.</p>
-<p>The mechanism is in <a class="" href="http://blong.feasible.one/docs/concepts/acl">the ACL concept</a>, the declarations and rule fields are in
-<a class="" href="http://blong.feasible.one/docs/patterns/acl">the pattern</a>, and <a class="" href="http://blong.feasible.one/docs/rationale/acl">the rationale</a> argues why the narrowing
-sits beside RBAC instead of inside it.</p>]]></content:encoded>
-            <category>Blong</category>
-            <category>Data</category>
-        </item>
-        <item>
             <title><![CDATA[Roles as bits in the token]]></title>
             <link>http://blong.feasible.one/blog/roles-as-bits-in-the-token</link>
             <guid>http://blong.feasible.one/blog/roles-as-bits-in-the-token</guid>
@@ -903,6 +831,78 @@ reflected in a login's expansion — the paths do not maintain themselves.</p>
 <p>Read next: <a class="" href="http://blong.feasible.one/docs/concepts/rbac">the RBAC concept</a> for the graph and the gate,
 <a class="" href="http://blong.feasible.one/docs/patterns/rbac">the pattern</a> for seeding and granting, and
 <a class="" href="http://blong.feasible.one/docs/concepts/resource-graph">the resource graph</a> for the tables the roles are stored in.</p>]]></content:encoded>
+            <category>Blong</category>
+            <category>Data</category>
+        </item>
+        <item>
+            <title><![CDATA[Record-level ACL that can only narrow]]></title>
+            <link>http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow</link>
+            <guid>http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow</guid>
+            <pubDate>Wed, 16 Sep 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[RBAC answers "may this caller call this method". It has one blind spot, and everybody meets it the]]></description>
+            <content:encoded><![CDATA[<p>RBAC answers "may this caller call this method". It has one blind spot, and everybody meets it the
+first time a customer service user opens a list and sees every customer in the company: the method
+is allowed, and the <em>records</em> are all of them.</p>
+<p>An access-control list closes that gap without touching the method check. It is opt-in per table,
+evaluated in SQL as part of the query, and it can only ever take permission away — which is the
+property that makes it safe to add to a running system.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="two-halves-one-verdict">Two halves, one verdict<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#two-halves-one-verdict" class="hash-link" aria-label="Direct link to Two halves, one verdict" title="Direct link to Two halves, one verdict" translate="no">​</a></h2>
+<!-- -->
+<p>The <strong>implicit</strong> half is the hierarchy, and it lives in the same resource graph as everything else:
+a <code>hasScope</code> edge says a caller acts within a scope, and a unit tree says which scopes contain
+which. Because it rides the existing hierarchy, moving a person between units needs no ACL change —
+which is the whole reason it is not a table of grants.</p>
+<p>The <strong>explicit</strong> half is <code>access_acl</code>: one row per rule, with a principal (a user, a role or a
+unit), an action, a target (<code>record</code>, <code>scope</code>, or <code>all</code>), and an effect. The two are combined as
+<code>(grant) AND NOT (deny)</code>, so an explicit refusal beats an inherited grant.</p>
+<p>Two details of that table are worth knowing because they are easy to get wrong from the outside. A
+<strong>capability is not a valid principal</strong>: the filter resolves the caller, their effective roles and
+their units (plus those units' ancestors) — nothing resolves a capability — so a rule naming one
+sits inert. And a <code>deny</code> has exactly one hole, which is the same property that makes the guard safe
+to adopt: the combined filter is <code>(unscoped OR guarded)</code>, and the <code>unscoped</code> term short-circuits for
+a record that participates in no scope. An explicit deny on such a record is therefore not applied.
+A deny on a record <em>inside</em> a scope is honoured, which is the case rules are written for.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="opting-in-changes-nothing--in-the-default-mode">Opting in changes nothing — in the default mode<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#opting-in-changes-nothing--in-the-default-mode" class="hash-link" aria-label="Direct link to Opting in changes nothing — in the default mode" title="Direct link to Opting in changes nothing — in the default mode" translate="no">​</a></h2>
+<p>Declaring the guard on a table is a two-line change in the schema, and it is deliberately a no-op on
+existing data:</p>
+<div class="language-typescript codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-typescript codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">acl</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">mode</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'scoped'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> scopes</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">[</span><span class="token string" style="color:rgb(163, 21, 21)">'belongsTo'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">]</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> addScope</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">predicate</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'belongsTo'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><br></div></code></pre></div></div>
+<p><code>mode: 'scoped'</code> means a record that participates in no scope is not narrowed: it falls back to
+RBAC. So guarding a table with ten thousand rows does not hide any of them until a grant mentions
+them, which is what makes the change reviewable. <code>mode: 'explicit'</code> is the opposite and deserves a
+decision rather than a default: there the unscoped fallback is not built, and every record is
+deny-by-default — per-record grants only.</p>
+<p>The two shapes of scope exist because a hierarchy can point either way. Usually a record points <em>at</em>
+its scope (<code>scopes: ['belongsTo']</code> — a person belongs to a unit). When the record <em>is</em> the scope —
+an organization level whose children are the records — it declares itself (<code>selfScope</code>), which is
+how the top of a hierarchy is enforced without inventing a scope for it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="enforced-by-the-runtime-not-by-each-handler">Enforced by the runtime, not by each handler<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#enforced-by-the-runtime-not-by-each-handler" class="hash-link" aria-label="Direct link to Enforced by the runtime, not by each handler" title="Direct link to Enforced by the runtime, not by each handler" translate="no">​</a></h2>
+<p>The guard is a property of the generic CRUD, which is the difference between an ACL that is real and
+one that is remembered in some handlers. Concretely, for a guarded table:</p>
+<table><thead><tr><th>Operation</th><th>A denied record is…</th></tr></thead><tbody><tr><td><code>get</code></td><td><strong>not found</strong> (404) — the row is not there as far as the caller is concerned</td></tr><tr><td><code>edit</code>, <code>remove</code></td><td><strong>forbidden</strong> (403)</td></tr><tr><td><code>find</code></td><td>filtered <strong>before</strong> paging, so a page of ten is ten visible rows</td></tr><tr><td>dropdowns</td><td>filtered too — a dropdown is a read, and leaks names otherwise</td></tr><tr><td><code>add</code></td><td>checked against the scope the new record names</td></tr></tbody></table>
+<p>The <code>get</code>-as-404 choice is the deliberate one: telling a caller "this exists but you may not see it"
+is itself a disclosure. And <code>find</code> filtering before paging matters more than it sounds — filtering
+after a <code>LIMIT</code> is how an ACL produces pages of three rows and an afternoon of confusion.</p>
+<p>One asymmetry is worth recording rather than discovering: the scope check on <code>add</code> only fires when
+the payload names a scope. An <code>add</code> that names none is allowed on the generic path, so a table that
+requires every new record to be scoped should say so in its <code>addScope</code> declaration and keep the
+guard's own check as the backstop it is — the stricter refusal is on the check path used by
+<code>access.session.verify</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="deleting-a-guarded-record-releases-its-rules">Deleting a guarded record releases its rules<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#deleting-a-guarded-record-releases-its-rules" class="hash-link" aria-label="Direct link to Deleting a guarded record releases its rules" title="Direct link to Deleting a guarded record releases its rules" translate="no">​</a></h2>
+<p>A guarded record that is deleted takes its rules with it, in the same operation and before the
+entity row goes: rules are removed by principal, target and action, so a delete cannot fail half-way
+and leave a rule pointing at a row that no longer exists. The reverse also holds — a rule for a
+record that was never created cannot accumulate, because the guard answers "not found" for it
+anyway.</p>
+<p>The cost of the design is that the verdict is computed as SQL on every query rather than cached in a
+table, so it is a join away from being free rather than free. That is the trade chosen here: a
+materialized effective table would need invalidating on every hierarchy change, while a filter on
+the query is always current. The one thing that must still be refreshed is the graph itself — the
+verdict reads <code>access.effectiveScope</code> for a record's ancestors and <code>access.effectiveRole</code> for a role
+or unit principal, so a hierarchy change needs <code>CALL access_pathRefresh()</code> before the narrowing
+reflects it.</p>
+<p>The mechanism is in <a class="" href="http://blong.feasible.one/docs/concepts/acl">the ACL concept</a>, the declarations and rule fields are in
+<a class="" href="http://blong.feasible.one/docs/patterns/acl">the pattern</a>, and <a class="" href="http://blong.feasible.one/docs/rationale/acl">the rationale</a> argues why the narrowing
+sits beside RBAC instead of inside it.</p>]]></content:encoded>
             <category>Blong</category>
             <category>Data</category>
         </item>

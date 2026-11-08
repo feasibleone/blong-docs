@@ -84,7 +84,7 @@ export { blongEvents } from './lib/eventBus.js';
 export type { BlongEventMap } from './lib/eventBus.js';
 export * from './feedback/index.js';
 export type { ActionRegistry, IBlongError, IMutationAction, IPageAction, IQueryAction, ITypedAction, IUseActionResult, } from './types/action.js';
-export type { IAction, ICardConfig, IEnrichedFieldSchema, IEnrichedSchema, IFieldConfig, IToolbarButton, IWidgetConfig, IWidgetProps, IWidgetRegistry, WidgetType, } from '@feasibleone/blong';
+export type { IAction, ICardConfig, IDeletionSpec, IDependantKind, IEnrichedFieldSchema, IEnrichedSchema, IFieldConfig, IToolbarButton, IWidgetConfig, IWidgetProps, IWidgetRegistry, TDeletionMode, WidgetType, } from '@feasibleone/blong';
 export type { IMenuItem, IPortalConfig, IPortalState, ITab } from './types/portal.js';
 export type { IAuthState, IUserProfile, PermissionMap } from './types/permission.js';
 export type { ISchemaDocument, ISchemaRegistry } from './types/schema.js';

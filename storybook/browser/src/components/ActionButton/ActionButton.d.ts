@@ -8,5 +8,5 @@ export interface IActionButtonProps extends IToolbarButton {
     /** External disabled override — disables the button regardless of its configured `enabled` */
     disabled?: boolean;
 }
-export declare function ActionButton({ label, icon, action: actionRef, method, permission, submit: shouldSubmit, confirm: confirmMessage, enabled, visible, menu, params: extraParams, successHint, refresh, formId, className, onBusyChange, disabled: externalDisabled, }: IActionButtonProps): import("react/jsx-runtime").JSX.Element | null;
+export declare function ActionButton({ label, icon, action: actionRef, method, permission, submit: shouldSubmit, confirm: confirmMessage, enabled, visible, menu, params: extraParams, successHint, refresh, deletion, formId, className, onBusyChange, disabled: externalDisabled, }: IActionButtonProps): import("react/jsx-runtime").JSX.Element | null;
 //# sourceMappingURL=ActionButton.d.ts.map

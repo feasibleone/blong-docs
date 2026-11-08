@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-Bjp52BOI.js";import{h as t}from"./chunk-K5T4RW27-BuVAdlwc.js";import{n,r}from"./chunk-FOC6F5B3-DD_Fa2H9.js";function i(){return(i=e((()=>{r(),t()})))()}i();export{n as createPacketServices};

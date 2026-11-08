@@ -1,5 +1,5 @@
 import { FeedbackTargetKind } from '@feasibleone/blong';
-import { ReactElement, ReactNode } from '../../../../common/temp/node_modules/.pnpm/react@19.2.4/node_modules/react';
+import { ReactNode } from '../../../../common/temp/node_modules/.pnpm/react@19.2.4/node_modules/react';
 import { IFeedbackModelContext } from './ids.js';
 /** Whether the mode is on; published once, by `App` (`@@D-667`). */
 export declare const FeedbackActiveContext: import('../../../../common/temp/node_modules/.pnpm/react@19.2.4/node_modules/react').Context<boolean>;
@@ -22,11 +22,16 @@ export interface IFeedbackNode {
 /**
  * Publish a composed path to the subtree.
  *
- * Only rendered where a node exists: an inactive tree never reaches this
- * component, so it costs no element and no context.
+ * Rendered whether or not the mode is on — with no path when it is off. A call site
+ * that returned its children bare instead would move the whole subtree under a
+ * different parent the moment the mode is switched on, and React remounts a subtree
+ * whose parent changes: a table lost its search and its page, a form lost its
+ * fields, at exactly the moment the reader meant to comment on them (`@@D-744`).
+ * Nothing is visible either way: a provider renders no element, and `null` is the
+ * value a consumer already reads outside one.
  */
 export declare function FeedbackPath({ path, children }: {
-    path: string;
+    path?: string;
     children: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
 /**
@@ -89,5 +94,5 @@ export declare function FeedbackRegion({ kind, name, label, children, }: {
     name?: string;
     label?: string;
     children: ReactNode;
-}): string | number | bigint | boolean | Iterable<ReactNode> | Promise<string | number | bigint | boolean | import('../../../../common/temp/node_modules/.pnpm/react@19.2.4/node_modules/react').ReactPortal | ReactElement<unknown, string | import('../../../../common/temp/node_modules/.pnpm/react@19.2.4/node_modules/react').JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | import("react/jsx-runtime").JSX.Element | null | undefined;
+}): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=useFeedbackTarget.d.ts.map

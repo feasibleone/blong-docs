@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "receiptId": "cd5afe63-2c80-439f-be61-b02013679b3c",
+  "receiptId": "b00b6b72-501a-4cbc-97d6-6cfe695d987a",
   "status": "current",
   "command": "deliver",
   "type": "architecture",
   "input": "/home/kalin/work/blong/blong/docs/blong/draw/archify/blong-architecture.json",
   "output": "/home/kalin/work/blong/blong/docs/blong/static/diagrams/blong-architecture.html",
   "specification": {
-    "sha256": "141f5baae04282a9fb493b5e349c2e701bb194a91eeba7f6aada6b6710b64d6f",
-    "bytes": 18745
+    "sha256": "5d6358fd333e3fd563349193d9ff14f328c2c73604167a6b25e86afe07ab23b2",
+    "bytes": 18893
   },
   "artifact": {
-    "sha256": "0be92acf28a5e316f1b0ede59dedd694335a9fdc6a78d19b19574ebccb685794",
-    "bytes": 897204
+    "sha256": "19c7f72b75defecaa8674e992283054a9d3d1ff9ef7874646b99d51a81c57db7",
+    "bytes": 897856
   }
 }

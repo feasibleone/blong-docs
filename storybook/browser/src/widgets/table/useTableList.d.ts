@@ -19,12 +19,22 @@ export interface ITableListOptions {
 export declare function useTableList({ listAction, listParams, resultSet, reportParams, reportMode, labelFields, cascadeFilter, pageSize, handler, }: ITableListOptions): {
     isListMode: boolean;
     rows: Row[];
-    total: number;
+    total: number | undefined;
+    hasMore: boolean;
     loading: boolean;
     params: {
         paging: {
             pageSize: number;
             pageNumber: number;
+            /**
+             * Ask the server for the size of the whole result, not just the
+             * page. The paginator's arrows need it: without a total the
+             * widget only knows the rows it was handed, so every page looked
+             * like the last one and the forward arrows stayed disabled.
+             * A read that ignores the flag answers rows alone, which the
+             * paginator still handles by asking whether the page is full.
+             */
+            count: boolean;
         };
         orderBy?: {
             field: string;

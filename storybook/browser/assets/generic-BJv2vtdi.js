@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-Bjp52BOI.js";import{a as t,n}from"./types-D6w_5h7V.js";var r;function i(){return(i=e((()=>{t(),r=n(()=>({activation:{default:{type:`generic`}},start(){return super.connect(),super.start()}}))})))()}i();export{r as default};

@@ -64,6 +64,22 @@ export interface IOpenPagesOptions {
      * asked to maintain. Requires {@link IOpenPagesOptions.docs}.
      */
     docsOnly?: boolean;
+    /**
+     * How many pages one test opens (default 1).
+     *
+     * A test's largest cost is its boot: a fresh browser context fetches the app, draws the
+     * login screen, signs in and waits for the composed portal before the first click — ten
+     * seconds on a CI runner, and every page-open test pays it again. Opening six pages in
+     * one test pays it once and visits six pages, which is what took blong-sport's 46 page
+     * tests to 630 s (`@@D-748`).
+     *
+     * Each page is still captured under its own name, and the tab it opened is closed again
+     * before the next one: a capture with three tabs behind it is a different picture from
+     * one with a single tab, so grouping must not move a baseline. A failure names the page
+     * it was on in the error, not just the group, and the group is a *slice of the list* —
+     * so a failure costs at most `groupSize - 1` pages of evidence, never the whole spec.
+     */
+    groupSize?: number;
 }
 /**
  * Register one test per page. Each opens the page from the portal menu, waits for
@@ -72,5 +88,5 @@ export interface IOpenPagesOptions {
  * `waitForTableData: false` is for a page that legitimately has no table — a
  * search page before anything is typed, say — where the wait could only time out.
  */
-export declare function openPages(test: ITestFn, expect: Expect, { methods, screenshot, waitForTableData, searchText: defaultSearchText, baselinePrefix, docs, docsOnly, }: IOpenPagesOptions): void;
+export declare function openPages(test: ITestFn, expect: Expect, { methods, screenshot, waitForTableData, searchText: defaultSearchText, baselinePrefix, docs, docsOnly, groupSize, }: IOpenPagesOptions): void;
 //# sourceMappingURL=pages.d.ts.map

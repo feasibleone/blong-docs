@@ -1,0 +1,37 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./appStore-p_jHiGC2.js","./rolldown-runtime-wTHAN5bU.js","./react-DUbJxPEF.js"])))=>i.map(i=>d[i]);
+import { n as __esmMin } from "./rolldown-runtime-wTHAN5bU.js";
+import { n as init_preload_helper, t as __vitePreload } from "./preload-helper-DJ4GxKnf.js";
+import { nt as init_types, tt as handler } from "./iframe-Kwn0esJL.js";
+// ../../core/blong-browser/orchestrator/auth/authSessionGet.ts
+var authSessionGet_default;
+function init_authSessionGet() {
+	return (init_authSessionGet = __esmMin((() => {
+		init_types();
+		init_preload_helper();
+		authSessionGet_default = handler(({ handler: { loginTokenRestore } }) => async function authSessionGet(_params, $meta) {
+			try {
+				const result = await loginTokenRestore({}, $meta);
+				if (!result?.access_token) return { authenticated: false };
+				const { useAppStore } = await __vitePreload(async () => {
+					const { useAppStore } = await import("./appStore-p_jHiGC2.js").then((n) => (n.n(), n.t));
+					return { useAppStore };
+				}, __vite__mapDeps([0,1,2]), import.meta.url);
+				const store = useAppStore.getState();
+				store.setToken(result.access_token);
+				if (result.permissions) store.setPermissions(typeof result.permissions === "boolean" ? result.permissions : Object.fromEntries(result.permissions.map((p) => [p, true])));
+				if (result.profile) store.setProfile(result.profile);
+				const language = result.profile.language;
+				if (language) await store.languageActivate(language);
+				return {
+					authenticated: true,
+					token: result.access_token,
+					permissions: typeof result.permissions === "boolean" ? void 0 : result.permissions
+				};
+			} catch {
+				return { authenticated: false };
+			}
+		});
+	})))();
+}
+init_authSessionGet();
+export { authSessionGet_default as default };

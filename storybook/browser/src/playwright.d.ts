@@ -115,11 +115,32 @@ export declare class Portal {
      * Click a portal menu item by its semantic triple.
      * For grouped menus, first opens the parent group.
      *
+     * The group a page sits in is the model's own decision (`classifier`,
+     * `menu.group`, `menu.root` — `@@D-777`), so it is never guessed from the
+     * method's subject: a page whose subject is `sport` may sit under `Registry`
+     * or inside the shared `Classifiers` root, and a group's `data-testid` is the
+     * id the menu builder gave it — `menuGroupId('$Subject')` is `subject`, not
+     * `$subject`. Clicking the wrong id opens nothing and leaves the leaf hidden.
+     *
+     * The chain comes from the rendered menu instead of from a parallel copy of
+     * it: the leaf is in the DOM even while its submenu is collapsed, so the
+     * anchors above it are the ids a click needs, whatever the menu was composed
+     * from and whether or not the deployment exposes the test store.
+     *
      * @param method - semantic triple, e.g. 'marine.coral.browse'
      */
     menuClick(method: string): Promise<void>;
     /** Close a tab. Finds the close button inside the tab header. */
     tabClose(tabId: string): Promise<void>;
+    /**
+     * Close every open tab, back to the empty portal.
+     *
+     * The portal keeps closed-page state out of the shell but not out of the tab strip: a
+     * page opened while two tabs are standing is a different picture from one opened on an
+     * empty portal, and a test that visits several pages in a row must therefore pass
+     * through empty between them or every capture after the first moves (`@@D-748`).
+     */
+    tabsCloseAll(): Promise<void>;
     /** Click the Save button and wait for the success icon. */
     save(): Promise<void>;
     /** Click the Edit button to enter edit mode. */
@@ -157,6 +178,27 @@ export declare class Portal {
     /** Wait for the table data to load (rows appear after loading completes). */
     waitForTableData(): Promise<void>;
 }
+/** What a session needs to become an authenticated portal. */
+export interface ISignInOptions {
+    /** Login name. */
+    username: string;
+    /** Login password. */
+    password: string;
+    /** Grant every permission after login, so permission-gated controls are visible. */
+    permissions?: boolean;
+    /** UI language to activate, which awaits the database dictionary. */
+    language?: string;
+}
+/**
+ * Open the app and sign in, returning the helper a spec drives.
+ *
+ * The sequence is the same whether the page is this test's own or one a whole worker
+ * shares, so it lives here rather than inside the fixture: a shared session
+ * (`./playwright/shared.js`) boots once per worker and must sign in exactly the way a
+ * per-test boot does, or a spec would measure a different app depending on which
+ * fixture it imported.
+ */
+export declare function openPortal(page: Page, options: ISignInOptions, existing?: Portal): Promise<Portal>;
 /**
  * Playwright test fixture extended with blong portal and coverage support.
  *
