@@ -55,6 +55,12 @@ export interface IBrowseModelOptions {
     /** Optional search text to type before taking the screenshot (filters table rows). */
     searchText?: string;
     /**
+     * Navigator node (its label) to select before searching, for a browse table
+     * that declares `widget.master`: the table lists only the selected node's
+     * rows, so a record in another branch is invisible to the filter.
+     */
+    navigatorNode?: string;
+    /**
      * Volatile substrings to redact (`###`) in every capture this helper takes — a minted
      * id, a wall clock, the generated tail of a name. Redaction keeps the cell, its column
      * and its header in the picture, where masking the cell would hide all three.
@@ -243,6 +249,19 @@ export interface ICleanupModelOptions {
     search: string;
     /** Remove method (semantic triple) whose browse-toolbar button deletes the selected row. */
     removeMethod: string;
+    /**
+     * Navigator node (its label) to select before filtering, for a browse table
+     * that declares `widget.master`: the table shows only the selected node's
+     * subtree, so search alone cannot reach a row another branch holds — and the
+     * leftover row would survive the cleanup.
+     */
+    navigatorNode?: string;
+    /**
+     * Test title. Defaults to `cleanup <subject> <object>`. A spec that sweeps up
+     * after its own create/edit tests adds a second cleanup for the same entity,
+     * and Playwright refuses two tests of one title.
+     */
+    title?: string;
     /** Volatile substrings to redact (`###`) in the confirmation capture, as in `browseModel`. */
     redact?: IRedactPattern[];
     /** Image format; the confirmation capture is the only one this helper takes. */

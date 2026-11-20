@@ -150,6 +150,16 @@ export declare class Portal {
     /** Click the Refresh button. */
     refresh(): Promise<void>;
     /**
+     * One call through the page's handler proxy.
+     *
+     * A spec that has to leave the database as it found it cannot always use the
+     * page: a model whose delete button deactivates (`deletion: {mode:
+     * 'deactivate'}`) keeps its row, and a leftover under the same name is what the
+     * next run opens instead of its own record. The remove handler behind that
+     * button is a real delete, and this is how a spec reaches it. `@@D-829`
+     */
+    call<T = unknown>(method: string, params?: Record<string, unknown>): Promise<T>;
+    /**
      * Fill a text input by its field name.
      * Fields use `name` attributes like `coral.coralName`.
      */

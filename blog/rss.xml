@@ -4,10 +4,147 @@
         <title>Blong Blog</title>
         <link>http://blong.feasible.one/blog</link>
         <description>Blong Blog</description>
-        <lastBuildDate>Thu, 29 Oct 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 19 Nov 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[Stop writing log messages, declare events]]></title>
+            <link>http://blong.feasible.one/blog/one-declared-vocabulary</link>
+            <guid>http://blong.feasible.one/blog/one-declared-vocabulary</guid>
+            <pubDate>Thu, 19 Nov 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Every logging library in the last twenty years lets the call site write the sentence. That one]]></description>
+            <content:encoded><![CDATA[<p>Every logging library in the last twenty years lets the call site write the sentence. That one
+decision — the message is composed where the event happens — has quietly cost us three things:
+identity that moves when nobody changed behaviour, alerting that breaks on a reworded line, and
+configuration that can only ever speak in levels for a whole service.</p>
+<p><code>lukaot</code> moves the sentence to a declaration beside the code, and the call site names it. The result
+is one vocabulary with <strong>four kinds</strong> — a line, an error, a payload, a decision — and an identity
+that exists before the process starts.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-three-steps">The three steps<a href="http://blong.feasible.one/blog/one-declared-vocabulary#the-three-steps" class="hash-link" aria-label="Direct link to The three steps" title="Direct link to The three steps" translate="no">​</a></h2>
+<table><thead><tr><th>Generation</th><th>What it added</th><th>What stayed broken</th></tr></thead><tbody><tr><td><code>printf</code>-style output</td><td>a sentence</td><td>nothing can read it</td></tr><tr><td>structured logging</td><td>fields, levels, machine-readable records</td><td>the call site still writes the sentence; a level is a service-wide dial</td></tr><tr><td><code>semantic-log</code> (ours)</td><td>identity derived from structure: mask, hash, one <strong>template</strong> per code path</td><td>identity still derived from <strong>text</strong>, so a reworded message is a new event</td></tr><tr><td><strong>lukaot</strong></td><td>identity <strong>declared</strong> in a file beside the code</td><td>— the name is the identity</td></tr></tbody></table>
+<p>The third step was a real improvement: two occurrences of one code path finally shared one identity
+however their values differed, and that identity survived a redeploy of unchanged code. But the
+identity was still a hash of words somebody typed at the call site, so "we reworded a message" and
+"we added an event" looked the same from the outside.</p>
+<p>The fourth step removes the derivation: if the name is written once, two occurrences agree because
+they call the same function. Nothing has to be masked or hashed to make them agree.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="one-mechanism-four-kinds">One mechanism, four kinds<a href="http://blong.feasible.one/blog/one-declared-vocabulary#one-mechanism-four-kinds" class="hash-link" aria-label="Direct link to One mechanism, four kinds" title="Direct link to One mechanism, four kinds" translate="no">​</a></h2>
+<div class="language-ts codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-ts codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">default</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">declare</span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    log</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">        fxpRateDeclined</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">level</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'warn'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> message</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'rate declined: {rate} above {rateLimit}'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    error</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">        agentTicketNotFound</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">message</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'ticket {ticketId} is not in the pool'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> statusCode</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token number" style="color:rgb(9, 134, 88)">404</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    decision</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">        rateWithinLimit</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">            message</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'whether a provider quotes the rate it was asked for'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">            branch</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">decline</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'above this provider limit'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> accept</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'the rate is quotable'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">        </span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><br></div></code></pre></div></div>
+<table><thead><tr><th>Kind</th><th>Before</th><th>Now</th></tr></thead><tbody><tr><td><strong>log</strong></td><td>a warn call with a template-literal message</td><td><code>signal?.fxpRateDeclined?.({rate, rateLimit})</code></td></tr><tr><td><strong>error</strong></td><td><code>throw new Error('ticket not found')</code></td><td><code>throw errors.agentTicketNotFound({ticketId}, $meta)</code></td></tr><tr><td><strong>capture</strong></td><td><code>log.debug({headers, body}, 'http exchange')</code></td><td><code>capture?.http?.({method, phase}, () =&gt; exchange)</code></td></tr><tr><td><strong>decision</strong></td><td><code>if (rate &gt; limit) { … }</code> — invisible afterwards</td><td><code>decide(vocabulary.decision.rateWithinLimit, values, arms)</code></td></tr></tbody></table>
+<p>Three properties follow from the declaration and none of them is available to a level API:</p>
+<ul>
+<li class=""><strong>One name, changed without the code.</strong> A realm configures <code>level</code>, <code>enabled</code> or <code>sample</code> per
+identifier — <code>agentAnswerWakeUnpublished: {enabled: false}</code> — and the call site is untouched. An
+unknown key is warned about rather than silently ignored.</li>
+<li class=""><strong>A closed set of arms.</strong> A decision's arms are declared, so an arm the declaration does not offer
+is a compile error at the call site — and a decision never depends on its own recording: switched
+off, it still decides and only the record stops.</li>
+<li class=""><strong>Evidence instead of absence.</strong> The branch records the discriminator, every arm in evaluation
+order, and the one taken, which is what lets a sequence diagram draw an <code>alt</code> block around the
+calls the arm made.</li>
+</ul>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-diagram-is-the-proof">The diagram is the proof<a href="http://blong.feasible.one/blog/one-declared-vocabulary#the-diagram-is-the-proof" class="hash-link" aria-label="Direct link to The diagram is the proof" title="Direct link to The diagram is the proof" translate="no">​</a></h2>
+<p>The two flows in <code>core/lukaot/flow/</code> run over real HTTP, each participant declaring its own
+vocabulary; a test runs both, renders the diagrams from what the service observed, and compares them
+with the committed artifact. Every arrow label is a name that can be grepped in the file that
+declares it:</p>
+<!-- -->
+<p><code>routeSelection</code> is a declared decision, <code>proxy.quote.corridor</code> is a leg id the source declares, and
+the <code>alt</code> arm names the ecosystem the proxy chose. Nothing in that block was typed by hand.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="where-to-read-more">Where to read more<a href="http://blong.feasible.one/blog/one-declared-vocabulary#where-to-read-more" class="hash-link" aria-label="Direct link to Where to read more" title="Direct link to Where to read more" translate="no">​</a></h2>
+<ul>
+<li class=""><a class="" href="http://blong.feasible.one/docs/concepts/lukaot">What lukaot is</a> — one page, four kinds</li>
+<li class=""><a class="" href="http://blong.feasible.one/docs/patterns/lukaot">How to declare and call it</a> — the reference, kind by kind</li>
+<li class=""><a class="" href="http://blong.feasible.one/docs/patterns/lukaot-flows">The flows a run observes</a> — the diagrams, annotated leg by leg</li>
+<li class=""><a class="" href="http://blong.feasible.one/docs/rationale/lukaot">Why the identity is declared</a> — the trade-offs, and what this replaced</li>
+</ul>]]></content:encoded>
+            <category>Blong</category>
+            <category>Observability</category>
+            <category>Design</category>
+        </item>
+        <item>
+            <title><![CDATA[One path, two protocols]]></title>
+            <link>http://blong.feasible.one/blog/one-path-two-protocols</link>
+            <guid>http://blong.feasible.one/blog/one-path-two-protocols</guid>
+            <pubDate>Tue, 10 Nov 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[A chat bot is the smallest integration that is not small. The platform calls you, you call it back,]]></description>
+            <content:encoded><![CDATA[<p>A chat bot is the smallest integration that is not small. The platform calls you, you call it back,
+a person has to answer a question inside the conversation, and the credential that makes any of it
+work expires while the process is idle. Slack and Viber disagree about almost every detail of that
+and agree on nothing about the words they use for it.</p>
+<p>The <code>blong-chat</code> realm is the proof that one adapter can carry all of it: one URL for both halves of
+the conversation, one method the realm answers, and a process that maintains its own Slack app from
+a database rather than from a config file a person edits by hand.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-adapter-is-a-shape-not-a-platform">The adapter is a shape, not a platform<a href="http://blong.feasible.one/blog/one-path-two-protocols#the-adapter-is-a-shape-not-a-platform" class="hash-link" aria-label="Direct link to The adapter is a shape, not a platform" title="Direct link to The adapter is a shape, not a platform" translate="no">​</a></h2>
+<p>The framework's <code>adapter.webhook</code> knows three things: how to check that a delivery really came from
+the platform, how to map a payload into one canonical inbound, and what to answer so the platform
+does not retry. Slack's Events API and its Interactivity API post to the <em>same</em> URL — one is an
+<code>event_callback</code>, the other a <code>payload</code> form field — so an adapter that treated a path as a protocol
+would need two paths and two registrations for one app.</p>
+<p>What the realm declares is the address and the account lookup:</p>
+<div class="language-ts codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-ts codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">k8sPorts</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">chatSlack</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">port</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token number" style="color:rgb(9, 134, 88)">8095</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">k8sIngresses</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">chatSlack</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">path</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'/chat/slack'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> servicePort</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token number" style="color:rgb(9, 134, 88)">8095</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><br></div></code></pre></div></div>
+<p>and the path itself carries the two ids a request names, which is how one process serves several
+bots without a lookup table in front of it:</p>
+<div class="language-text codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-text codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">/chat/slack/{appId}/{clientId}/{action?}</span><br></div></code></pre></div></div>
+<p>Everything after that is a mapping. A <code>block_actions</code> payload becomes an answer, a <code>view_submission</code>
+becomes an answer with a text field, a <code>message</code> becomes a message, and the realm never learns which
+of Slack's twenty payload types it was. Viber's adapter produces the same four shapes from its own
+vocabulary, and the realm's dispatch does not change.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-question-that-returns-an-answer">The question that returns an answer<a href="http://blong.feasible.one/blog/one-path-two-protocols#the-question-that-returns-an-answer" class="hash-link" aria-label="Direct link to The question that returns an answer" title="Direct link to The question that returns an answer" translate="no">​</a></h2>
+<p>The part with no precedent is the ask. A realm that wants to ask a person something cannot hold an
+HTTP request open, and cannot poll a UI that does not exist. So <code>chat.prompt.ask</code> posts the
+controls, parks the call on a promise keyed by the prompt id it minted, and returns when the answer
+arrives:</p>
+<!-- -->
+<p>Three details are what make it usable rather than a demo. The ask <strong>times out</strong>, because a promise
+nobody resolves holds a request for the life of the process. The message is <strong>rewritten</strong> once it is
+answered: the options stay, the chosen one is marked, and the controls go, because a control that no
+longer answers anything is a trap. And the message is <strong>closed</strong> when the question expires — the
+options stay, a line says nobody answered, and the live buttons go with the pending entry, so a late
+click is not a button that does nothing.</p>
+<p>A typed reply still answers. A free-text answer carries no prompt id — there is no button to carry
+one — so a pending question <em>claims the next message in that conversation</em>, and only while something
+is pending. A click that arrives after the timeout is not an error either: it is a real condition,
+the platform has already been answered, and the realm forwards it to whatever consumer the account
+is configured with, because a session may still be open somewhere else.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-credential-nobody-wants-to-think-about">The credential nobody wants to think about<a href="http://blong.feasible.one/blog/one-path-two-protocols#the-credential-nobody-wants-to-think-about" class="hash-link" aria-label="Direct link to The credential nobody wants to think about" title="Direct link to The credential nobody wants to think about" translate="no">​</a></h2>
+<p>A Slack app configuration token authorizes app management in a <strong>workspace</strong>, not for one bot. That
+one sentence changed the schema: the token pair lives on <code>chat_workspace</code>, once, and an account only
+names the workspace it belongs to. Two bots in one workspace share the pair, and a rotation replaces
+it in one place.</p>
+<p>Slack answers a rotation with a new pair and spends the old refresh token, so the write-back is not
+a nicety — a process that renews and does not store the replacement works until its next restart and
+then fails with a token that no longer exists. The pass therefore refuses to renew when it has
+nowhere to store the result, and says so, rather than renewing and hoping.</p>
+<p>The same pass maintains the app:</p>
+<ol>
+<li class="">read the accounts — from the database when it holds any, otherwise from the config;</li>
+<li class="">renew each workspace's pair once, when it is close to expiring;</li>
+<li class="">for an account with no app id, create the app from a bare manifest and store what Slack answered;</li>
+<li class="">point the app's request URLs at the address the process answers on, after checking that the
+address actually answers.</li>
+</ol>
+<p>Step four is the one a first deployment teaches. The manifest update is tightly rate-limited, so the
+manifest is read first and left alone when it already names that address. And the address has to
+<em>answer</em>: an Ingress that names a TLS secret nothing issues accepts no handshake at all, and the
+adapter's warning — "the public address does not answer yet" — is the honest report of a certificate
+that was never asked for.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-a-deployment-had-to-be-told">What a deployment had to be told<a href="http://blong.feasible.one/blog/one-path-two-protocols#what-a-deployment-had-to-be-told" class="hash-link" aria-label="Direct link to What a deployment had to be told" title="Direct link to What a deployment had to be told" translate="no">​</a></h2>
+<p>The realm is deployed like any other suite, and two addresses fell out of the shapes above rather
+than out of a preference. The portal owns its host, and a webhook sharing that host would inherit
+the portal's authentication — ingress annotations belong to the host, not to a path — so the webhook
+answers on its own host. That host is the suite's to name, and so is the issuer that signs its
+certificate; a contributed ingress may now carry the host's annotations for exactly that reason.</p>
+<p>The other lesson was blunter. A cycle that ships the artifact and reuses the framework image ships
+no change to <code>core/blong-gogo</code>, where the adapters live: the same config, the same database and the
+same intent list passed locally and did nothing in the cluster, and nothing in the runbook said so.
+The adapter now logs one line per pass naming the store and the accounts it resolved, which turns
+the difference into something a reader can see.</p>]]></content:encoded>
+            <category>Blong</category>
+            <category>Design</category>
+            <category>Chat</category>
+        </item>
         <item>
             <title><![CDATA[Point at what is wrong]]></title>
             <link>http://blong.feasible.one/blog/point-at-what-is-wrong</link>
@@ -726,8 +863,8 @@ declared when it started, which the framework turns into the participant's band.
 <p>A generated diagram is only worth trusting if it is compared against a real run, so the mechanism
 has three parts:</p>
 <ol>
-<li class=""><strong>A fixture that runs a flow and produces the records.</strong> The semantic-log observed-flow test runs
-the fixture in-process and asserts the diagram it generates.</li>
+<li class=""><strong>A fixture that runs a flow and produces the records.</strong> The observed-flow test runs the fixture
+in-process and asserts the diagram it generates.</li>
 <li class=""><strong>A committed artefact</strong> — the mermaid source, in the repository, registered in the
 documentation's artefact list with the command that regenerates it.</li>
 <li class=""><strong>A comparison.</strong> The test asserts that the committed artefact still equals what a run produces,
@@ -752,11 +889,83 @@ absent — the picture is honest about its own coverage in the same way the repo
 decorations are more than the two the concept page names: phases and withheld-payload notes are
 drawn as well, so "checkpoints and decisions" is the shape of the progress points rather than the
 whole vocabulary of the drawing.</p>
-<p><a class="" href="http://blong.feasible.one/docs/patterns/semantic-log-flows">The flow patterns</a> walk a diagram leg by leg;
+<p><a class="" href="http://blong.feasible.one/docs/patterns/lukaot-flows">The flow patterns</a> walk a diagram leg by leg;
 <a class="" href="http://blong.feasible.one/docs/concepts/checkpoint">the checkpoint concept</a> is the mechanism behind the notes and branches,
-and <a class="" href="http://blong.feasible.one/docs/rationale/semantic-log">the rationale</a> states the rules the drawing follows.</p>]]></content:encoded>
+and <a class="" href="http://blong.feasible.one/docs/rationale/lukaot">the rationale</a> states the rules the drawing follows.</p>]]></content:encoded>
             <category>Blong</category>
             <category>Observability</category>
+        </item>
+        <item>
+            <title><![CDATA[Record-level ACL that can only narrow]]></title>
+            <link>http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow</link>
+            <guid>http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow</guid>
+            <pubDate>Wed, 16 Sep 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[RBAC answers "may this caller call this method". It has one blind spot, and everybody meets it the]]></description>
+            <content:encoded><![CDATA[<p>RBAC answers "may this caller call this method". It has one blind spot, and everybody meets it the
+first time a customer service user opens a list and sees every customer in the company: the method
+is allowed, and the <em>records</em> are all of them.</p>
+<p>An access-control list closes that gap without touching the method check. It is opt-in per table,
+evaluated in SQL as part of the query, and it can only ever take permission away — which is the
+property that makes it safe to add to a running system.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="two-halves-one-verdict">Two halves, one verdict<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#two-halves-one-verdict" class="hash-link" aria-label="Direct link to Two halves, one verdict" title="Direct link to Two halves, one verdict" translate="no">​</a></h2>
+<!-- -->
+<p>The <strong>implicit</strong> half is the hierarchy, and it lives in the same resource graph as everything else:
+a <code>hasScope</code> edge says a caller acts within a scope, and a unit tree says which scopes contain
+which. Because it rides the existing hierarchy, moving a person between units needs no ACL change —
+which is the whole reason it is not a table of grants.</p>
+<p>The <strong>explicit</strong> half is <code>access_acl</code>: one row per rule, with a principal (a user, a role or a
+unit), an action, a target (<code>record</code>, <code>scope</code>, or <code>all</code>), and an effect. The two are combined as
+<code>(grant) AND NOT (deny)</code>, so an explicit refusal beats an inherited grant.</p>
+<p>Two details of that table are worth knowing because they are easy to get wrong from the outside. A
+<strong>capability is not a valid principal</strong>: the filter resolves the caller, their effective roles and
+their units (plus those units' ancestors) — nothing resolves a capability — so a rule naming one
+sits inert. And a <code>deny</code> has exactly one hole, which is the same property that makes the guard safe
+to adopt: the combined filter is <code>(unscoped OR guarded)</code>, and the <code>unscoped</code> term short-circuits for
+a record that participates in no scope. An explicit deny on such a record is therefore not applied.
+A deny on a record <em>inside</em> a scope is honoured, which is the case rules are written for.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="opting-in-changes-nothing--in-the-default-mode">Opting in changes nothing — in the default mode<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#opting-in-changes-nothing--in-the-default-mode" class="hash-link" aria-label="Direct link to Opting in changes nothing — in the default mode" title="Direct link to Opting in changes nothing — in the default mode" translate="no">​</a></h2>
+<p>Declaring the guard on a table is a two-line change in the schema, and it is deliberately a no-op on
+existing data:</p>
+<div class="language-typescript codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-typescript codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">acl</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">mode</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'scoped'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> scopes</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">[</span><span class="token string" style="color:rgb(163, 21, 21)">'belongsTo'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">]</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> addScope</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">predicate</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'belongsTo'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><br></div></code></pre></div></div>
+<p><code>mode: 'scoped'</code> means a record that participates in no scope is not narrowed: it falls back to
+RBAC. So guarding a table with ten thousand rows does not hide any of them until a grant mentions
+them, which is what makes the change reviewable. <code>mode: 'explicit'</code> is the opposite and deserves a
+decision rather than a default: there the unscoped fallback is not built, and every record is
+deny-by-default — per-record grants only.</p>
+<p>The two shapes of scope exist because a hierarchy can point either way. Usually a record points <em>at</em>
+its scope (<code>scopes: ['belongsTo']</code> — a person belongs to a unit). When the record <em>is</em> the scope —
+an organization level whose children are the records — it declares itself (<code>selfScope</code>), which is
+how the top of a hierarchy is enforced without inventing a scope for it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="enforced-by-the-runtime-not-by-each-handler">Enforced by the runtime, not by each handler<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#enforced-by-the-runtime-not-by-each-handler" class="hash-link" aria-label="Direct link to Enforced by the runtime, not by each handler" title="Direct link to Enforced by the runtime, not by each handler" translate="no">​</a></h2>
+<p>The guard is a property of the generic CRUD, which is the difference between an ACL that is real and
+one that is remembered in some handlers. Concretely, for a guarded table:</p>
+<table><thead><tr><th>Operation</th><th>A denied record is…</th></tr></thead><tbody><tr><td><code>get</code></td><td><strong>not found</strong> (404) — the row is not there as far as the caller is concerned</td></tr><tr><td><code>edit</code>, <code>remove</code></td><td><strong>forbidden</strong> (403)</td></tr><tr><td><code>find</code></td><td>filtered <strong>before</strong> paging, so a page of ten is ten visible rows</td></tr><tr><td>dropdowns</td><td>filtered too — a dropdown is a read, and leaks names otherwise</td></tr><tr><td><code>add</code></td><td>checked against the scope the new record names</td></tr></tbody></table>
+<p>The <code>get</code>-as-404 choice is the deliberate one: telling a caller "this exists but you may not see it"
+is itself a disclosure. And <code>find</code> filtering before paging matters more than it sounds — filtering
+after a <code>LIMIT</code> is how an ACL produces pages of three rows and an afternoon of confusion.</p>
+<p>One asymmetry is worth recording rather than discovering: the scope check on <code>add</code> only fires when
+the payload names a scope. An <code>add</code> that names none is allowed on the generic path, so a table that
+requires every new record to be scoped should say so in its <code>addScope</code> declaration and keep the
+guard's own check as the backstop it is — the stricter refusal is on the check path used by
+<code>access.session.verify</code>.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="deleting-a-guarded-record-releases-its-rules">Deleting a guarded record releases its rules<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#deleting-a-guarded-record-releases-its-rules" class="hash-link" aria-label="Direct link to Deleting a guarded record releases its rules" title="Direct link to Deleting a guarded record releases its rules" translate="no">​</a></h2>
+<p>A guarded record that is deleted takes its rules with it, in the same operation and before the
+entity row goes: rules are removed by principal, target and action, so a delete cannot fail half-way
+and leave a rule pointing at a row that no longer exists. The reverse also holds — a rule for a
+record that was never created cannot accumulate, because the guard answers "not found" for it
+anyway.</p>
+<p>The cost of the design is that the verdict is computed as SQL on every query rather than cached in a
+table, so it is a join away from being free rather than free. That is the trade chosen here: a
+materialized effective table would need invalidating on every hierarchy change, while a filter on
+the query is always current. The one thing that must still be refreshed is the graph itself — the
+verdict reads <code>access.effectiveScope</code> for a record's ancestors and <code>access.effectiveRole</code> for a role
+or unit principal, so a hierarchy change needs <code>CALL access_pathRefresh()</code> before the narrowing
+reflects it.</p>
+<p>The mechanism is in <a class="" href="http://blong.feasible.one/docs/concepts/acl">the ACL concept</a>, the declarations and rule fields are in
+<a class="" href="http://blong.feasible.one/docs/patterns/acl">the pattern</a>, and <a class="" href="http://blong.feasible.one/docs/rationale/acl">the rationale</a> argues why the narrowing
+sits beside RBAC instead of inside it.</p>]]></content:encoded>
+            <category>Blong</category>
+            <category>Data</category>
         </item>
         <item>
             <title><![CDATA[Roles as bits in the token]]></title>
@@ -831,78 +1040,6 @@ reflected in a login's expansion — the paths do not maintain themselves.</p>
 <p>Read next: <a class="" href="http://blong.feasible.one/docs/concepts/rbac">the RBAC concept</a> for the graph and the gate,
 <a class="" href="http://blong.feasible.one/docs/patterns/rbac">the pattern</a> for seeding and granting, and
 <a class="" href="http://blong.feasible.one/docs/concepts/resource-graph">the resource graph</a> for the tables the roles are stored in.</p>]]></content:encoded>
-            <category>Blong</category>
-            <category>Data</category>
-        </item>
-        <item>
-            <title><![CDATA[Record-level ACL that can only narrow]]></title>
-            <link>http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow</link>
-            <guid>http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow</guid>
-            <pubDate>Wed, 16 Sep 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[RBAC answers "may this caller call this method". It has one blind spot, and everybody meets it the]]></description>
-            <content:encoded><![CDATA[<p>RBAC answers "may this caller call this method". It has one blind spot, and everybody meets it the
-first time a customer service user opens a list and sees every customer in the company: the method
-is allowed, and the <em>records</em> are all of them.</p>
-<p>An access-control list closes that gap without touching the method check. It is opt-in per table,
-evaluated in SQL as part of the query, and it can only ever take permission away — which is the
-property that makes it safe to add to a running system.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="two-halves-one-verdict">Two halves, one verdict<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#two-halves-one-verdict" class="hash-link" aria-label="Direct link to Two halves, one verdict" title="Direct link to Two halves, one verdict" translate="no">​</a></h2>
-<!-- -->
-<p>The <strong>implicit</strong> half is the hierarchy, and it lives in the same resource graph as everything else:
-a <code>hasScope</code> edge says a caller acts within a scope, and a unit tree says which scopes contain
-which. Because it rides the existing hierarchy, moving a person between units needs no ACL change —
-which is the whole reason it is not a table of grants.</p>
-<p>The <strong>explicit</strong> half is <code>access_acl</code>: one row per rule, with a principal (a user, a role or a
-unit), an action, a target (<code>record</code>, <code>scope</code>, or <code>all</code>), and an effect. The two are combined as
-<code>(grant) AND NOT (deny)</code>, so an explicit refusal beats an inherited grant.</p>
-<p>Two details of that table are worth knowing because they are easy to get wrong from the outside. A
-<strong>capability is not a valid principal</strong>: the filter resolves the caller, their effective roles and
-their units (plus those units' ancestors) — nothing resolves a capability — so a rule naming one
-sits inert. And a <code>deny</code> has exactly one hole, which is the same property that makes the guard safe
-to adopt: the combined filter is <code>(unscoped OR guarded)</code>, and the <code>unscoped</code> term short-circuits for
-a record that participates in no scope. An explicit deny on such a record is therefore not applied.
-A deny on a record <em>inside</em> a scope is honoured, which is the case rules are written for.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="opting-in-changes-nothing--in-the-default-mode">Opting in changes nothing — in the default mode<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#opting-in-changes-nothing--in-the-default-mode" class="hash-link" aria-label="Direct link to Opting in changes nothing — in the default mode" title="Direct link to Opting in changes nothing — in the default mode" translate="no">​</a></h2>
-<p>Declaring the guard on a table is a two-line change in the schema, and it is deliberately a no-op on
-existing data:</p>
-<div class="language-typescript codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-typescript codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">acl</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">mode</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'scoped'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> scopes</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">[</span><span class="token string" style="color:rgb(163, 21, 21)">'belongsTo'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">]</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><span class="token plain"> addScope</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">predicate</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token string" style="color:rgb(163, 21, 21)">'belongsTo'</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">,</span><br></div></code></pre></div></div>
-<p><code>mode: 'scoped'</code> means a record that participates in no scope is not narrowed: it falls back to
-RBAC. So guarding a table with ten thousand rows does not hide any of them until a grant mentions
-them, which is what makes the change reviewable. <code>mode: 'explicit'</code> is the opposite and deserves a
-decision rather than a default: there the unscoped fallback is not built, and every record is
-deny-by-default — per-record grants only.</p>
-<p>The two shapes of scope exist because a hierarchy can point either way. Usually a record points <em>at</em>
-its scope (<code>scopes: ['belongsTo']</code> — a person belongs to a unit). When the record <em>is</em> the scope —
-an organization level whose children are the records — it declares itself (<code>selfScope</code>), which is
-how the top of a hierarchy is enforced without inventing a scope for it.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="enforced-by-the-runtime-not-by-each-handler">Enforced by the runtime, not by each handler<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#enforced-by-the-runtime-not-by-each-handler" class="hash-link" aria-label="Direct link to Enforced by the runtime, not by each handler" title="Direct link to Enforced by the runtime, not by each handler" translate="no">​</a></h2>
-<p>The guard is a property of the generic CRUD, which is the difference between an ACL that is real and
-one that is remembered in some handlers. Concretely, for a guarded table:</p>
-<table><thead><tr><th>Operation</th><th>A denied record is…</th></tr></thead><tbody><tr><td><code>get</code></td><td><strong>not found</strong> (404) — the row is not there as far as the caller is concerned</td></tr><tr><td><code>edit</code>, <code>remove</code></td><td><strong>forbidden</strong> (403)</td></tr><tr><td><code>find</code></td><td>filtered <strong>before</strong> paging, so a page of ten is ten visible rows</td></tr><tr><td>dropdowns</td><td>filtered too — a dropdown is a read, and leaks names otherwise</td></tr><tr><td><code>add</code></td><td>checked against the scope the new record names</td></tr></tbody></table>
-<p>The <code>get</code>-as-404 choice is the deliberate one: telling a caller "this exists but you may not see it"
-is itself a disclosure. And <code>find</code> filtering before paging matters more than it sounds — filtering
-after a <code>LIMIT</code> is how an ACL produces pages of three rows and an afternoon of confusion.</p>
-<p>One asymmetry is worth recording rather than discovering: the scope check on <code>add</code> only fires when
-the payload names a scope. An <code>add</code> that names none is allowed on the generic path, so a table that
-requires every new record to be scoped should say so in its <code>addScope</code> declaration and keep the
-guard's own check as the backstop it is — the stricter refusal is on the check path used by
-<code>access.session.verify</code>.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="deleting-a-guarded-record-releases-its-rules">Deleting a guarded record releases its rules<a href="http://blong.feasible.one/blog/record-level-acl-that-can-only-narrow#deleting-a-guarded-record-releases-its-rules" class="hash-link" aria-label="Direct link to Deleting a guarded record releases its rules" title="Direct link to Deleting a guarded record releases its rules" translate="no">​</a></h2>
-<p>A guarded record that is deleted takes its rules with it, in the same operation and before the
-entity row goes: rules are removed by principal, target and action, so a delete cannot fail half-way
-and leave a rule pointing at a row that no longer exists. The reverse also holds — a rule for a
-record that was never created cannot accumulate, because the guard answers "not found" for it
-anyway.</p>
-<p>The cost of the design is that the verdict is computed as SQL on every query rather than cached in a
-table, so it is a join away from being free rather than free. That is the trade chosen here: a
-materialized effective table would need invalidating on every hierarchy change, while a filter on
-the query is always current. The one thing that must still be refreshed is the graph itself — the
-verdict reads <code>access.effectiveScope</code> for a record's ancestors and <code>access.effectiveRole</code> for a role
-or unit principal, so a hierarchy change needs <code>CALL access_pathRefresh()</code> before the narrowing
-reflects it.</p>
-<p>The mechanism is in <a class="" href="http://blong.feasible.one/docs/concepts/acl">the ACL concept</a>, the declarations and rule fields are in
-<a class="" href="http://blong.feasible.one/docs/patterns/acl">the pattern</a>, and <a class="" href="http://blong.feasible.one/docs/rationale/acl">the rationale</a> argues why the narrowing
-sits beside RBAC instead of inside it.</p>]]></content:encoded>
             <category>Blong</category>
             <category>Data</category>
         </item>
@@ -1151,10 +1288,10 @@ generated from it, search, and the digest. The property that makes this comforta
 emitter is not buffering for a service that might arrive: stdout and the local store are where a
 record lives first, and the service is a reader.</p>
 <!-- -->
-<p>The mechanism, and the deliverables, are in <a class="" href="http://blong.feasible.one/docs/concepts/semantic-log">the concept page</a>; the
-<a class="" href="http://blong.feasible.one/docs/patterns/semantic-log">pattern guide</a> covers the flow ledger and the fault fixtures, and
-<a class="" href="http://blong.feasible.one/docs/rationale/semantic-log">the rationale</a> is the long argument for novelty, rate shift and drift
-as three named things rather than one score.</p>]]></content:encoded>
+<p>The mechanism that replaced this — a declared vocabulary rather than an identity derived from text —
+is in <a class="" href="http://blong.feasible.one/docs/concepts/lukaot">the concept page</a>; the <a class="" href="http://blong.feasible.one/docs/patterns/lukaot">pattern guide</a> covers the
+declarations and the flow fixtures, and <a class="" href="http://blong.feasible.one/docs/rationale/lukaot">the rationale</a> is the long argument
+for names over hashes.</p>]]></content:encoded>
             <category>Blong</category>
             <category>Observability</category>
         </item>
@@ -1508,175 +1645,6 @@ account it produced are what make the account attributable at all.</p>
 <p>The full lifecycle, the configuration keys and the self-registration flow are in
 <a class="" href="http://blong.feasible.one/docs/concepts/sessions">the sessions concept page</a>; the role and capability model it reuses is in
 <a class="" href="http://blong.feasible.one/docs/concepts/resource-graph">the resource graph</a> and <a class="" href="http://blong.feasible.one/docs/concepts/rbac">RBAC</a>.</p>]]></content:encoded>
-            <category>Blong</category>
-            <category>Data</category>
-        </item>
-        <item>
-            <title><![CDATA[blong-dev: the dev loop in one CLI]]></title>
-            <link>http://blong.feasible.one/blog/blong-dev-the-dev-loop-in-one-cli</link>
-            <guid>http://blong.feasible.one/blog/blong-dev-the-dev-loop-in-one-cli</guid>
-            <pubDate>Thu, 13 Aug 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Every codebase accumulates a directory of shell scripts, and every one of them starts as a good]]></description>
-            <content:encoded><![CDATA[<p>Every codebase accumulates a directory of shell scripts, and every one of them starts as a good
-idea. <code>load-db.sh</code> because the connection string was long. <code>read-log.sh</code> because the logs only
-existed in a terminal that had already been closed. <code>open-trace.sh</code> because a Playwright trace is a
-zip of JSON lines and reading it by hand is a tax on every failure. Each script is correct on the
-machine of the person who wrote it, and none of them is documented anywhere a new contributor would
-look.</p>
-<p>Blong puts that directory in one command, and the reason it is worth a post is not the count of
-subcommands — it is that the commands are shared by the two kinds of caller this repository has: a
-person at a terminal, and a coding agent working through the same loop.</p>
-<div class="language-text codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-text codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">blong-dev lint [files...]    Run tsc + cspell + eslint in current package</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev lint-staged        Lint git staged files across all affected packages</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev test               Run tap tests in current package</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev report vitest      Convert coverage/vitest.json into .ci-report/</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev ci-report          Aggregate .ci-report/ into the CI report</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev playwright [args]  Run Playwright tests in current package</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev proxy [opts]       MLE proxy for curl (--port/--target/--username/--password)</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev trace &lt;trace.zip&gt;  Print a human-readable Playwright trace timeline</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev log [ulid] [opts]  Fetch log entries from cacache (--output/--level/--search/...)</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev sql [opts]         Run a SQL query via .blong_devrc (--output json|pretty)</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev memory &lt;verb&gt;      Add, list, show, close, format or check agent memory entries</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">blong-dev docs &lt;verb&gt;        List, generate, check or verify the docs site artefacts</span><br></div></code></pre></div></div>
-<!-- -->
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="one-command-per-thing-nobody-remembers">One command per thing-nobody-remembers<a href="http://blong.feasible.one/blog/blong-dev-the-dev-loop-in-one-cli#one-command-per-thing-nobody-remembers" class="hash-link" aria-label="Direct link to One command per thing-nobody-remembers" title="Direct link to One command per thing-nobody-remembers" translate="no">​</a></h2>
-<p><strong>Lint.</strong> <code>blong-dev lint --files $(git diff --name-only)</code> runs the spell check, the lint and the
-type check with the repository's own configuration, from whatever package the file lives in — and
-bundles its own cspell, eslint and tsc. The files narrow the spell and lint work; the type check
-still covers the package, because a file cannot be type-checked in isolation. <code>lint-staged</code> is the
-same command fanned out over every package the staged files belong to, and it is what the pre-commit
-hook runs.</p>
-<p><strong>Test, and the report.</strong> <code>blong-dev test</code> runs tap in the current package, keeps the raw TAP in
-<code>.ci-report/</code> and prints a compact failure view. <code>blong-dev playwright</code> wraps the browser runner and
-builds the Allure report, and <code>blong-dev report vitest</code> exists because <code>blong-browser</code> runs vitest
-while the rest of the monorepo runs tap — one contract has to receive both, or the CI report is a
-lie about which packages were checked. <code>blong-dev ci-report</code> then aggregates every package's report
-into the single file CI publishes, with the metrics history and the failure bundle.</p>
-<p><strong>The proxy.</strong> The gateway's RPC endpoint is encrypted end to end, which is the right property in
-production and an obstacle in development: you cannot see what the front end is sending, or call a
-method with curl. <code>blong-dev proxy</code> performs the MLE handshake once, optionally logging in on
-startup, and then forwards plain JSON:</p>
-<div class="language-bash codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-bash codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">blong-dev proxy --port 8099 --target http://localhost:8080 \</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    --username testAdmin --password testPassword</span><br></div><div class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">curl -s -X POST http://localhost:8099/gateway/bundle/find \</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">     -H 'content-type: application/json' -d '{"params":{"paging":{}}}'</span><br></div></code></pre></div></div>
-<p>The method comes from the path, or from a dotted <code>method</code> in the body, so anything that can send an
-HTTP request can now exercise any method of the running server — which turns "curl cannot talk to
-this gateway" from a fact into a five-second setup.</p>
-<p><strong>The trace.</strong> A Playwright trace is a zip of JSON lines, and the test that failed usually captured
-no screenshot, so the useful thing is a timeline:</p>
-<div class="language-text codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-text codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">Trace: trace.zip</span><br></div><div class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">--- actions ---</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">[   40.5s] Frame.goto ./</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">[   41.6s] Frame.fill input[name="username"]</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">[   41.8s] Frame.click internal:testid=[data-testid="login-submit"s]</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">[   41.9s] Frame.waitForSelector html[data-portal-config="merged"]</span><br></div><div class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">--- failed requests ---</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">(none)</span><br></div></code></pre></div></div>
-<p>That output is worth describing precisely, because the command used to get it wrong. A trace is
-written in numbered chunks — <code>0-trace.trace</code>, then <code>1-trace.trace</code> when a run records more than one
-file's worth of events — and the command read only the first. On a real failing run from this
-repository, chunk zero held 333 bytes and the entire recording sat in chunk one, so the command
-printed an empty timeline: not an error, not a warning, just a plausible-looking "nothing happened".
-It now reads every chunk in order, and says so when it finds none. The lesson generalises: a tool
-that prints nothing where you expect a list has to be distinguishable from a tool that found
-nothing, or you will spend an afternoon debugging a test that ran perfectly.</p>
-<p><strong>The log.</strong> <code>blong-dev log --level error --limit 20</code> reads what the logging transport wrote to disk
-while the process was alive, filtering by level, service name, trace id, method or free text; a ULID
-prints one entry in full. This is the difference between "the logs are gone, restart it and try
-again" and being able to read what happened in a run that finished yesterday.</p>
-<p><strong>The database.</strong> <code>blong-dev sql "SELECT * FROM access_role"</code> connects from <code>.blong_devrc</code> and falls
-back to the development defaults, deriving the database name as <code>&lt;suite&gt;-&lt;user&gt;</code> when nothing is
-configured. The alternative it replaces is exec-ing into a pod to look at development data.</p>
-<p><strong>Docs and memory.</strong> <code>blong-dev docs verify</code> builds or serves the documentation site, loads every
-page and every blog post in Chromium, and reports the diagrams and images it expected against the
-ones that actually rendered — which is how a broken diagram is caught by a command instead of by a
-reader. And <code>blong-dev memory</code> owns the agent memory files: identifiers, section, wrapping,
-generated index, and a <code>check</code> that fails a commit.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-same-commands-for-the-agent-and-for-you">The same commands for the agent and for you<a href="http://blong.feasible.one/blog/blong-dev-the-dev-loop-in-one-cli#the-same-commands-for-the-agent-and-for-you" class="hash-link" aria-label="Direct link to The same commands for the agent and for you" title="Direct link to The same commands for the agent and for you" translate="no">​</a></h2>
-<p>The commands are one CLI rather than a script directory for a reason that is easy to miss: the
-development loop and the agent loop are the same loop. An agent fixing a failing test needs the
-test's output, the persisted log, a query against the development database and the memory file
-recording what was learned — exactly what a person needs. When those are commands, both callers can
-use them, and this repository's instructions do point agents at <code>blong-dev memory</code>, <code>blong-dev sql</code>
-and <code>blong-dev lint</code> by name.</p>
-<p>Two habits keep that from turning into a tool that serves neither caller. Anything with output gets
-a machine mode beside its human one — <code>--output json</code>, <code>list --json</code> — so a person gets a table and
-an agent gets something it can parse. And anything that would otherwise be a shell incantation in
-someone's notes becomes a command, which means it can be tested, documented and corrected.</p>
-<p>The API is described in <a class="" href="http://blong.feasible.one/docs/patterns/blong-dev">the blong-dev pattern</a>, including the flags each
-command takes and the files it reads.</p>]]></content:encoded>
-            <category>Blong</category>
-            <category>Tooling</category>
-        </item>
-        <item>
-            <title><![CDATA[One graph for the whole domain]]></title>
-            <link>http://blong.feasible.one/blog/one-graph-for-the-whole-domain</link>
-            <guid>http://blong.feasible.one/blog/one-graph-for-the-whole-domain</guid>
-            <pubDate>Sun, 05 Jul 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Ask a system of any age a simple question — "which organisations is this person connected to?" — and]]></description>
-            <content:encoded><![CDATA[<p>Ask a system of any age a simple question — "which organisations is this person connected to?" — and
-you can watch it fail in a specific way. The person exists three times: once in the HR tables, once
-in the customer records, once in the login store, and the three rows share a name and nothing else.
-The connections are worse: a membership is a join table here, a foreign key there, a JSON array in
-the third place, and no query can follow the chain without knowing which of them it is standing in.</p>
-<p>Blong puts people, organisations, units, roles, users and actions in one graph. An entity is a
-<strong>resource</strong>; a relationship is an <strong>edge</strong> between two resources; and the realms that describe them
-are lenses over that graph rather than separate stores standing beside it.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-substrate-is-four-tables">The substrate is four tables<a href="http://blong.feasible.one/blog/one-graph-for-the-whole-domain#the-substrate-is-four-tables" class="hash-link" aria-label="Direct link to The substrate is four tables" title="Direct link to The substrate is four tables" translate="no">​</a></h2>
-<table><thead><tr><th>Table</th><th>Columns</th><th>Key</th></tr></thead><tbody><tr><td><code>core.resource</code></td><td><code>resourceId</code> (uuid), <code>resourceName</code>, <code>typeId</code></td><td>PK <code>resourceId</code>; FK <code>typeId</code> → <code>core.type</code></td></tr><tr><td><code>core.type</code></td><td><code>typeId</code> (increment), <code>typeAlias</code></td><td>PK <code>typeId</code>; unique <code>typeAlias</code> (<code>party.person</code>, …)</td></tr><tr><td><code>core.triple</code></td><td><code>subjectId</code>, <code>predicateName</code>, <code>objectId</code></td><td>PK all three; both endpoints FK → <code>core.resource</code></td></tr><tr><td><code>core.path</code></td><td><code>originId</code>, <code>destinationId</code>, <code>pathType</code>, <code>pathDepth</code></td><td>PK <code>(originId, destinationId, pathType)</code></td></tr></tbody></table>
-<p>The edge table is the one to look at twice. It has no <code>tripleId</code>: an edge is identified by what it
-asserts, so asserting the same membership twice inserts nothing, and there is no id to leak into
-another table. Both of its endpoints are foreign keys to the <em>same</em> table, which is why one edge
-table can carry a membership, a role grant, a tree position and a scope, and why the predicate name
-is load-bearing rather than decorative. A relationship is not a resource — the endpoints are — and
-that distinction is what keeps the graph from needing a table per pair of things that can be
-related.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="a-membership-is-a-row">A membership is a row<a href="http://blong.feasible.one/blog/one-graph-for-the-whole-domain#a-membership-is-a-row" class="hash-link" aria-label="Direct link to A membership is a row" title="Direct link to A membership is a row" translate="no">​</a></h2>
-<!-- -->
-<p>The person table has no <code>unitId</code>; the unit table has no <code>personId</code>; there is no <code>person_unit</code> join
-table. There is one edge, and the same three columns hold <code>isPartOf</code> for the unit tree, <code>hasRole</code>
-and <code>hasCapability</code> for the permission chain, <code>hasScope</code> for an organizational grant and
-<code>hasProfile</code> for the person behind an account. Adding the next relationship is an insert, not a
-migration, which is the property a domain model wants most: the day someone asks for "a person can
-be a member of a unit <em>and</em> a contractor for it", the answer is a predicate, not a table.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="identity-in-one-place-and-what-that-does-not-buy">Identity in one place, and what that does not buy<a href="http://blong.feasible.one/blog/one-graph-for-the-whole-domain#identity-in-one-place-and-what-that-does-not-buy" class="hash-link" aria-label="Direct link to Identity in one place, and what that does not buy" title="Direct link to Identity in one place, and what that does not buy" translate="no">​</a></h2>
-<p>A resource-backed table's primary key is a foreign key to <code>core_resource.resourceId</code>, so an entity
-row and its identity are one row rather than two that can drift. Two operations in <code>blong-core</code>
-exist because more than an insert is involved:</p>
-<ul>
-<li class=""><strong><code>core.resource.ensure</code></strong> finds or creates a resource by <code>(typeAlias, resourceName)</code>, then
-inserts the entity row if it is missing — and if it finds a resource whose entity row does not
-exist, it heals it instead of minting a second resource under the taken name.</li>
-<li class=""><strong><code>core.triple.merge</code></strong> inserts a set of edges, ignoring the ones already present, and can refresh
-the materialized paths afterwards.</li>
-</ul>
-<p>That is what makes seeding idempotent, and it is worth being exact about its strength: the pair is a
-<em>logical</em> identity, not a unique constraint. <code>resourceName</code> carries a non-unique index, so two
-writers that go around it can leave two resources with the same name in one type, and a generic
-<code>add</code> given no name mints one named after the column. A development database that has been driven by
-tests for a few months shows both: dozens of resources named after the same person, and a handful
-literally named <code>party.person.personId</code>. The honest summary is that identity holds for writes that
-go through <code>merge</code>/<code>ensure</code>, which is why they are the operations the framework's own registration
-and seed paths call.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="party-types-are-tables-sub-entities-are-not">Party types are tables; sub-entities are not<a href="http://blong.feasible.one/blog/one-graph-for-the-whole-domain#party-types-are-tables-sub-entities-are-not" class="hash-link" aria-label="Direct link to Party types are tables; sub-entities are not" title="Direct link to Party types are tables; sub-entities are not" translate="no">​</a></h2>
-<p><code>blong-party</code> declares <code>person</code>, <code>organization</code> and <code>unit</code> as three resource-backed tables, each
-with its own key (<code>personId</code>, <code>organizationId</code>, <code>unitId</code>) and its own display column (<code>lastName</code>,
-<code>legalName</code>, <code>unitName</code>). There is no <code>party_type</code> discriminator and no <code>party</code> table with a kind
-column — the <strong>type alias</strong> distinguishes them, which is why asking for "all parties" is a union
-over types rather than a filter.</p>
-<p>The realm's actual sub-entities look different, and deliberately so: <code>party.contact</code>,
-<code>party.address</code> and <code>party.identifier</code> carry their own auto-increment keys and an FK column
-<code>partyResourceId</code> pointing at <code>core.resource</code>. They hang off a party and have no identity of their
-own, so they get a plain table instead of a resource. ## Three lenses, one set of edges</p>
-<!-- -->
-<p><strong>Party</strong> reads the hierarchy — membership through <code>belongsTo</code>, the unit tree through <code>isPartOf</code>,
-the human behind an account through <code>hasProfile</code>. <strong>RBAC</strong> walks user → role → capability → action,
-directly or through the unit the user belongs to, and materializes the answer into <code>core.path</code> as
-<code>access.effectiveRole</code>, <code>access.effectiveAction</code> and <code>access.effectiveScope</code>, so the caller's
-effective actions are one indexed lookup instead of a recursive walk — read at login, to pack the
-token's bitmask, while the per-request check expands that bitmask with a cache. <strong>The record-level
-ACL</strong> adds the narrowing direction: <code>access_acl</code> is a table whose principal, action and target are
-all resources, so a rule can attach to any of them, and its implicit half is a <code>hasScope</code> edge in
-the same graph.</p>
-<p>Note what is <em>not</em> claimed here: the graph does not replace the tables. A role is still a table with
-a <code>roleBit</code> column; <code>access_acl</code> is still a table with rules in it; the unit hierarchy is
-materialized into <code>core_path</code> rather than computed on every read. What the graph changes is that the
-relations — the part that used to grow tables or columns every time the business learned a new word
-— are data.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="querying-it">Querying it<a href="http://blong.feasible.one/blog/one-graph-for-the-whole-domain#querying-it" class="hash-link" aria-label="Direct link to Querying it" title="Direct link to Querying it" translate="no">​</a></h2>
-<p>Because the predicates are the join, two shapes cover most questions. An edge lookup names as many
-of the three key columns as you know:</p>
-<div class="language-jsonc codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-jsonc codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">// the units under an organisation: unit --belongsTo--&gt; organisation</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">{"method": "core.triple.find", "predicateName": "belongsTo", "objectId": "&lt;organization resourceId&gt;"}</span><br></div><div class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">// what this resource points at, and what points at it — both indexed</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">{"method": "core.triple.find", "subjectId": "&lt;resourceId&gt;"}</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">{"method": "core.triple.find", "objectId": "&lt;resourceId&gt;"}</span><br></div></code></pre></div></div>
-<p>A path lookup reads the materialized answer:</p>
-<div class="language-jsonc codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-jsonc codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">{"method": "core.path.find", "originId": "&lt;userId&gt;", "pathType": "access.effectiveAction"}</span><br></div></code></pre></div></div>
-<p>Neither query names a domain table, so the same two shapes answer a party question and an
-authorization question: the domain decides what an edge means, and the graph decides how it is
-stored and traversed.</p>
-<p>Two tables complete the schema without being part of any working path: <code>core.property</code> and
-<code>core.translation</code> are declared, and nothing reads or writes them yet. They are reserved rather than
-usable, and worth knowing about precisely so nobody mistakes them for an API.</p>
-<p><a class="" href="http://blong.feasible.one/docs/concepts/resource-graph">The resource graph</a> is the concept page; <a class="" href="http://blong.feasible.one/docs/concepts/rbac">RBAC</a>
-and <a class="" href="http://blong.feasible.one/docs/concepts/acl">the record-level ACL</a> are the two lenses built on it.</p>]]></content:encoded>
             <category>Blong</category>
             <category>Data</category>
         </item>

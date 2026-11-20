@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-Bjp52BOI.js";import{A as t,O as n}from"./iframe-CcbA3TQN.js";var r;function i(){return(i=e((()=>{t(),r=n(()=>({activation:{default:{type:`generic`}},start(){return super.connect(),super.start()}}))})))()}i();export{r as default};

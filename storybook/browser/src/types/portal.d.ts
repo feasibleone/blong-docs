@@ -87,6 +87,7 @@ export interface IPortalBrand {
 export interface IPortalConfig {
     name: string;
     title: string;
+    menuTitle?: string;
     theme?: string;
     home?: IAction;
     menu?: IMenuItem[];
@@ -111,6 +112,20 @@ export interface IPortalConfig {
     profile?: {
         page?: string;
         get?: string;
+    };
+    /**
+     * The scope cookie a stored file is served with (`@@D-836`).
+     *
+     * A blob is read by the browser from a plain `<img>` or `<a>` — a route rather than a call —
+     * so the session cannot vouch for it on its own: the route reads a cookie, and this names the
+     * method that mints it (`blob.scope.issue` in a suite that attaches `blong-blob`). Naming it in
+     * configuration is the same rule as `translation.load` and `feedback`: `blong-browser` ships the
+     * call, the realm that owns the store is named here, and a suite with no blob realm has no block
+     * and makes no call.
+     */
+    blob?: {
+        /** The method that answers `{path}` and sets the cookie; called once per session. */
+        issue?: string;
     };
     /**
      * Per-language translation dictionaries (English key → translated string).

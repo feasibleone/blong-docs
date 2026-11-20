@@ -10,6 +10,7 @@
 export { BlongProvider, makeHandlerProxy, useBlong } from './context/BlongContext.js';
 export type { IBlongContextValue, IBlongPortalConfig, IBlongProviderProps, } from './context/BlongContext.js';
 export { useAppStore, type ITranslationBundle } from './state/appStore.js';
+export { assetReference, assetSrc, ASSET_PATH, type IAssetOptions, type IAssetReference, } from './blob/assetReference.js';
 export { useAction } from './hooks/useAction.js';
 export { useAsync } from './hooks/useAsync.js';
 export { useAuth } from './hooks/useAuth.js';
@@ -29,6 +30,9 @@ export { AccountMenu, type IAccountMenuProps } from './components/AccountMenu/Ac
 export { ActionButton } from './components/ActionButton/ActionButton.js';
 export { App, type IAppProps } from './components/App/App.js';
 export { Async } from './components/Async/Async.js';
+export { BlobImage, type IBlobImageProps } from './components/BlobImage/BlobImage.js';
+export { AssetWidget, type IAssetWidgetConfig } from './widgets/AssetWidget.js';
+export { assetIcon, assetIsImage } from './widgets/assetIcon.js';
 export { Button, type ButtonProps } from './components/Button/Button.js';
 export { Card } from './components/Card/Card.js';
 export { Commander, type ICommanderLevel, type ICommanderProps, type ICommanderSource, } from './components/Commander/Commander.js';
