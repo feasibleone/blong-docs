@@ -1,1 +1,0 @@
-import{n as e}from"./rolldown-runtime-Bjp52BOI.js";import{M as t,N as n}from"./Text-A69JH0-n.js";function r(e){let t=n(e=>e.auth.permissions);return typeof t==`boolean`?t:e==null?!0:typeof e==`boolean`?e:t[e]===!0}function i(){return(i=e((()=>{t()})))()}export{r as n,i as t};

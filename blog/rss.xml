@@ -1044,82 +1044,6 @@ reflected in a login's expansion — the paths do not maintain themselves.</p>
             <category>Data</category>
         </item>
         <item>
-            <title><![CDATA[One sticky comment for the whole monorepo]]></title>
-            <link>http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo</link>
-            <guid>http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo</guid>
-            <pubDate>Tue, 15 Sep 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[A monorepo of forty packages that each report their own results produces a specific kind of unusable]]></description>
-            <content:encoded><![CDATA[<p>A monorepo of forty packages that each report their own results produces a specific kind of unusable
-CI. The check is green and nobody believes it. The logs are thorough and nobody reads them. And the
-one question a reviewer actually has — "did this branch break that test, or was it already broken?"
-— has no answer anywhere in the run, because answering it needs a comparison nobody made.</p>
-<p>Blong's answer is one document. Per package it carries the counts, the duration, the coverage and
-the change against the base branch; for the run it carries the tests that did not run, the slowest
-test, and every failure with its provenance. That same document is the artefact and the pull-request
-comment, so there is nothing to reconcile.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-delta-lives-in-the-same-cell">The delta lives in the same cell<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#the-delta-lives-in-the-same-cell" class="hash-link" aria-label="Direct link to The delta lives in the same cell" title="Direct link to The delta lives in the same cell" translate="no">​</a></h2>
-<p>The rule that shapes the whole table is small and worth copying: <strong>the change is printed beside the
-value it changed</strong>, not in a column of its own.</p>
-<table><thead><tr><th>Package</th><th>Result</th><th>Passed</th><th>Failed</th><th>Flaky</th><th>Not run</th><th>Total</th><th>Duration</th><th>Coverage</th><th>Report</th></tr></thead><tbody><tr><td>fake-fail</td><td>❌</td><td>8</td><td>2</td><td>0</td><td>—</td><td>10 (+2)</td><td>1m 05s (+5.0s) ⏱️ logs in as the… 11s</td><td>🔴 25% (-5.0pp)</td><td><code>[report]</code></td></tr></tbody></table>
-<p>That row is real — the local fixture's output — and it shows the four decisions the table makes. A
-count is <code>10 (+2)</code>. A duration carries its change and the name of the slowest test, which is what
-makes "the build got slower" actionable rather than true. Coverage is against the committed baseline
-with a red mark past a one-point regression. And <code>Report</code> is a link predicted from the reporting
-base before anything is published, so the document is complete when it is written rather than
-patched afterwards.</p>
-<p>Two columns exist only when they have something to say, which is the same principle applied to
-absence: <strong>Not run</strong> (<code>skipped + todo</code>) appears only when a package has one, and <strong>Flaky</strong> is
-separate from <strong>Passed</strong> always. A suite that skipped half its tests is a green that must not look
-like the others, and a suite that survives by retrying is not healthy — it is a suite whose health
-nobody has measured. Flaky tests are counted in their own column, marked <code>⚠️</code> in the package's
-result icon, listed as <code>🟡 flaky</code> in the failures table, and separated inside the failure bundle.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="three-runners-one-contract">Three runners, one contract<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#three-runners-one-contract" class="hash-link" aria-label="Direct link to Three runners, one contract" title="Direct link to Three runners, one contract" translate="no">​</a></h2>
-<p>The packages do not agree on a test runner, and nobody should pretend otherwise: tap for the
-framework packages, Playwright with Allure for the browser suites, vitest for <code>blong-browser</code>. What
-they agree on is that each writes a <strong>slice</strong> into <code>.ci-report/</code>, and aggregation is a sum over
-slices rather than a reader per runner:</p>
-<table><thead><tr><th>Runner</th><th>Adapter</th><th>Who writes it</th></tr></thead><tbody><tr><td>tap</td><td><code>report/tapReport.ts</code></td><td><code>blong-dev test</code></td></tr><tr><td>Playwright + Allure</td><td><code>report/allurePublish.ts</code></td><td><code>blong-dev playwright</code></td></tr><tr><td>vitest</td><td><code>report/vitestReport.ts</code> (<code>report vitest</code>)</td><td>the package itself</td></tr></tbody></table>
-<p>The coverage half of that story — how the three runners' line data becomes one number — has its own
-page, because merging lcov from three tools is a different problem from counting tests.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="is-this-failure-new">"Is this failure new?"<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#is-this-failure-new" class="hash-link" aria-label="Direct link to &quot;Is this failure new?&quot;" title="Direct link to &quot;Is this failure new?&quot;" translate="no">​</a></h2>
-<p>This is the question the report was built to answer, and it needs a history as well as a run. Each
-failing test is characterised against the base branch:</p>
-<table><thead><tr><th>Provenance</th><th>Meaning</th></tr></thead><tbody><tr><td><code>new</code></td><td>green on the base branch, red here — this branch broke it</td></tr><tr><td><code>recurring</code></td><td>already failing there — not this branch's doing</td></tr><tr><td><code>intermittent</code></td><td>has passed and failed before — flaky, and now it counts</td></tr></tbody></table>
-<p>The history is <code>.github/history.jsonl</code>, <strong>rebuilt</strong> per run from the per-package slices rather than
-appended to, so a rebase cannot leave two histories interleaved and a deleted test cannot haunt the
-percentages. The baseline the deltas are computed against is <code>.github/metrics.json</code> — the whole
-run's totals, duration and coverage — which is what makes <code>(+2)</code> a statement about last night rather
-than about nothing.</p>
-<p>When a run is red, a <strong>failure bundle</strong> is published beside the report: an HTML index, the failing
-tests as JSON and markdown, and the traces. It is built only for a red run, and the previous bundle
-is removed first — so a green build cannot leave a stale bundle behind for somebody to debug months
-later, which is a failure mode worth designing away because it wastes exactly the hours the bundle
-exists to save.</p>
-<!-- -->
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-this-repository-owns-and-what-it-does-not">What this repository owns, and what it does not<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#what-this-repository-owns-and-what-it-does-not" class="hash-link" aria-label="Direct link to What this repository owns, and what it does not" title="Direct link to What this repository owns, and what it does not" translate="no">​</a></h2>
-<p>The aggregation, the rendering, the metrics snapshot, the history and the failure bundle are here,
-with unit tests over each and a <strong>local fixture</strong> that builds a complete report without CI
-(<code>npm run report:local</code> in <code>test/blong-ci-report</code>) — which is the invocation to use when changing
-the contract, because it shows the real table rather than a description of it. The tests over the
-report models and writers pass 104 assertions.</p>
-<p>The step that <strong>posts</strong> the document as a pull-request comment does not live here: this repository
-calls a shared reusable workflow, and the posting is inside it. So the honest split is that the
-contract is owned here and the delivery is not — which is worth saying out loud, because a report
-nobody posts is a report nobody reads, and the part you cannot see from this repository is the half
-that decides whether reviewers ever meet the document.</p>
-<p>One defect is worth recording rather than hiding. <code>blong-dev ci-report</code> <strong>crashes</strong> on a tree that
-contains a single-run <code>.ci-report/report.json</code> written by an older schema —
-<code>TypeError: report.runs is not iterable</code> — because the collector assumes every slice is the current
-multi-runner shape. The fixture path works and the CI path works; the ad-hoc local path is the one
-that fails, which is precisely the path somebody takes when they are debugging the report. A schema
-guard is the missing piece, and it is on the list.</p>
-<p>The contract itself — the columns, the provenance rules, the bundle and the baseline — is described
-in <a class="" href="http://blong.feasible.one/docs/rationale/ci-report">the CI report rationale</a>; coverage aggregation across the three
-runners is in <a class="" href="http://blong.feasible.one/docs/concepts/code-coverage">the coverage concept</a>.</p>]]></content:encoded>
-            <category>Blong</category>
-            <category>CI</category>
-        </item>
-        <item>
             <title><![CDATA[The repo remembers what cost effort]]></title>
             <link>http://blong.feasible.one/blog/the-repo-remembers-what-cost-effort</link>
             <guid>http://blong.feasible.one/blog/the-repo-remembers-what-cost-effort</guid>
@@ -1198,6 +1122,82 @@ rather than a database or a tracker. The next post in the series adds a way to r
 by meaning instead of by phrase: <a class="" href="http://blong.feasible.one/blog/the-repo-answers-by-meaning">the repo answers by meaning</a>.</p>]]></content:encoded>
             <category>Blong</category>
             <category>Tooling</category>
+        </item>
+        <item>
+            <title><![CDATA[One sticky comment for the whole monorepo]]></title>
+            <link>http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo</link>
+            <guid>http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo</guid>
+            <pubDate>Tue, 15 Sep 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[A monorepo of forty packages that each report their own results produces a specific kind of unusable]]></description>
+            <content:encoded><![CDATA[<p>A monorepo of forty packages that each report their own results produces a specific kind of unusable
+CI. The check is green and nobody believes it. The logs are thorough and nobody reads them. And the
+one question a reviewer actually has — "did this branch break that test, or was it already broken?"
+— has no answer anywhere in the run, because answering it needs a comparison nobody made.</p>
+<p>Blong's answer is one document. Per package it carries the counts, the duration, the coverage and
+the change against the base branch; for the run it carries the tests that did not run, the slowest
+test, and every failure with its provenance. That same document is the artefact and the pull-request
+comment, so there is nothing to reconcile.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-delta-lives-in-the-same-cell">The delta lives in the same cell<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#the-delta-lives-in-the-same-cell" class="hash-link" aria-label="Direct link to The delta lives in the same cell" title="Direct link to The delta lives in the same cell" translate="no">​</a></h2>
+<p>The rule that shapes the whole table is small and worth copying: <strong>the change is printed beside the
+value it changed</strong>, not in a column of its own.</p>
+<table><thead><tr><th>Package</th><th>Result</th><th>Passed</th><th>Failed</th><th>Flaky</th><th>Not run</th><th>Total</th><th>Duration</th><th>Coverage</th><th>Report</th></tr></thead><tbody><tr><td>fake-fail</td><td>❌</td><td>8</td><td>2</td><td>0</td><td>—</td><td>10 (+2)</td><td>1m 05s (+5.0s) ⏱️ logs in as the… 11s</td><td>🔴 25% (-5.0pp)</td><td><code>[report]</code></td></tr></tbody></table>
+<p>That row is real — the local fixture's output — and it shows the four decisions the table makes. A
+count is <code>10 (+2)</code>. A duration carries its change and the name of the slowest test, which is what
+makes "the build got slower" actionable rather than true. Coverage is against the committed baseline
+with a red mark past a one-point regression. And <code>Report</code> is a link predicted from the reporting
+base before anything is published, so the document is complete when it is written rather than
+patched afterwards.</p>
+<p>Two columns exist only when they have something to say, which is the same principle applied to
+absence: <strong>Not run</strong> (<code>skipped + todo</code>) appears only when a package has one, and <strong>Flaky</strong> is
+separate from <strong>Passed</strong> always. A suite that skipped half its tests is a green that must not look
+like the others, and a suite that survives by retrying is not healthy — it is a suite whose health
+nobody has measured. Flaky tests are counted in their own column, marked <code>⚠️</code> in the package's
+result icon, listed as <code>🟡 flaky</code> in the failures table, and separated inside the failure bundle.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="three-runners-one-contract">Three runners, one contract<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#three-runners-one-contract" class="hash-link" aria-label="Direct link to Three runners, one contract" title="Direct link to Three runners, one contract" translate="no">​</a></h2>
+<p>The packages do not agree on a test runner, and nobody should pretend otherwise: tap for the
+framework packages, Playwright with Allure for the browser suites, vitest for <code>blong-browser</code>. What
+they agree on is that each writes a <strong>slice</strong> into <code>.ci-report/</code>, and aggregation is a sum over
+slices rather than a reader per runner:</p>
+<table><thead><tr><th>Runner</th><th>Adapter</th><th>Who writes it</th></tr></thead><tbody><tr><td>tap</td><td><code>report/tapReport.ts</code></td><td><code>blong-dev test</code></td></tr><tr><td>Playwright + Allure</td><td><code>report/allurePublish.ts</code></td><td><code>blong-dev playwright</code></td></tr><tr><td>vitest</td><td><code>report/vitestReport.ts</code> (<code>report vitest</code>)</td><td>the package itself</td></tr></tbody></table>
+<p>The coverage half of that story — how the three runners' line data becomes one number — has its own
+page, because merging lcov from three tools is a different problem from counting tests.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="is-this-failure-new">"Is this failure new?"<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#is-this-failure-new" class="hash-link" aria-label="Direct link to &quot;Is this failure new?&quot;" title="Direct link to &quot;Is this failure new?&quot;" translate="no">​</a></h2>
+<p>This is the question the report was built to answer, and it needs a history as well as a run. Each
+failing test is characterised against the base branch:</p>
+<table><thead><tr><th>Provenance</th><th>Meaning</th></tr></thead><tbody><tr><td><code>new</code></td><td>green on the base branch, red here — this branch broke it</td></tr><tr><td><code>recurring</code></td><td>already failing there — not this branch's doing</td></tr><tr><td><code>intermittent</code></td><td>has passed and failed before — flaky, and now it counts</td></tr></tbody></table>
+<p>The history is <code>.github/history.jsonl</code>, <strong>rebuilt</strong> per run from the per-package slices rather than
+appended to, so a rebase cannot leave two histories interleaved and a deleted test cannot haunt the
+percentages. The baseline the deltas are computed against is <code>.github/metrics.json</code> — the whole
+run's totals, duration and coverage — which is what makes <code>(+2)</code> a statement about last night rather
+than about nothing.</p>
+<p>When a run is red, a <strong>failure bundle</strong> is published beside the report: an HTML index, the failing
+tests as JSON and markdown, and the traces. It is built only for a red run, and the previous bundle
+is removed first — so a green build cannot leave a stale bundle behind for somebody to debug months
+later, which is a failure mode worth designing away because it wastes exactly the hours the bundle
+exists to save.</p>
+<!-- -->
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-this-repository-owns-and-what-it-does-not">What this repository owns, and what it does not<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#what-this-repository-owns-and-what-it-does-not" class="hash-link" aria-label="Direct link to What this repository owns, and what it does not" title="Direct link to What this repository owns, and what it does not" translate="no">​</a></h2>
+<p>The aggregation, the rendering, the metrics snapshot, the history and the failure bundle are here,
+with unit tests over each and a <strong>local fixture</strong> that builds a complete report without CI
+(<code>npm run report:local</code> in <code>test/blong-ci-report</code>) — which is the invocation to use when changing
+the contract, because it shows the real table rather than a description of it. The tests over the
+report models and writers pass 104 assertions.</p>
+<p>The step that <strong>posts</strong> the document as a pull-request comment does not live here: this repository
+calls a shared reusable workflow, and the posting is inside it. So the honest split is that the
+contract is owned here and the delivery is not — which is worth saying out loud, because a report
+nobody posts is a report nobody reads, and the part you cannot see from this repository is the half
+that decides whether reviewers ever meet the document.</p>
+<p>One defect is worth recording rather than hiding. <code>blong-dev ci-report</code> <strong>crashes</strong> on a tree that
+contains a single-run <code>.ci-report/report.json</code> written by an older schema —
+<code>TypeError: report.runs is not iterable</code> — because the collector assumes every slice is the current
+multi-runner shape. The fixture path works and the CI path works; the ad-hoc local path is the one
+that fails, which is precisely the path somebody takes when they are debugging the report. A schema
+guard is the missing piece, and it is on the list.</p>
+<p>The contract itself — the columns, the provenance rules, the bundle and the baseline — is described
+in <a class="" href="http://blong.feasible.one/docs/rationale/ci-report">the CI report rationale</a>; coverage aggregation across the three
+runners is in <a class="" href="http://blong.feasible.one/docs/concepts/code-coverage">the coverage concept</a>.</p>]]></content:encoded>
+            <category>Blong</category>
+            <category>CI</category>
         </item>
         <item>
             <title><![CDATA[The log line that knows its own structure]]></title>
