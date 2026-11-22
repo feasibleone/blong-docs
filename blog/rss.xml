@@ -4,10 +4,81 @@
         <title>Blong Blog</title>
         <link>http://blong.feasible.one/blog</link>
         <description>Blong Blog</description>
-        <lastBuildDate>Thu, 19 Nov 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 22 Nov 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[The API definition came first]]></title>
+            <link>http://blong.feasible.one/blog/from-a-definition-to-a-handler</link>
+            <guid>http://blong.feasible.one/blog/from-a-definition-to-a-handler</guid>
+            <pubDate>Sun, 22 Nov 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Most codebases have the same document in two places. One is the OpenAPI file a client, a partner or]]></description>
+            <content:encoded><![CDATA[<p>Most codebases have the same document in two places. One is the OpenAPI file a client, a partner or
+a former colleague reads; the other is the handler that actually answers. They are edited by
+different people, drift apart quietly, and the drift is only visible when an integration breaks.</p>
+<p>Blong's answer is not to generate the document from the code — that is the other direction, and it
+only works when the code got there first. It is to accept the document as the source, and generate
+what is missing: a typed handler stub, named where the framework's own conventions say it belongs,
+written while the developer is still in the editor.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-loop">The loop<a href="http://blong.feasible.one/blog/from-a-definition-to-a-handler#the-loop" class="hash-link" aria-label="Direct link to The loop" title="Direct link to The loop" translate="no">​</a></h2>
+<div class="language-text codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-text codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">contract/realm.api.yaml          # published, versioned, edited by the owner of the contract</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">contract/realm.operations.yaml   # what the team is trying — merged on top of the base</span><br></div></code></pre></div></div>
+<p>Both files are loaded, in name order, so the second overrides the first and does not have to repeat
+it. A method added to the override becomes a handler; a field added to a method grows the handler
+that already existed. Save the file and the skeleton appears:</p>
+<div class="language-text codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-text codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">info  ApiSchema wrote …/orchestrator/record/realmRecordFind.ts for realmRecordFind</span><br></div></code></pre></div></div>
+<p>Nothing else in the framework is watching that folder. The generation runs as part of the same load
+that reads the definition, because both facts — "this method exists in the contract" and "this
+folder holds the handlers for it" — are known there and nowhere else.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-wiring-file-is-where-the-two-worlds-meet">The wiring file is where the two worlds meet<a href="http://blong.feasible.one/blog/from-a-definition-to-a-handler#the-wiring-file-is-where-the-two-worlds-meet" class="hash-link" aria-label="Direct link to The wiring file is where the two worlds meet" title="Direct link to The wiring file is where the two worlds meet" translate="no">​</a></h2>
+<p>Here is the part that is usually a manual, error-prone translation: a published API is written in
+somebody else's vocabulary. Its operations are called <code>createContract</code> and <code>issueInvoice</code>; the realm
+calls its handlers <code>ordersContractAdd</code> and <code>ordersInvoiceIssue</code>, because that is the semantic triple
+the rest of the framework speaks.</p>
+<p>That translation does not belong in the published document, and it does not need a code generator
+setting either. It is a small file merged over the document:</p>
+<div class="language-yaml codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-yaml codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token comment" style="color:rgb(0, 128, 0)"># apis/contract.operations.yaml — none of contract.api.yaml is repeated</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token key atrule">openapi</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"> 3.0.3</span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token key atrule">x-blong</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token key atrule">namespace</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"> orders </span><span class="token comment" style="color:rgb(0, 128, 0)"># this document serves the orders realm</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token key atrule">paths</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    </span><span class="token key atrule">/contracts</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">        </span><span class="token key atrule">post</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">            </span><span class="token key atrule">x-blong-method</span><span class="token punctuation" style="color:rgb(4, 81, 165)">:</span><span class="token plain"> ContractAdd </span><span class="token comment" style="color:rgb(0, 128, 0)"># → ordersContractAdd</span><br></div></code></pre></div></div>
+<p>Three names, and the path falls out of them:</p>
+<div class="language-text codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-text codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">orders/orchestrator/contract/ordersContractAdd.ts</span><br></div></code></pre></div></div>
+<p>The namespace is the subject (<code>orders</code>), the first word of <code>x-blong-method</code> is the object
+(<code>Contract</code>) and names the group folder, and the rest is the predicate (<code>Add</code>). Nothing is guessed
+and nothing is configured per method. An operation that matches no folder is not filed somewhere
+plausible — it is reported, because a silently misplaced handler is worse than a missing one.</p>
+<p>The same file also does the quieter half of the job: it adds what the published document left out.
+An invoice body whose members are all optional is a stub describing an invoice with no amount; one
+<code>required: [contractId, amountMinor]</code> in the wiring file is the difference between a skeleton and a
+skeleton that means something.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-the-stub-is-for">What the stub is for<a href="http://blong.feasible.one/blog/from-a-definition-to-a-handler#what-the-stub-is-for" class="hash-link" aria-label="Direct link to What the stub is for" title="Direct link to What the stub is for" translate="no">​</a></h2>
+<p>The generated body throws:</p>
+<div class="language-ts codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-ts codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token keyword" style="color:rgb(0, 0, 255)">type</span><span class="token plain"> </span><span class="token class-name" style="color:rgb(38, 127, 153)">Handler</span><span class="token plain"> </span><span class="token operator" style="color:rgb(0, 0, 0)">=</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">(</span><span class="token plain">params</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    customerName</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> </span><span class="token comment" style="color:rgb(0, 128, 0)">// Who the contract is with.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    currencyCode</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> </span><span class="token comment" style="color:rgb(0, 128, 0)">// ISO 4217 code the amounts are written in.</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">)</span><span class="token plain"> </span><span class="token operator" style="color:rgb(0, 0, 0)">=&gt;</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">Promise</span><span class="token operator" style="color:rgb(0, 0, 0)">&lt;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">contractId</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> status</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token operator" style="color:rgb(0, 0, 0)">&gt;</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><br></div></code></pre></div></div>
+<p>The signature is the part worth generating, and it comes from the contract: query and path
+parameters, the request body in either OpenAPI 3 or Swagger 2 shape, and the reply schema. The body
+worth writing is the part the contract cannot know — which orchestrator to call, what to do when the
+item is missing.</p>
+<p>Returning <code>{}</code> would make a stub that compiles nowhere and fails at the first call with a type error
+somewhere else; throwing says what it is, immediately, and the first honest line the developer
+writes is the one that replaces it.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-part-that-keeps-it-safe">The part that keeps it safe<a href="http://blong.feasible.one/blog/from-a-definition-to-a-handler#the-part-that-keeps-it-safe" class="hash-link" aria-label="Direct link to The part that keeps it safe" title="Direct link to The part that keeps it safe" translate="no">​</a></h2>
+<p>A generator that writes into the source tree has to answer one question convincingly: when does it
+stop being a generator? Here the answer is one line at the top of the file —
+<code>import unchanged from '@feasibleone/blong'</code> — and it is a state rather than a note in a changelog.
+While it is there the file is a stub and the next run rewrites it from the document, whatever
+changed; delete it and the file is yours. That is what lets a dev run stay open while a contract
+moves, and what keeps the generator from ever arguing with the person writing the code.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="where-the-automation-ends">Where the automation ends<a href="http://blong.feasible.one/blog/from-a-definition-to-a-handler#where-the-automation-ends" class="hash-link" aria-label="Direct link to Where the automation ends" title="Direct link to Where the automation ends" translate="no">​</a></h2>
+<p>Editing a definition by hand is one workflow. Writing it <em>before</em> the code is another, and it is the
+one an agent session does best: describe the API, then let tooling produce the files that must exist
+for it. The same naming rules apply, and <code>blong-kukum</code> scaffolds the handlers on demand from the
+command line or over the API — the same tree, without a process watching a file.</p>
+<p>Between the two, the definition stops being a document that describes the code and becomes the thing
+the code is generated from — and the drift has nowhere left to happen.</p>
+<p>Read the full mechanics in the <a class="" href="http://blong.feasible.one/docs/patterns/api-generation">api generation pattern</a>, and run
+<code>demo/blong-generate</code> to watch three published documents become seven handlers across two realms.</p>]]></content:encoded>
+            <category>Blong</category>
+            <category>API</category>
+            <category>Design</category>
+            <category>DexEx</category>
+        </item>
         <item>
             <title><![CDATA[Stop writing log messages, declare events]]></title>
             <link>http://blong.feasible.one/blog/one-declared-vocabulary</link>
@@ -1044,6 +1115,82 @@ reflected in a login's expansion — the paths do not maintain themselves.</p>
             <category>Data</category>
         </item>
         <item>
+            <title><![CDATA[One sticky comment for the whole monorepo]]></title>
+            <link>http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo</link>
+            <guid>http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo</guid>
+            <pubDate>Tue, 15 Sep 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[A monorepo of forty packages that each report their own results produces a specific kind of unusable]]></description>
+            <content:encoded><![CDATA[<p>A monorepo of forty packages that each report their own results produces a specific kind of unusable
+CI. The check is green and nobody believes it. The logs are thorough and nobody reads them. And the
+one question a reviewer actually has — "did this branch break that test, or was it already broken?"
+— has no answer anywhere in the run, because answering it needs a comparison nobody made.</p>
+<p>Blong's answer is one document. Per package it carries the counts, the duration, the coverage and
+the change against the base branch; for the run it carries the tests that did not run, the slowest
+test, and every failure with its provenance. That same document is the artefact and the pull-request
+comment, so there is nothing to reconcile.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-delta-lives-in-the-same-cell">The delta lives in the same cell<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#the-delta-lives-in-the-same-cell" class="hash-link" aria-label="Direct link to The delta lives in the same cell" title="Direct link to The delta lives in the same cell" translate="no">​</a></h2>
+<p>The rule that shapes the whole table is small and worth copying: <strong>the change is printed beside the
+value it changed</strong>, not in a column of its own.</p>
+<table><thead><tr><th>Package</th><th>Result</th><th>Passed</th><th>Failed</th><th>Flaky</th><th>Not run</th><th>Total</th><th>Duration</th><th>Coverage</th><th>Report</th></tr></thead><tbody><tr><td>fake-fail</td><td>❌</td><td>8</td><td>2</td><td>0</td><td>—</td><td>10 (+2)</td><td>1m 05s (+5.0s) ⏱️ logs in as the… 11s</td><td>🔴 25% (-5.0pp)</td><td><code>[report]</code></td></tr></tbody></table>
+<p>That row is real — the local fixture's output — and it shows the four decisions the table makes. A
+count is <code>10 (+2)</code>. A duration carries its change and the name of the slowest test, which is what
+makes "the build got slower" actionable rather than true. Coverage is against the committed baseline
+with a red mark past a one-point regression. And <code>Report</code> is a link predicted from the reporting
+base before anything is published, so the document is complete when it is written rather than
+patched afterwards.</p>
+<p>Two columns exist only when they have something to say, which is the same principle applied to
+absence: <strong>Not run</strong> (<code>skipped + todo</code>) appears only when a package has one, and <strong>Flaky</strong> is
+separate from <strong>Passed</strong> always. A suite that skipped half its tests is a green that must not look
+like the others, and a suite that survives by retrying is not healthy — it is a suite whose health
+nobody has measured. Flaky tests are counted in their own column, marked <code>⚠️</code> in the package's
+result icon, listed as <code>🟡 flaky</code> in the failures table, and separated inside the failure bundle.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="three-runners-one-contract">Three runners, one contract<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#three-runners-one-contract" class="hash-link" aria-label="Direct link to Three runners, one contract" title="Direct link to Three runners, one contract" translate="no">​</a></h2>
+<p>The packages do not agree on a test runner, and nobody should pretend otherwise: tap for the
+framework packages, Playwright with Allure for the browser suites, vitest for <code>blong-browser</code>. What
+they agree on is that each writes a <strong>slice</strong> into <code>.ci-report/</code>, and aggregation is a sum over
+slices rather than a reader per runner:</p>
+<table><thead><tr><th>Runner</th><th>Adapter</th><th>Who writes it</th></tr></thead><tbody><tr><td>tap</td><td><code>report/tapReport.ts</code></td><td><code>blong-dev test</code></td></tr><tr><td>Playwright + Allure</td><td><code>report/allurePublish.ts</code></td><td><code>blong-dev playwright</code></td></tr><tr><td>vitest</td><td><code>report/vitestReport.ts</code> (<code>report vitest</code>)</td><td>the package itself</td></tr></tbody></table>
+<p>The coverage half of that story — how the three runners' line data becomes one number — has its own
+page, because merging lcov from three tools is a different problem from counting tests.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="is-this-failure-new">"Is this failure new?"<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#is-this-failure-new" class="hash-link" aria-label="Direct link to &quot;Is this failure new?&quot;" title="Direct link to &quot;Is this failure new?&quot;" translate="no">​</a></h2>
+<p>This is the question the report was built to answer, and it needs a history as well as a run. Each
+failing test is characterised against the base branch:</p>
+<table><thead><tr><th>Provenance</th><th>Meaning</th></tr></thead><tbody><tr><td><code>new</code></td><td>green on the base branch, red here — this branch broke it</td></tr><tr><td><code>recurring</code></td><td>already failing there — not this branch's doing</td></tr><tr><td><code>intermittent</code></td><td>has passed and failed before — flaky, and now it counts</td></tr></tbody></table>
+<p>The history is <code>.github/history.jsonl</code>, <strong>rebuilt</strong> per run from the per-package slices rather than
+appended to, so a rebase cannot leave two histories interleaved and a deleted test cannot haunt the
+percentages. The baseline the deltas are computed against is <code>.github/metrics.json</code> — the whole
+run's totals, duration and coverage — which is what makes <code>(+2)</code> a statement about last night rather
+than about nothing.</p>
+<p>When a run is red, a <strong>failure bundle</strong> is published beside the report: an HTML index, the failing
+tests as JSON and markdown, and the traces. It is built only for a red run, and the previous bundle
+is removed first — so a green build cannot leave a stale bundle behind for somebody to debug months
+later, which is a failure mode worth designing away because it wastes exactly the hours the bundle
+exists to save.</p>
+<!-- -->
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-this-repository-owns-and-what-it-does-not">What this repository owns, and what it does not<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#what-this-repository-owns-and-what-it-does-not" class="hash-link" aria-label="Direct link to What this repository owns, and what it does not" title="Direct link to What this repository owns, and what it does not" translate="no">​</a></h2>
+<p>The aggregation, the rendering, the metrics snapshot, the history and the failure bundle are here,
+with unit tests over each and a <strong>local fixture</strong> that builds a complete report without CI
+(<code>npm run report:local</code> in <code>test/blong-ci-report</code>) — which is the invocation to use when changing
+the contract, because it shows the real table rather than a description of it. The tests over the
+report models and writers pass 104 assertions.</p>
+<p>The step that <strong>posts</strong> the document as a pull-request comment does not live here: this repository
+calls a shared reusable workflow, and the posting is inside it. So the honest split is that the
+contract is owned here and the delivery is not — which is worth saying out loud, because a report
+nobody posts is a report nobody reads, and the part you cannot see from this repository is the half
+that decides whether reviewers ever meet the document.</p>
+<p>One defect is worth recording rather than hiding. <code>blong-dev ci-report</code> <strong>crashes</strong> on a tree that
+contains a single-run <code>.ci-report/report.json</code> written by an older schema —
+<code>TypeError: report.runs is not iterable</code> — because the collector assumes every slice is the current
+multi-runner shape. The fixture path works and the CI path works; the ad-hoc local path is the one
+that fails, which is precisely the path somebody takes when they are debugging the report. A schema
+guard is the missing piece, and it is on the list.</p>
+<p>The contract itself — the columns, the provenance rules, the bundle and the baseline — is described
+in <a class="" href="http://blong.feasible.one/docs/rationale/ci-report">the CI report rationale</a>; coverage aggregation across the three
+runners is in <a class="" href="http://blong.feasible.one/docs/concepts/code-coverage">the coverage concept</a>.</p>]]></content:encoded>
+            <category>Blong</category>
+            <category>CI</category>
+        </item>
+        <item>
             <title><![CDATA[The repo remembers what cost effort]]></title>
             <link>http://blong.feasible.one/blog/the-repo-remembers-what-cost-effort</link>
             <guid>http://blong.feasible.one/blog/the-repo-remembers-what-cost-effort</guid>
@@ -1122,82 +1269,6 @@ rather than a database or a tracker. The next post in the series adds a way to r
 by meaning instead of by phrase: <a class="" href="http://blong.feasible.one/blog/the-repo-answers-by-meaning">the repo answers by meaning</a>.</p>]]></content:encoded>
             <category>Blong</category>
             <category>Tooling</category>
-        </item>
-        <item>
-            <title><![CDATA[One sticky comment for the whole monorepo]]></title>
-            <link>http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo</link>
-            <guid>http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo</guid>
-            <pubDate>Tue, 15 Sep 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[A monorepo of forty packages that each report their own results produces a specific kind of unusable]]></description>
-            <content:encoded><![CDATA[<p>A monorepo of forty packages that each report their own results produces a specific kind of unusable
-CI. The check is green and nobody believes it. The logs are thorough and nobody reads them. And the
-one question a reviewer actually has — "did this branch break that test, or was it already broken?"
-— has no answer anywhere in the run, because answering it needs a comparison nobody made.</p>
-<p>Blong's answer is one document. Per package it carries the counts, the duration, the coverage and
-the change against the base branch; for the run it carries the tests that did not run, the slowest
-test, and every failure with its provenance. That same document is the artefact and the pull-request
-comment, so there is nothing to reconcile.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-delta-lives-in-the-same-cell">The delta lives in the same cell<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#the-delta-lives-in-the-same-cell" class="hash-link" aria-label="Direct link to The delta lives in the same cell" title="Direct link to The delta lives in the same cell" translate="no">​</a></h2>
-<p>The rule that shapes the whole table is small and worth copying: <strong>the change is printed beside the
-value it changed</strong>, not in a column of its own.</p>
-<table><thead><tr><th>Package</th><th>Result</th><th>Passed</th><th>Failed</th><th>Flaky</th><th>Not run</th><th>Total</th><th>Duration</th><th>Coverage</th><th>Report</th></tr></thead><tbody><tr><td>fake-fail</td><td>❌</td><td>8</td><td>2</td><td>0</td><td>—</td><td>10 (+2)</td><td>1m 05s (+5.0s) ⏱️ logs in as the… 11s</td><td>🔴 25% (-5.0pp)</td><td><code>[report]</code></td></tr></tbody></table>
-<p>That row is real — the local fixture's output — and it shows the four decisions the table makes. A
-count is <code>10 (+2)</code>. A duration carries its change and the name of the slowest test, which is what
-makes "the build got slower" actionable rather than true. Coverage is against the committed baseline
-with a red mark past a one-point regression. And <code>Report</code> is a link predicted from the reporting
-base before anything is published, so the document is complete when it is written rather than
-patched afterwards.</p>
-<p>Two columns exist only when they have something to say, which is the same principle applied to
-absence: <strong>Not run</strong> (<code>skipped + todo</code>) appears only when a package has one, and <strong>Flaky</strong> is
-separate from <strong>Passed</strong> always. A suite that skipped half its tests is a green that must not look
-like the others, and a suite that survives by retrying is not healthy — it is a suite whose health
-nobody has measured. Flaky tests are counted in their own column, marked <code>⚠️</code> in the package's
-result icon, listed as <code>🟡 flaky</code> in the failures table, and separated inside the failure bundle.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="three-runners-one-contract">Three runners, one contract<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#three-runners-one-contract" class="hash-link" aria-label="Direct link to Three runners, one contract" title="Direct link to Three runners, one contract" translate="no">​</a></h2>
-<p>The packages do not agree on a test runner, and nobody should pretend otherwise: tap for the
-framework packages, Playwright with Allure for the browser suites, vitest for <code>blong-browser</code>. What
-they agree on is that each writes a <strong>slice</strong> into <code>.ci-report/</code>, and aggregation is a sum over
-slices rather than a reader per runner:</p>
-<table><thead><tr><th>Runner</th><th>Adapter</th><th>Who writes it</th></tr></thead><tbody><tr><td>tap</td><td><code>report/tapReport.ts</code></td><td><code>blong-dev test</code></td></tr><tr><td>Playwright + Allure</td><td><code>report/allurePublish.ts</code></td><td><code>blong-dev playwright</code></td></tr><tr><td>vitest</td><td><code>report/vitestReport.ts</code> (<code>report vitest</code>)</td><td>the package itself</td></tr></tbody></table>
-<p>The coverage half of that story — how the three runners' line data becomes one number — has its own
-page, because merging lcov from three tools is a different problem from counting tests.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="is-this-failure-new">"Is this failure new?"<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#is-this-failure-new" class="hash-link" aria-label="Direct link to &quot;Is this failure new?&quot;" title="Direct link to &quot;Is this failure new?&quot;" translate="no">​</a></h2>
-<p>This is the question the report was built to answer, and it needs a history as well as a run. Each
-failing test is characterised against the base branch:</p>
-<table><thead><tr><th>Provenance</th><th>Meaning</th></tr></thead><tbody><tr><td><code>new</code></td><td>green on the base branch, red here — this branch broke it</td></tr><tr><td><code>recurring</code></td><td>already failing there — not this branch's doing</td></tr><tr><td><code>intermittent</code></td><td>has passed and failed before — flaky, and now it counts</td></tr></tbody></table>
-<p>The history is <code>.github/history.jsonl</code>, <strong>rebuilt</strong> per run from the per-package slices rather than
-appended to, so a rebase cannot leave two histories interleaved and a deleted test cannot haunt the
-percentages. The baseline the deltas are computed against is <code>.github/metrics.json</code> — the whole
-run's totals, duration and coverage — which is what makes <code>(+2)</code> a statement about last night rather
-than about nothing.</p>
-<p>When a run is red, a <strong>failure bundle</strong> is published beside the report: an HTML index, the failing
-tests as JSON and markdown, and the traces. It is built only for a red run, and the previous bundle
-is removed first — so a green build cannot leave a stale bundle behind for somebody to debug months
-later, which is a failure mode worth designing away because it wastes exactly the hours the bundle
-exists to save.</p>
-<!-- -->
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-this-repository-owns-and-what-it-does-not">What this repository owns, and what it does not<a href="http://blong.feasible.one/blog/one-sticky-comment-for-the-whole-monorepo#what-this-repository-owns-and-what-it-does-not" class="hash-link" aria-label="Direct link to What this repository owns, and what it does not" title="Direct link to What this repository owns, and what it does not" translate="no">​</a></h2>
-<p>The aggregation, the rendering, the metrics snapshot, the history and the failure bundle are here,
-with unit tests over each and a <strong>local fixture</strong> that builds a complete report without CI
-(<code>npm run report:local</code> in <code>test/blong-ci-report</code>) — which is the invocation to use when changing
-the contract, because it shows the real table rather than a description of it. The tests over the
-report models and writers pass 104 assertions.</p>
-<p>The step that <strong>posts</strong> the document as a pull-request comment does not live here: this repository
-calls a shared reusable workflow, and the posting is inside it. So the honest split is that the
-contract is owned here and the delivery is not — which is worth saying out loud, because a report
-nobody posts is a report nobody reads, and the part you cannot see from this repository is the half
-that decides whether reviewers ever meet the document.</p>
-<p>One defect is worth recording rather than hiding. <code>blong-dev ci-report</code> <strong>crashes</strong> on a tree that
-contains a single-run <code>.ci-report/report.json</code> written by an older schema —
-<code>TypeError: report.runs is not iterable</code> — because the collector assumes every slice is the current
-multi-runner shape. The fixture path works and the CI path works; the ad-hoc local path is the one
-that fails, which is precisely the path somebody takes when they are debugging the report. A schema
-guard is the missing piece, and it is on the list.</p>
-<p>The contract itself — the columns, the provenance rules, the bundle and the baseline — is described
-in <a class="" href="http://blong.feasible.one/docs/rationale/ci-report">the CI report rationale</a>; coverage aggregation across the three
-runners is in <a class="" href="http://blong.feasible.one/docs/concepts/code-coverage">the coverage concept</a>.</p>]]></content:encoded>
-            <category>Blong</category>
-            <category>CI</category>
         </item>
         <item>
             <title><![CDATA[The log line that knows its own structure]]></title>
@@ -1563,90 +1634,6 @@ rather than hand-made.</p>
 and the checklist for adding a source — is in <a class="" href="http://blong.feasible.one/docs/patterns/commander">the commander pattern</a>.</p>]]></content:encoded>
             <category>Blong</category>
             <category>Tooling</category>
-        </item>
-        <item>
-            <title><![CDATA[Sessions, refresh tokens and audit]]></title>
-            <link>http://blong.feasible.one/blog/sessions-refresh-tokens-and-audit</link>
-            <guid>http://blong.feasible.one/blog/sessions-refresh-tokens-and-audit</guid>
-            <pubDate>Thu, 20 Aug 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[A signed token is a lovely thing right up to the moment you need to take it back. It cannot be]]></description>
-            <content:encoded><![CDATA[<p>A signed token is a lovely thing right up to the moment you need to take it back. It cannot be
-revoked, it says what it said when it was minted, and it stays valid until it expires — which is why
-"stateless JWTs" and "we need to log this user out" cannot both be true without a second mechanism
-underneath.</p>
-<p>Blong's answer keeps the token as the fast path and adds a database-backed session behind it, with
-rotation, inactivity, revocation, and an audit trail written at the one place every controlled
-operation passes through.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="two-tokens-and-a-row">Two tokens and a row<a href="http://blong.feasible.one/blog/sessions-refresh-tokens-and-audit#two-tokens-and-a-row" class="hash-link" aria-label="Direct link to Two tokens and a row" title="Direct link to Two tokens and a row" translate="no">​</a></h2>
-<div class="language-text codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-text codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token plain">  login.token.create ──▶ access token (short-lived)  ──▶ every RPC call</span><br></div><div class="token-line" style="color:#000000"><span class="token plain">                     └─▶ refresh token (rotating)    ──▶ access_session row</span><br></div></code></pre></div></div>
-<!-- -->
-<p>The access token is a JWT and carries what the gateway needs to answer a request with no database
-round trip: the caller's identity, the session id, and a bitmap of role bits. The refresh token is
-an opaque handle whose hash is stored on the session row, and renewal is a call of its own —
-<code>login.token.refresh</code>, not a grant on <code>login.token.create</code>, which accepts only a password or a
-client credential and minting a session is deliberately not part of what it does for a machine
-client.</p>
-<p>Rotation is the detail that makes a stolen refresh token uninteresting. Every renewal writes a new
-hash to the row and returns a new token, so the hash follows the newest token and replaying an older
-one no longer matches. Inactivity is anchored on <code>lastActivityAt</code>, which renewal touches, and a
-session older than <code>login.expire.inactivity</code> is refused renewal and reported <code>inactive</code>. Revocation
-sets <code>isRevoked</code> and <code>revokedAt</code> and clears the restore cookie; cleanup then deletes revoked,
-inactive and expired rows.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="logging-out-and-who-may-do-it">Logging out, and who may do it<a href="http://blong.feasible.one/blog/sessions-refresh-tokens-and-audit#logging-out-and-who-may-do-it" class="hash-link" aria-label="Direct link to Logging out, and who may do it" title="Direct link to Logging out, and who may do it" translate="no">​</a></h2>
-<p><code>access.session.close</code> is the revoke primitive, and the interesting part is what it takes to call
-it, because the answer differs by entry point. With no id it defaults to the session id in the JWT,
-so an empty call logs the caller out — but only through <code>login.token.revoke</code>, whose route is
-declared with the access check skipped. Called directly over RPC, the gateway's check runs first and
-the method needs the <code>access.session.close</code> action like anything else; the adapter's own-session
-shortcut sits <em>after</em> that check, not instead of it. Closing somebody else's session always needs
-the action, and is refused with a 403 otherwise.</p>
-<p>That ordering is the right one, and it is worth naming why: "log yourself out" and "log anyone out"
-are different permissions, and a shortcut that skipped authorization because the id happened to look
-like the caller's own would be a confused-deputy bug in waiting.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="login-is-itself-a-permission">Login is itself a permission<a href="http://blong.feasible.one/blog/sessions-refresh-tokens-and-audit#login-is-itself-a-permission" class="hash-link" aria-label="Direct link to Login is itself a permission" title="Direct link to Login is itself a permission" translate="no">​</a></h2>
-<p>The session gate does not treat authentication as a special case outside the access model: the
-<code>accessLogin</code> action has to be among the caller's effective actions, or the gate refuses to
-establish <em>or renew</em> a session. So deactivating a user, or withdrawing that one action, ends their
-ability to get a new session — and also their ability to resume one from the restore cookie, which
-is the part easier to forget. A revoked grant that could still be restored from a cookie would be a
-grant that was not really revoked.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-audit-is-written-where-the-decision-is">The audit is written where the decision is<a href="http://blong.feasible.one/blog/sessions-refresh-tokens-and-audit#the-audit-is-written-where-the-decision-is" class="hash-link" aria-label="Direct link to The audit is written where the decision is" title="Direct link to The audit is written where the decision is" translate="no">​</a></h2>
-<p>Every access-control decision is recorded next to the check itself, at the gateway — the single
-choke point every RBAC-controlled operation passes through. <code>access.audit.record</code> appends one row
-per request with the actor, the session, the action, whether it was allowed, the HTTP status and the
-IP:</p>
-<table><thead><tr><th>Column</th><th>What it holds</th></tr></thead><tbody><tr><td><code>auditId</code>, <code>occurredAt</code></td><td>ULID key and timestamp</td></tr><tr><td><code>actionName</code>, <code>isSuccess</code>, <code>statusCode</code></td><td>what was asked, and the outcome</td></tr><tr><td><code>userId</code>, <code>actorId</code>, <code>sessionId</code></td><td>who asked, and on whose behalf</td></tr><tr><td><code>credentialType</code>, <code>ipAddress</code>, <code>failureReason</code></td><td>how they authenticated, from where, why it failed</td></tr><tr><td><code>detail</code></td><td>sanitised DML context — see below</td></tr></tbody></table>
-<p>Two properties make the trail usable. It is <strong>best-effort and non-blocking</strong> — an audit failure
-never fails the request it was describing — and the only detail it records for a write is a
-whitelisted set of identifier-shaped keys (<code>…Id</code>, <code>…Name</code>, <code>…Key</code>), never the payload. A
-credential's hash, a password, a description: none of them reach the audit table.</p>
-<p>Reading it is a page, not a query. <code>access.audit.browse</code> lists the entries with no toolbar at all —
-an audit log an operator can edit is not an audit log — and <code>access.audit.find</code> is the method behind
-it, so an orchestrator or a test can assert on the same rows. Operators also get
-<code>access.session.browse</code>, which lists live sessions with a <strong>Close Session</strong> action, so the
-revocation described above is a button as well as a handler.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="self-registration-and-what-it-does-not-have">Self-registration, and what it does not have<a href="http://blong.feasible.one/blog/sessions-refresh-tokens-and-audit#self-registration-and-what-it-does-not-have" class="hash-link" aria-label="Direct link to Self-registration, and what it does not have" title="Direct link to Self-registration, and what it does not have" translate="no">​</a></h2>
-<p>The one entry point that must work without a session is registration: <code>access.registration.add</code> is
-declared <code>auth: 'login'</code>, validates an email and a password of at least eight characters, and then
-creates three things — the account (with the <code>Guest</code> role), the person it belongs to, through a
-cross-realm <code>party.person.add</code>, and a <code>hasProfile</code> triple connecting them in the resource graph.
-Google sign-in with no existing link or matching address runs the same handler with a subject id
-instead of a password, so there is one shape of account however it arrived.</p>
-<p>And here the documentation has to be blunt rather than aspirational: a self-registered account is
-<strong>active immediately</strong>. There is no pending state, no email verification, no approval queue — the
-rights it has are exactly what the <code>Guest</code> role carries, and everything else is an operator grant
-through <code>access.user.edit</code> afterwards. If you were expecting an approval step, the correct reading
-is that the <em>Guest role</em> is the approval, and a deployment that wants a human in the loop needs to
-add one; nothing in the realm currently distinguishes an account that is waiting from one that is
-ready.</p>
-<p>That is also why the audit matters more here than anywhere else. A registration is a write with no
-actor behind it — nobody was logged in when the row appeared — so the recorded entries for the
-account it produced are what make the account attributable at all.</p>
-<p>The full lifecycle, the configuration keys and the self-registration flow are in
-<a class="" href="http://blong.feasible.one/docs/concepts/sessions">the sessions concept page</a>; the role and capability model it reuses is in
-<a class="" href="http://blong.feasible.one/docs/concepts/resource-graph">the resource graph</a> and <a class="" href="http://blong.feasible.one/docs/concepts/rbac">RBAC</a>.</p>]]></content:encoded>
-            <category>Blong</category>
-            <category>Data</category>
         </item>
     </channel>
 </rss>

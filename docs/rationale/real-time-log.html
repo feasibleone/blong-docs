@@ -16,8 +16,8 @@
 
 <link rel="icon" sizes="32x32" href="img/manta32.png">
 <link rel="icon" sizes="64x64" href="img/manta64.png"><link rel="stylesheet" href="/assets/css/styles.4f7cf835.css">
-<script src="/assets/js/runtime~main.f9c88819.js" defer="defer"></script>
-<script src="/assets/js/main.43e717fe.js" defer="defer"></script>
+<script src="/assets/js/runtime~main.4e7090a2.js" defer="defer"></script>
+<script src="/assets/js/main.2a18c190.js" defer="defer"></script>
 </head>
 <body>
 <svg style="display: none;"><defs>
@@ -124,17 +124,26 @@ booleans/null=purple)</li>
 <p>This is implemented as a new package in the folder <code>tools/blong-log</code>. It is only loosely coupled to
 the blong framework runtime (<code>core/blong-gogo</code>), so that it can be tested independently.</p>
 <h3 class="anchor anchorTargetStickyNavbar_l5nE" id="server-side">Server side<a href="#server-side" class="hash-link" aria-label="Direct link to Server side" title="Direct link to Server side" translate="no">​</a></h3>
-<p>Implemented as a new Pino transport, which sends log entries via UDP to a log server. The log server
-is implemented as a separate microservice, which receives log entries from the transport and stores
-them in a circular buffer in memory. The log entries are in JSON format and are split into UDP
-packets, which are sent to the log server. Each set of packets contains a batch of log entries and
-has a randomly generated 8 byte batch id, which allows the log server to reassemble the log entries
-in the correct order. After reassembling the log entries, the log server tries to parse the log
-message as JSON, and if it succeeds, it stores them in the buffer and adds an ULID to each log
-entry. The log server also exposes a WebSocket API, which allows the client to subscribe to log
-entries in real time, and also to provide filters. The log server also exposes a REST API, which
-allows the client to fetch recent log entries on open, and also to fetch log entries based on
-filters.</p>
+<p>Implemented as a lukaot <strong>writer</strong> which sends records via UDP to a log server. The writer replaced
+a pino transport, and the replacement is not a detail: the framework stopped writing through pino
+when the vocabulary landed, so the pino transport had no producer at all. What travels is the
+<strong>record</strong>, not the rendered line — a destination is handed both, and a viewer that had only the
+line could show the sentence but none of the fields a capture row draws.</p>
+<p>The writer is <code>createUdpWriter</code> in <code>@feasibleone/lukaot/node</code>, not in this package: a process has to
+be able to send its records somewhere without depending on the tool that displays them, so the sink
+travels with the vocabulary and the viewer only reads what arrives. The batch format lives beside
+the writer for the same reason — a collector that guessed the header could not be corrected by
+upgrading the process that sends (<code>@@D-930</code>).</p>
+<p>The log server is a separate process, which receives records from the writer and stores them in a
+circular buffer in memory. The records are JSON and are split into UDP packets; each set carries a
+randomly generated 8-byte batch id, which lets the server reassemble them in the correct order.
+After reassembling, the server stores each record with a minted ULID. It exposes a WebSocket API for
+real-time subscription with filters, a REST API for the recent window, and the client bundle itself,
+which is why a local run is one command.</p>
+<p>The client&#x27;s addresses are derived from the request that asks for them rather than from the host the
+server bound to: a viewer reached through a forwarded port or an ingress must be told where <em>it</em> can
+reach the API, and a configuration written at startup cannot know that. Deployment, authentication
+and a portal entry are not implemented; what they need is recorded in the pattern page.</p>
 <p>The server side also hosts the client side artifacts. It is deliberately not a Blong component: the
 receiver, the REST routes and the WebSocket hub are a plain <code>node:http</code> server with <code>ws</code>
 (<code>tools/blong-log/src/server.ts</code>), so the viewer can run on a developer&#x27;s machine without a suite, a
@@ -157,6 +166,11 @@ came to be wrong.</p>
 <ul>
 <li class=""><strong>Dual filtering</strong>: Client-side filtering (useMemo) for instant response on fetched data, plus
 server-side filtering via WebSocket subscription messages</li>
+<li class=""><strong>Declared identity</strong>: a <code>Signal</code> column carries the declared identifier, which is the line&#x27;s
+identity since the vocabulary landed, and a mark on the rows whose payload can be drawn</li>
+<li class=""><strong>Capture rendering</strong>: an expanded capture is drawn by the shape that produced it — an exchange as
+a request/response with headers and body, a frame as a hex dump with its ASCII beside it, a
+document as its keys and then its content</li>
 <li class=""><strong>Filter persistence</strong>: Uses ref to track current filters and re-sends them on WebSocket
 reconnection</li>
 <li class=""><strong>Search highlighting</strong>: Custom highlightSearch() function wraps matches in yellow background
