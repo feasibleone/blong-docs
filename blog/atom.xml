@@ -2,11 +2,102 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>http://blong.feasible.one/blog</id>
     <title>Blong Blog</title>
-    <updated>2026-11-22T00:00:00.000Z</updated>
+    <updated>2026-11-25T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="http://blong.feasible.one/blog"/>
     <subtitle>Blong Blog</subtitle>
     <icon>http://blong.feasible.one/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Agents developing agents]]></title>
+        <id>http://blong.feasible.one/blog/agents-developing-agents</id>
+        <link href="http://blong.feasible.one/blog/agents-developing-agents"/>
+        <updated>2026-11-25T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[The agent realm was built to do one thing that could not be proved any other way: hand a coding]]></summary>
+        <content type="html"><![CDATA[<p>The agent realm was built to do one thing that could not be proved any other way: hand a coding
+agent a ticket in this repository, let a model work it on a machine of its own, and watch the work
+happen from a browser on another machine. It ran — a runtime on a box in the next room claimed a
+ticket, wrote files in a jailed workspace, asked a person a question, resumed with the answer, and
+the page drew each step while it was still happening.</p>
+<p>What is interesting is not that an agent can edit code. It is that a session became something you
+can <strong>read after the fact, watch while it runs, and assert on in a test</strong> — three properties that
+pull in different directions and that one design ends up serving.</p>
+<figure class="diagram_J0cC" data-archify-slug="agents-workflow"><button type="button" class="poster__ZXE" aria-label="Load the interactive diagram: One ticket, one runtime, one transcript"><img class="image_wS69" src="http://blong.feasible.one/assets/images/agents-workflow-light-11ab17b7d76a172d2795227fad894902.png#gh-light-mode-only" alt="One ticket, one runtime, one transcript"><img class="image_wS69" src="http://blong.feasible.one/assets/images/agents-workflow-dark-0ed21bd7a91d6c95d1d72e1daa8a9bf2.png#gh-dark-mode-only" alt="One ticket, one runtime, one transcript"></button><figcaption class="caption_VxSf"><span>One ticket, one runtime, one transcript</span><a class="open_vG84" href="http://blong.feasible.one/diagrams/agents-workflow.html" target="_blank" rel="noreferrer">Open full screen</a></figcaption></figure>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="three-machines-three-kinds-of-trust">Three machines, three kinds of trust<a href="http://blong.feasible.one/blog/agents-developing-agents#three-machines-three-kinds-of-trust" class="hash-link" aria-label="Direct link to Three machines, three kinds of trust" title="Direct link to Three machines, three kinds of trust" translate="no">​</a></h2>
+<p>The picture has a browser, a realm, and a runtime host with a model behind it. Each one is trusted
+with something different, and the boundaries are where the interesting decisions are.</p>
+<p>The <strong>runtime host</strong> owns the loop. A copilot runtime on a LAN address runs its own shell, file and
+edit tools against the directory a ticket may touch, and reaches the model over an OpenAI-compatible
+wire with a key the account carries. The realm does not drive that loop, which is what makes the
+runtime swappable: a scripted account takes the same seat in a test as a real one.</p>
+<p>The <strong>realm</strong> owns the tools the runtime cannot answer. Asking a person, and saying the session is
+finished, are the realm's; they reach the model as custom tools that dispatch back into
+<code>agent.tool.run</code>. That is why "shell access is off in this deployment" is a true statement rather
+than a prompt: a session offered no shell tool cannot run a command, whatever the model decides to
+try.</p>
+<p>The <strong>page</strong> owns nothing. It reads a route and draws what arrives. A session that started an hour
+ago replays from the topic, a session that is running streams into the same reducer, and the two are
+indistinguishable by the time the transcript appears.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-feed-is-the-product">The feed is the product<a href="http://blong.feasible.one/blog/agents-developing-agents#the-feed-is-the-product" class="hash-link" aria-label="Direct link to The feed is the product" title="Direct link to The feed is the product" translate="no">​</a></h2>
+<p>The decision that shaped everything else: every turn is published before anybody reads it.</p>
+<p>That buys the replay. A transcript is not a client's memory of a conversation; it is a record the
+system keeps, and a page attaches to it at a cursor — <code>partition:offset</code> — so a reconnect continues
+without a gap or a repeat. The topic is keyed by session id, so one session's events share a
+partition and keep their order, and the first batch of a session waits for its delivery report,
+because that report is the only place a partition becomes a fact.</p>
+<p>It also forces the harder property: a running session has to be readable while it runs. The route
+that serves it is a <strong>stream</strong>, not a poll — the handler answers an async iterable and every frame
+leaves as one frame, sealed with the caller's key, because a transcript is exactly the thing the
+connection exists to protect. A keepalive frame, an SSE comment in the text envelope and a flagged
+frame in the binary one, keeps an idle proxy from closing a connection the reader still wants and
+lets the reader tell a quiet session from a dead one. A frame carries at most one mebibyte, and the
+writer refuses to emit one that a reader would reject. And <code>Accept</code> picks the envelope:
+<code>text/event-stream</code> for the one a person can read with <code>curl</code>, <code>application/vnd.blong.stream</code> for
+the one that costs no base64.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="a-question-is-a-suspension-and-a-suspension-is-a-checkpoint">A question is a suspension, and a suspension is a checkpoint<a href="http://blong.feasible.one/blog/agents-developing-agents#a-question-is-a-suspension-and-a-suspension-is-a-checkpoint" class="hash-link" aria-label="Direct link to A question is a suspension, and a suspension is a checkpoint" title="Direct link to A question is a suspension, and a suspension is a checkpoint" translate="no">​</a></h2>
+<p>The beat that made the whole thing real was the cheapest one to overlook: a person, asked a
+question, answering it.</p>
+<p>The first live run told the model its question had been answered with <code>{"ok": true}</code>. Everything
+looked right — the checkpoint held the question, the answer had arrived 84 milliseconds later — and
+three readings of the code found nothing. The cause was one line's assumption: a local dispatch
+answers with the framework's pair, <code>[payload, meta]</code>, and the engine read <code>result</code> off the pair and
+fell back to its own acknowledgement. Three lines of logging settled in one run what an afternoon of
+reading had not. A question that parks a run now writes the prompt, the tool call and the history
+into a checkpoint before it waits, the answer arrives as a row, a wake publishes on a channel the
+orchestrator listens to, and the resume names the same runtime session and the same pending call.</p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-page-reads-what-the-model-did-not-what-it-said">The page reads what the model did, not what it said<a href="http://blong.feasible.one/blog/agents-developing-agents#the-page-reads-what-the-model-did-not-what-it-said" class="hash-link" aria-label="Direct link to The page reads what the model did, not what it said" title="Direct link to The page reads what the model did, not what it said" translate="no">​</a></h2>
+<p>The last surprise was the payloads. Two engine kinds report the same work in different shapes: one
+streams deltas, the other hands over whole messages; one puts an exit code in <code>shellExecution</code>, the
+other at the top level. A page that printed the payload drew a wall of JSON — <code>sleep 15</code> rendered
+with a <code>{"content": "\n", "detailedContent": …}</code> envelope under it, and a <code>view</code> call sized by a
+diff-shaped snapshot that was never a change.</p>
+<p>So a tool call is now read into what it did — command, exit code, output, path, content, diff,
+question, options, answer — and each kind gets the card it deserves. A shell is its command and its
+output with a bare tick when it worked; a write is its content with the lines it added; an edit is
+the coloured diff; a read is the file; a question is the card with its choices and the answer a
+person gave. A run of calls with nothing between them is one row, and the marks that carry no
+information — a pill on every success, a duration on every call, a caret on every head — are gone.</p>
+<p><img decoding="async" loading="lazy" alt="The session page after a two-minute tour: reasoning, a slow call marked in amber, an expanded diff, a question with its answer, and the closing message with a table and a diagram" src="http://blong.feasible.one/assets/images/agent-session-transcript-afae2f1d4ff4c3604d0b19542aae75c6.png" width="602" height="1635" class="img_T0Il"></p>
+<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="what-it-took-to-trust-it">What it took to trust it<a href="http://blong.feasible.one/blog/agents-developing-agents#what-it-took-to-trust-it" class="hash-link" aria-label="Direct link to What it took to trust it" title="Direct link to What it took to trust it" translate="no">​</a></h2>
+<p>The test that closes the loop is a scripted task: seven steps, each preceded by <code>sleep 15</code>, so a
+person has time to watch. It asks the agent to write a note with a table, a script that computes, a
+mermaid flow, a question for a human, an edit to a file it already wrote, and a closing message a
+chat page can render. Two runs, two accounts, both through Kafka — the partition a broker assigned
+is on the session row, which is how the run proves it went through a broker rather than a ring in
+the process.</p>
+<p>The loop that produced those runs had three agents in it, and only two of them were the runtimes:</p>
+<figure class="diagram_J0cC" data-archify-slug="agents-test-loop"><button type="button" class="poster__ZXE" aria-label="Load the interactive diagram: Three agents, one script, one page"><img class="image_wS69" src="http://blong.feasible.one/assets/images/agents-test-loop-light-88d2e70e6278980b8b0643d88c45df1d.png#gh-light-mode-only" alt="Three agents, one script, one page"><img class="image_wS69" src="http://blong.feasible.one/assets/images/agents-test-loop-dark-e9e145254a73df1dcfc3c304113d2e1e.png#gh-dark-mode-only" alt="Three agents, one script, one page"></button><figcaption class="caption_VxSf"><span>Three agents, one script, one page</span><a class="open_vG84" href="http://blong.feasible.one/diagrams/agents-test-loop.html" target="_blank" rel="noreferrer">Open full screen</a></figcaption></figure>
+<p>What the picture at the end is not: a claim. It is the session itself, with the exit codes, the
+diff, the question, the answer and the token count the model cost.</p>
+<p>The design reasoning is in <a class="" href="http://blong.feasible.one/docs/rationale/agents-developing-agents">agents developing agents</a>, and
+the contract a page reads is in <a class="" href="http://blong.feasible.one/docs/patterns/agent-session">watching an agent session</a>.</p>]]></content>
+        <author>
+            <name>Kalin Krustev</name>
+            <uri>https://github.com/kalinkrustev</uri>
+        </author>
+        <category label="Blong" term="Blong"/>
+        <category label="Observability" term="Observability"/>
+        <category label="Testing" term="Testing"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[The API definition came first]]></title>
         <id>http://blong.feasible.one/blog/from-a-definition-to-a-handler</id>
@@ -1612,101 +1703,6 @@ uses.</p>
 <p>See <a class="" href="http://blong.feasible.one/docs/concepts/kukum">the concept page</a> for what the primitives are, the
 <a class="" href="http://blong.feasible.one/docs/patterns/kukum">pattern guide</a> for the commands and the merge rules, and
 <a class="" href="http://blong.feasible.one/docs/rationale/kukum">the rationale</a> for why the recipes moved out of the skills.</p>]]></content>
-        <author>
-            <name>Kalin Krustev</name>
-            <uri>https://github.com/kalinkrustev</uri>
-        </author>
-        <category label="Blong" term="Blong"/>
-        <category label="Tooling" term="Tooling"/>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[One admin UI for every backend]]></title>
-        <id>http://blong.feasible.one/blog/one-admin-ui-for-every-backend</id>
-        <link href="http://blong.feasible.one/blog/one-admin-ui-for-every-backend"/>
-        <updated>2026-09-07T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[Count the backends a normal system depends on. A relational database for the data, a bucket for the]]></summary>
-        <content type="html"><![CDATA[<p>Count the backends a normal system depends on. A relational database for the data, a bucket for the
-files, a key-value store for the cache, a queue for the events, a secret store for the credentials,
-a directory for the users, and a cluster running all of it. Then count the screens: one per backend,
-each with a slightly different table, a slightly different filter box and the same four bugs.</p>
-<p>The commander realm describes each of those as a <strong>source</strong> — a namespace of triples with levels —
-and renders all of them with one explorer. The screens disappear; what remains is a descriptor per
-backend and, where the connection needs one, a small adapter.</p>
-<p><img decoding="async" loading="lazy" alt="Every configured source in one tree — Kubernetes, S3, Vault, Mongo, Redis, Kafka, Keycloak and the SQL database" src="http://blong.feasible.one/assets/images/commander-sources-24e6e907aaea01b5c60a5c02f02d7134.png" width="1024" height="620" class="img_T0Il"></p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="a-backend-is-a-namespace-of-triples">A backend is a namespace of triples<a href="http://blong.feasible.one/blog/one-admin-ui-for-every-backend#a-backend-is-a-namespace-of-triples" class="hash-link" aria-label="Direct link to A backend is a namespace of triples" title="Direct link to A backend is a namespace of triples" translate="no">​</a></h2>
-<div class="language-typescript codeBlockContainer_St0r theme-code-block" style="--prism-color:#000000;--prism-background-color:#ffffff"><div class="codeBlockContent_kRlz"><pre tabindex="0" class="prism-code language-typescript codeBlock_quga thin-scrollbar" style="color:#000000;background-color:#ffffff"><code class="codeBlockLines_k23V"><div class="token-line" style="color:#000000"><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">interface</span><span class="token plain"> </span><span class="token class-name" style="color:rgb(38, 127, 153)">ICommanderSource</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    name</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> </span><span class="token comment" style="color:rgb(0, 128, 0)">// lowercase instance namespace — the subject of every triple</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    label</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    icon</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    permission</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    levels</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> ICommanderLevel</span><span class="token punctuation" style="color:rgb(4, 81, 165)">[</span><span class="token punctuation" style="color:rgb(4, 81, 165)">]</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain" style="display:inline-block"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token keyword" style="color:rgb(0, 0, 255)">export</span><span class="token plain"> </span><span class="token keyword" style="color:rgb(0, 0, 255)">interface</span><span class="token plain"> </span><span class="token class-name" style="color:rgb(38, 127, 153)">ICommanderLevel</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    label</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    list</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">method</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> params</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> object</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> </span><span class="token comment" style="color:rgb(0, 128, 0)">// the list triple for this level</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    open</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token punctuation" style="color:rgb(4, 81, 165)">{</span><span class="token plain">method</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> params</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> object</span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> </span><span class="token comment" style="color:rgb(0, 128, 0)">// the detail triple, when the level has one</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    permission</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> </span><span class="token comment" style="color:rgb(0, 128, 0)">// the action a caller needs to see this level</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain">    viewer</span><span class="token operator" style="color:rgb(0, 0, 0)">?</span><span class="token operator" style="color:rgb(0, 0, 0)">:</span><span class="token plain"> </span><span class="token builtin" style="color:rgb(0, 112, 193)">string</span><span class="token punctuation" style="color:rgb(4, 81, 165)">;</span><span class="token plain"> </span><span class="token comment" style="color:rgb(0, 128, 0)">// which viewer renders a node of this level</span><span class="token plain"></span><br></div><div class="token-line" style="color:#000000"><span class="token plain"></span><span class="token punctuation" style="color:rgb(4, 81, 165)">}</span><br></div></code></pre></div></div>
-<p>Eight sources ship today: the SQL database (through the access realm's own table method, with no
-dedicated adapter), Kubernetes, S3, Vault, MongoDB, Redis, Kafka and Keycloak. Each is a hierarchy
-of levels whose <code>list</code> and <code>open</code> name <strong>existing triples</strong> — <code>k8s-dev</code> lists namespaces through the
-Kubernetes adapter, <code>redis-dev</code> lists keys through the Redis adapter — so the explorer never learns
-what a backend is. It posts <code>{source, level, parent}</code> to <code>commander.branch.list</code>, that handler
-resolves the level's triple and calls it, and the rows come back.</p>
-<p>That indirection is what makes "a new backend is a source, not a screen" literally true. A source is
-one entry in <code>config/sources.ts</code>. If the backend needs a connection the framework does not have, it
-needs an adapter too — and then a viewer only if its resources have a shape none of the existing
-ones does, because viewers are keyed by <em>resource type</em> rather than by backend.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-explorer-is-one-component">The explorer is one component<a href="http://blong.feasible.one/blog/one-admin-ui-for-every-backend#the-explorer-is-one-component" class="hash-link" aria-label="Direct link to The explorer is one component" title="Direct link to The explorer is one component" translate="no">​</a></h2>
-<p>The shell lives in <code>blong-browser</code>, not in the realm, because it is not commander-specific: the
-realm contributes descriptors and handlers, and the component renders whatever it is given.</p>
-<ul>
-<li class="">The <strong>tree</strong> is built from the source list, one root per source.</li>
-<li class="">The <strong>table</strong> comes from the level's <code>list</code> triple, and the handler flattens heterogeneous rows so
-the same table can show a Kubernetes object and a SQL row.</li>
-<li class="">The <strong>filter</strong> is client-side over the flattened row, and the <strong>columns</strong> are derived from the
-data — scalar fields only. Nothing per-backend is configured for a table to appear.</li>
-<li class=""><strong>Opening</strong> a node is opt-in per level: with an <code>open</code> triple you get the fetched detail, without
-one you get the row you already had.</li>
-<li class=""><strong>Viewers</strong> are chosen by the node's own type metadata: JSON, key/value, file, image, table,
-document, secret, YAML, message, pod log.</li>
-</ul>
-<p><img decoding="async" loading="lazy" alt="The same explorer, drilled into the SQL source: the access realm&amp;#39;s tables" src="http://blong.feasible.one/assets/images/commander-access-db-ce7fda05db70dfb4aab3b06e9d32d6f5.png" width="1024" height="620" class="img_T0Il"></p>
-<p>Two pictures, one component, seven backends between them — and the second one is the SQL source,
-which has no adapter and no per-backend code at all. It is a descriptor pointing at a method the
-access realm already exposed.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="it-lists-it-does-not-write">It lists; it does not write<a href="http://blong.feasible.one/blog/one-admin-ui-for-every-backend#it-lists-it-does-not-write" class="hash-link" aria-label="Direct link to It lists; it does not write" title="Direct link to It lists; it does not write" translate="no">​</a></h2>
-<p>This is the part of the idea that has to be said plainly, because an admin UI invites the opposite
-assumption: <strong>there is no write path in the realm</strong>. No edit, update, save, delete or create handler
-exists anywhere in it, and the action method offers only <code>copyPath</code>, <code>open</code> and <code>refresh</code>. The tool
-explores.</p>
-<p>That is a defensible place to stop — a screen that can mutate a production Kubernetes object or a
-Vault secret needs an authorization story this realm does not attempt — but it does mean "admin UI"
-is a description of the audience rather than a claim about capability. What it gives an operator is
-the ability to <em>find and read</em> anything in six systems through one page, which is the part that was
-missing.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="authorization-is-per-level">Authorization is per level<a href="http://blong.feasible.one/blog/one-admin-ui-for-every-backend#authorization-is-per-level" class="hash-link" aria-label="Direct link to Authorization is per level" title="Direct link to Authorization is per level" translate="no">​</a></h2>
-<p>A source carries a <code>permission</code> and so does a level, and the list method prunes the tree by the
-caller's effective actions before returning it: a source a caller cannot use is not a source they
-see, rather than a source that fails when clicked. The gating is fine-grained enough to be useful —
-one level of the S3 source can be granted while the rest stays hidden, and the Kubernetes namespace
-gates a whole subtree while its synthetic category and resource levels are deliberately ungated,
-because they describe what is inside a namespace the caller already reached.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="the-local-wiring-and-a-claim-worth-correcting">The local wiring, and a claim worth correcting<a href="http://blong.feasible.one/blog/one-admin-ui-for-every-backend#the-local-wiring-and-a-claim-worth-correcting" class="hash-link" aria-label="Direct link to The local wiring, and a claim worth correcting" title="Direct link to The local wiring, and a claim worth correcting" translate="no">​</a></h2>
-<p>Each <code>*Dev</code> adapter extends the real one and supplies a local endpoint, local credentials and the
-settings a local backend needs: Kafka gets a JSON codec, short session timeouts and admin mode (so
-the topic list comes from metadata rather than from consuming the stream), S3 gets path-style URLs
-for MinIO.</p>
-<p>The tempting description — "the dev conveniences live in a dev-intent adapter" — is wrong, and the
-code is the reason: they declare <code>activation.default</code>, not <code>activation.dev</code>, and the framework
-merges the <code>default</code> block in <em>every</em> intent. A deployment that loaded this realm would get
-localhost endpoints unless it overrode them. The accurate reading is "a dev-wired instance of the
-adapter", which the realm's own entry decides whether to include. It is the kind of nuance that
-documentation usually smooths over and that costs somebody an afternoon in an environment they
-cannot explain.</p>
-<p>Four other things in the realm are declared but not wired, and they are recorded rather than
-discovered later: <code>commander.node.viewer</code> and <code>commander.node.action</code> are registered,
-gateway-validated and never called by the shipped page; the <code>commander.sources</code> configuration
-override has no provider, so the hardcoded array always wins; <code>ICommanderLevel.model</code> is used by no
-source; and three of the eight sources — Kubernetes items, Kafka messages, Keycloak users — have no
-<code>open</code> triple yet, so their viewers show the list row rather than fetched detail.</p>
-<h2 class="anchor anchorTargetStickyNavbar_l5nE" id="yes-it-works">Yes, it works<a href="http://blong.feasible.one/blog/one-admin-ui-for-every-backend#yes-it-works" class="hash-link" aria-label="Direct link to Yes, it works" title="Direct link to Yes, it works" translate="no">​</a></h2>
-<p>The claim is easy to make and worth testing, so it was: all seven backends are reachable in this
-environment, the realm's own protocol test passes, and the Playwright suite was run source by source
-— the tree renders its eight roots, and drilling each one returns real rows from the real service.
-The two images above come from a capture spec that photographs the explorer, asserts the eight
-sources and a known row, and writes nothing unless it is asked to, so the pictures are regenerable
-rather than hand-made.</p>
-<p>The full reference — the descriptors, the eight sources, the viewer registry, the authorization seed
-and the checklist for adding a source — is in <a class="" href="http://blong.feasible.one/docs/patterns/commander">the commander pattern</a>.</p>]]></content>
         <author>
             <name>Kalin Krustev</name>
             <uri>https://github.com/kalinkrustev</uri>

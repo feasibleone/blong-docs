@@ -1,0 +1,1 @@
+import{n as e}from"./rolldown-runtime-BCiCTKAo.js";import{w as t}from"./chunk-NGNAAXSQ-CMvwFyNQ.js";import{n,r}from"./chunk-24IY7LWP-CnNDU9-i.js";function i(){return(i=e((()=>{r(),t()})))()}i();export{n as createArchitectureServices};

@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunk_feasibleone_blong_docs=globalThis.webpackChunk_feasibleone_blong_docs||[]).push([[9640],{79640(e,s,a){a.d(s,{createCynefinServices:()=>b.t});var b=a(38252);a(91340)}}]);

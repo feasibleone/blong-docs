@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "2719ca04-8963-4ac1-afd0-69007a4cad11",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/home/kalin/work/blong/blong/docs/blong/draw/archify/agents-workflow.json",
+  "output": "/home/kalin/work/blong/blong/docs/blong/static/diagrams/agents-workflow.html",
+  "specification": {
+    "sha256": "e4bd7ff9e1a7a6434862db9f80aca4053cde5c48ff84e77af805ccd18a67be70",
+    "bytes": 12388
+  },
+  "artifact": {
+    "sha256": "1c8df9ae57610c6cc089f6f57838e02f9cb1b83d90a130b3f7d56daf8f0c97b1",
+    "bytes": 861543
+  }
+}

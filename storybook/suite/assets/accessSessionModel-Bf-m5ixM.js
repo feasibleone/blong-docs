@@ -1,0 +1,67 @@
+import { n as __esmMin } from "./rolldown-runtime-DpEnGzO4.js";
+import { Dt as model, wt as init_types } from "./iframe-Na9SG7k6.js";
+// ../../realm/blong-access/meta/model/accessSessionModel.ts
+var accessSessionModel_default;
+function init_accessSessionModel() {
+	return (init_accessSessionModel = __esmMin((() => {
+		init_types();
+		accessSessionModel_default = model(() => async function accessSessionModel() {
+			return {
+				subject: "access",
+				object: "session",
+				objectTitle: "Session",
+				public: true,
+				nameField: "session.sessionId",
+				schema: { properties: { session: {
+					properties: {
+						sessionId: {
+							title: "Session",
+							filter: true
+						},
+						userId: { title: "User" },
+						issuedAt: {
+							title: "Issued",
+							widget: { type: "dateTime" }
+						},
+						expiresAt: {
+							title: "Expires",
+							widget: { type: "dateTime" }
+						},
+						ipAddress: { title: "IP" },
+						isRevoked: {
+							title: "Revoked",
+							type: "boolean"
+						}
+					},
+					widget: { columns: [
+						"sessionId",
+						"userId",
+						"issuedAt",
+						"expiresAt",
+						"ipAddress",
+						"isRevoked"
+					] }
+				} } },
+				cards: { browse: {
+					label: "Sessions",
+					widgets: ["session"]
+				} },
+				browser: {
+					title: "Sessions",
+					icon: "pi pi-clock",
+					toolbar: [{
+						label: "Close Session",
+						icon: "pi pi-times",
+						enabled: "current",
+						confirm: "Close this session?",
+						method: "access.session.close",
+						params: "${current}",
+						refresh: true
+					}]
+				}
+			};
+		});
+	})))();
+}
+init_accessSessionModel();
+export { accessSessionModel_default as default };

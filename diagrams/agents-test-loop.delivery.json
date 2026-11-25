@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "effb2a24-bd93-48bf-8647-f7998095486d",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/home/kalin/work/blong/blong/docs/blong/draw/archify/agents-test-loop.json",
+  "output": "/home/kalin/work/blong/blong/docs/blong/static/diagrams/agents-test-loop.html",
+  "specification": {
+    "sha256": "6f02a47d4dcbc761858bd9003942584644ef6ca5d33ccd1d2d14c7a4e407fb02",
+    "bytes": 9847
+  },
+  "artifact": {
+    "sha256": "f54cb1d8b7501fde20838b202e610088fffe1b0b4dbbe2aae08a99a582d20178",
+    "bytes": 853568
+  }
+}

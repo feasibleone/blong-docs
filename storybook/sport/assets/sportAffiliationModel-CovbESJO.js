@@ -1,0 +1,135 @@
+import { n as __esmMin } from "./rolldown-runtime-DpEnGzO4.js";
+import { Et as init_types, kt as model } from "./iframe-DG6UCJRm.js";
+// meta/model/sportAffiliationModel.ts
+var sportAffiliationModel_default;
+function init_sportAffiliationModel() {
+	return (init_sportAffiliationModel = __esmMin((() => {
+		init_types();
+		sportAffiliationModel_default = model(() => async function sportAffiliationModel() {
+			return {
+				subject: "sport",
+				object: "affiliation",
+				objectTitle: "Affiliation Period",
+				public: true,
+				deletion: { mode: "prompt" },
+				menu: {
+					group: "Registry",
+					order: 6
+				},
+				nameField: "affiliation.organisationId",
+				schema: { properties: { affiliation: {
+					properties: {
+						personResourceId: {
+							title: "Person",
+							required: true,
+							widget: { dropdown: "sport.recipient" }
+						},
+						organisationId: {
+							title: "Organisation",
+							required: true,
+							widget: { dropdown: "sport.organization" }
+						},
+						fromDate: {
+							title: "From",
+							widget: { type: "date" }
+						},
+						toDate: {
+							title: "To",
+							widget: { type: "date" }
+						},
+						affiliationStatus: {
+							title: "Status",
+							required: true,
+							widget: { options: [{
+								value: "active",
+								label: "Active"
+							}, {
+								value: "completed",
+								label: "Completed"
+							}] }
+						},
+						basisNote: {
+							title: "Basis",
+							widget: { type: "textArea" }
+						}
+					},
+					widget: { columns: [
+						"personResourceId",
+						"organisationId",
+						"fromDate",
+						"affiliationStatus"
+					] }
+				} } },
+				cards: {
+					browse: {
+						label: "Affiliations",
+						widgets: ["affiliation"]
+					},
+					affiliation: {
+						label: "Affiliation",
+						widgets: [
+							"affiliation.personResourceId",
+							"affiliation.organisationId",
+							"affiliation.affiliationStatus"
+						]
+					},
+					period: {
+						label: "Period",
+						widgets: [
+							"affiliation.fromDate",
+							"affiliation.toDate",
+							"affiliation.basisNote"
+						]
+					}
+				},
+				layouts: {
+					edit: [["affiliation"], "period"],
+					editThumbIndex: {
+						orientation: "left",
+						items: [{
+							id: "affiliation",
+							label: "Affiliation",
+							icon: "pi pi-link",
+							widgets: ["affiliation"]
+						}, {
+							id: "period",
+							label: "Period",
+							icon: "pi pi-calendar",
+							widgets: ["period"]
+						}]
+					}
+				},
+				browser: {
+					title: "Affiliations",
+					icon: "pi pi-link",
+					toolbar: [
+						{
+							label: "Create",
+							icon: "pi pi-plus",
+							action: "component/sport.affiliation.new",
+							permission: "sport.affiliation.add"
+						},
+						{
+							label: "Edit",
+							icon: "pi pi-pencil",
+							enabled: "current",
+							method: "component/sport.affiliation.open",
+							params: "${current}"
+						},
+						{
+							label: "Delete",
+							icon: "pi pi-trash",
+							enabled: "selected",
+							confirm: "Delete the selected affiliation?",
+							method: "sport.affiliation.remove",
+							params: { affiliationId: "${affiliationId}" },
+							refresh: true
+						}
+					]
+				}
+			};
+		});
+	})))();
+}
+init_sportAffiliationModel();
+export { sportAffiliationModel_default as default };
